@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 定义连接池配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- 设置最大连接数 -->
+		<property name="maxTotal" value="${redis.maxTotal}"/>
+	</bean>
+	
+	<!-- 定义连接池 -->
+	<bean class="redis.clients.jedis.JedisPool" destroy-method="close">
+		<constructor-arg index="0" ref="jedisPoolConfig"/>
+		<constructor-arg index="1" value="${redis.ip}" type="java.lang.String"/>
+		<constructor-arg index="2" value="${redis.port}" type="int"/>
+	</bean>
+	
+	
+ 
+</beans>

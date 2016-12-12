@@ -1,0 +1,64 @@
+.toplogo-pic{margin:20% auto 0;width:30%}
+.toplogo-pic img{width: 100%;margin:0 auto; max-width: 300px;}
+.slogan-big{color:#9f9f9f;text-align:center;}
+.c_a {padding: 2% 5%; }
+.form_item .form_inp {
+    height: 45px;
+    padding-top: 2px;
+    padding-left: 2rem;
+    border: 1px solid #c8c8c8;
+    background-color: #fff;
+    font-size: 3.2rem;
+    color: #2d2d2d;
+    -webkit-appearance: none; }
+
+.form_item .form_btn.bg-gray, .form_item .form_btn.bg-active, .form_item .form_btn.bg-red, .form_item .form_btn.bg-red-active, .form_item .form_btn_s, .form_item .form_btn_s.bg-gray, .form_item .form_btn_s.bg-active {
+    height: 45px;
+    line-height: 43px;
+    padding-left: 0;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    font-size: 2rem; }
+.form_item {
+    position: relative;
+    width: 100%;
+    margin-top: 20px; }
+.form_item .form_inp {
+    width: 100%; }
+.form_item .form_inp_s {
+    width: 64%;
+    float: left; }
+.form_item dt{float:left;width:25%;line-height: 45px;}
+.form_item dd{float:right;width:70%}
+select, input[type="tel"], input[type="text"], input[type="number"], input[type="password"] {
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 0;
+font-size: 4rem;}
+
+input [type="checkbox"] {
+    color: #37a7d6; }
+
+::-webkit-input-placeholder, :-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #2d2d2d; }
+
+input:-moz-placeholder {
+    color: #2d2d2d; }
+
+::-moz-placeholder {
+    color: #2d2d2d; }
+
+:-ms-input-placeholder {
+    color: #2d2d2d; }
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0; }
+
+.kh-btn{ text-align: center;background-color: #c50433;display: block;color:#fff;margin-top: 5%;height:45px;line-height: 45px;}
+.kh-btn:hover{background-color: #a8032b}
+@media all and (min-width:721px){html{font-size:62.5%}}@media all and (max-width:720px){html{font-size:62.5%}}@media all and (max-width:640px){html{font-size:55.556%}}@media all and (max-width:540px){html{font-size:46.875%}}@media all and (max-width:480px){html{font-size:41.667%}}@media all and (max-width:400px){html{font-size:34.722%}}@media all and (max-width:360px){html{font-size:31.25%}}@media all and (max-width:340px){html{font-size:29.514%}}@media all and (max-width:320px){html{font-size:27.778%}}
