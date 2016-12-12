@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedCertInfoMapper">
+    <resultMap id="BaseResultMap" type="acceptedCertInfo">
+        <id column="ID" property="id" jdbcType="DECIMAL"/>
+        <result column="CUSTNAME" property="custname" jdbcType="VARCHAR"/>
+        <result column="IDTYPE" property="idtype" jdbcType="VARCHAR"/>
+        <result column="IDNO" property="idno" jdbcType="VARCHAR"/>
+        <result column="ETHNIC" property="ethnic" jdbcType="VARCHAR"/>
+        <result column="MOBILENO" property="mobileno" jdbcType="VARCHAR"/>
+        <result column="CERTUID" property="certuid" jdbcType="VARCHAR"/>
+        <result column="BRANCHNO" property="branchno" jdbcType="VARCHAR"/>
+        <result column="POSTID" property="postid" jdbcType="VARCHAR"/>
+        <result column="ADDR" property="addr" jdbcType="VARCHAR"/>
+        <result column="STATE" property="state" jdbcType="VARCHAR"/>
+        <result column="CREATEDATE" property="createdate" jdbcType="VARCHAR"/>
+        <result column="USERSEX" property="usersex" jdbcType="VARCHAR"/>
+        <result column="BORTHDAY" property="borthday" jdbcType="VARCHAR"/>
+        <result column="NATIONALITY" property="nationality" jdbcType="VARCHAR"/>
+        <result column="IDBEGINDATE" property="idbegindate" jdbcType="VARCHAR"/>
+        <result column="IDENDDATE" property="idenddate" jdbcType="VARCHAR"/>
+        <result column="BKMOBILENO1" property="bkmobileno1" jdbcType="VARCHAR"/>
+        <result column="UPDATEDATE" property="updatedate" jdbcType="VARCHAR"/>
+        <result column="POLICEORG" property="policeorg" jdbcType="VARCHAR"/>
+        <result column="NATIVE" property="natives" jdbcType="VARCHAR"/>
+        <result column="RISKEXP" property="riskexp" jdbcType="VARCHAR"/>
+        <result column="ACCESS_CHANNEL" property="accessChannel" jdbcType="DECIMAL"/>
+        <result column="IPADDR" property="ipaddr" jdbcType="VARCHAR"/>
+        <result column="MACADDR" property="macaddr" jdbcType="VARCHAR"/>
+        <result column="EXTEND_SOURCE" property="extendSource" jdbcType="VARCHAR"/>
+        <result column="EXTEND_COMPANY" property="extendCompany" jdbcType="VARCHAR"/>
+        <result column="BANKTYPE" property="banktype" jdbcType="VARCHAR"/>
+        <result column="BANKCODE" property="bankcode" jdbcType="VARCHAR"/>
+        <result column="INFOCOLECT_CHANNEL" property="infocolectChannel" jdbcType="VARCHAR"/>
+        <result column="EDU" property="edu" jdbcType="VARCHAR"/>
+        <result column="PROFESSION_CODE" property="professionCode" jdbcType="VARCHAR"/>
+        <result column="OPACCTKIND_FLAG" property="opacctkindFlag" jdbcType="VARCHAR"/>
+        <result column="BKMOBLIENO1" property="bkmoblieno1" jdbcType="VARCHAR"/>
+        <result column="RECOMMENDNO" property="recommendno" jdbcType="VARCHAR"/>
+        <result column="COMMISSION" property="commission" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, CUSTNAME, IDTYPE, IDNO, ETHNIC, MOBILENO, CERTUID, BRANCHNO, POSTID, ADDR, STATE,
+    CREATEDATE, USERSEX, BORTHDAY, NATIONALITY, IDBEGINDATE, IDENDDATE, BKMOBILENO1,
+    UPDATEDATE, POLICEORG, NATIVE, RISKEXP, ACCESS_CHANNEL, IPADDR, MACADDR, EXTEND_SOURCE,
+    EXTEND_COMPANY, BANKTYPE, BANKCODE, INFOCOLECT_CHANNEL, EDU, PROFESSION_CODE, OPACCTKIND_FLAG,
+    BKMOBLIENO1, RECOMMENDNO, COMMISSION
+  </sql>
+    <sql id="queryParam">
+        <where>
+            <if test="id != null">
+                AND ID = #{id,jdbcType=DECIMAL}
+            </if>
+            <if test="custname != null">
+                AND CUSTNAME = #{custname,jdbcType=VARCHAR}
+            </if>
+            <if test="idtype != null">
+                AND IDTYPE = #{idtype,jdbcType=VARCHAR}
+            </if>
+            <if test="idno != null">
+                AND IDNO = #{idno,jdbcType=VARCHAR}
+            </if>
+            <if test="ethnic != null">
+                AND ETHNIC = #{ethnic,jdbcType=VARCHAR}
+            </if>
+            <if test="mobileno != null">
+                AND MOBILENO = #{mobileno,jdbcType=VARCHAR}
+            </if>
+            <if test="certuid != null">
+                AND CERTUID = #{certuid,jdbcType=VARCHAR}
+            </if>
+            <if test="branchno != null">
+                AND BRANCHNO = #{branchno,jdbcType=VARCHAR}
+            </if>
+            <if test="postid != null">
+                AND POSTID = #{postid,jdbcType=VARCHAR}
+            </if>
+            <if test="addr != null">
+                AND ADDR = #{addr,jdbcType=VARCHAR}
+            </if>
+            <if test="state != null">
+                AND STATE = #{state,jdbcType=VARCHAR}
+            </if>
+            <if test="createdate != null">
+                AND CREATEDATE = #{createdate,jdbcType=VARCHAR}
+            </if>
+            <if test="usersex != null">
+                AND USERSEX = #{usersex,jdbcType=VARCHAR}
+            </if>
+            <if test="borthday != null">
+                AND BORTHDAY = #{borthday,jdbcType=VARCHAR}
+            </if>
+            <if test="nationality != null">
+                AND NATIONALITY = #{nationality,jdbcType=VARCHAR}
+            </if>
+            <if test="idbegindate != null">
+                AND IDBEGINDATE = #{idbegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="idenddate != null">
+                AND IDENDDATE = #{idenddate,jdbcType=VARCHAR}
+            </if>
+            <if test="bkmobileno1 != null">
+                AND BKMOBILENO1 = #{bkmobileno1,jdbcType=VARCHAR}
+            </if>
+            <if test="updatedate != null">
+                AND UPDATEDATE = #{updatedate,jdbcType=VARCHAR}
+            </if>
+            <if test="policeorg != null">
+                AND POLICEORG = #{policeorg,jdbcType=VARCHAR}
+            </if>
+            <if test="natives != null">
+                AND NATIVE = #{natives,jdbcType=VARCHAR}
+            </if>
+            <if test="riskexp != null">
+                AND RISKEXP = #{riskexp,jdbcType=VARCHAR}
+            </if>
+            <if test="accessChannel != null">
+                AND ACCESS_CHANNEL = #{accessChannel,jdbcType=DECIMAL}
+            </if>
+            <if test="ipaddr != null">
+                AND IPADDR = #{ipaddr,jdbcType=VARCHAR}
+            </if>
+            <if test="macaddr != null">
+                AND MACADDR = #{macaddr,jdbcType=VARCHAR}
+            </if>
+            <if test="extendSource != null">
+                AND EXTEND_SOURCE = #{extendSource,jdbcType=VARCHAR}
+            </if>
+            <if test="extendCompany != null">
+                AND EXTEND_COMPANY = #{extendCompany,jdbcType=VARCHAR}
+            </if>
+            <if test="banktype != null">
+                AND BANKTYPE = #{banktype,jdbcType=VARCHAR}
+            </if>
+            <if test="bankcode != null">
+                AND BANKCODE = #{bankcode,jdbcType=VARCHAR}
+            </if>
+            <if test="infocolectChannel != null">
+                AND INFOCOLECT_CHANNEL = #{infocolectChannel,jdbcType=VARCHAR}
+            </if>
+            <if test="edu != null">
+                AND EDU = #{edu,jdbcType=VARCHAR}
+            </if>
+            <if test="professionCode != null">
+                AND PROFESSION_CODE = #{professionCode,jdbcType=VARCHAR}
+            </if>
+            <if test="opacctkindFlag != null">
+                AND OPACCTKIND_FLAG = #{opacctkindFlag,jdbcType=VARCHAR}
+            </if>
+            <if test="bkmoblieno1 != null">
+                AND BKMOBLIENO1 = #{bkmoblieno1,jdbcType=VARCHAR}
+            </if>
+            <if test="recommendno != null">
+                AND RECOMMENDNO = #{recommendno,jdbcType=VARCHAR}
+            </if>
+            <if test="commission != null">
+                AND COMMISSION = #{commission,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </sql>
+    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from OSOADATA.T_ACCEPTED_CERT_INFO
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from OSOADATA.T_ACCEPTED_CERT_INFO
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <insert id="insert" parameterType="acceptedCertInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into OSOADATA.T_ACCEPTED_CERT_INFO (ID, CUSTNAME, IDTYPE,
+      IDNO, ETHNIC, MOBILENO,
+      CERTUID, BRANCHNO, POSTID,
+      ADDR, STATE, CREATEDATE,
+      USERSEX, BORTHDAY, NATIONALITY,
+      IDBEGINDATE, IDENDDATE, BKMOBILENO1,
+      UPDATEDATE, POLICEORG, NATIVE,
+      RISKEXP, ACCESS_CHANNEL, IPADDR,
+      MACADDR, EXTEND_SOURCE, EXTEND_COMPANY,
+      BANKTYPE, BANKCODE, INFOCOLECT_CHANNEL,
+      EDU, PROFESSION_CODE, OPACCTKIND_FLAG,
+      BKMOBLIENO1, RECOMMENDNO, COMMISSION
+      )
+    values (#{id,jdbcType=DECIMAL}, #{custname,jdbcType=VARCHAR}, #{idtype,jdbcType=VARCHAR},
+      #{idno,jdbcType=VARCHAR}, #{ethnic,jdbcType=VARCHAR}, #{mobileno,jdbcType=VARCHAR},
+      #{certuid,jdbcType=VARCHAR}, #{branchno,jdbcType=VARCHAR}, #{postid,jdbcType=VARCHAR},
+      #{addr,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{createdate,jdbcType=VARCHAR},
+      #{usersex,jdbcType=VARCHAR}, #{borthday,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR},
+      #{idbegindate,jdbcType=VARCHAR}, #{idenddate,jdbcType=VARCHAR}, #{bkmobileno1,jdbcType=VARCHAR},
+      #{updatedate,jdbcType=VARCHAR}, #{policeorg,jdbcType=VARCHAR}, #{natives,jdbcType=VARCHAR},
+      #{riskexp,jdbcType=VARCHAR}, #{accessChannel,jdbcType=DECIMAL}, #{ipaddr,jdbcType=VARCHAR},
+      #{macaddr,jdbcType=VARCHAR}, #{extendSource,jdbcType=VARCHAR}, #{extendCompany,jdbcType=VARCHAR},
+      #{banktype,jdbcType=VARCHAR}, #{bankcode,jdbcType=VARCHAR}, #{infocolectChannel,jdbcType=VARCHAR},
+      #{edu,jdbcType=VARCHAR}, #{professionCode,jdbcType=VARCHAR}, #{opacctkindFlag,jdbcType=VARCHAR},
+      #{bkmoblieno1,jdbcType=VARCHAR}, #{recommendno,jdbcType=VARCHAR}, #{commission,jdbcType=DECIMAL}
+      )
+  </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="acceptedCertInfo">
+        update OSOADATA.T_ACCEPTED_CERT_INFO
+        <set>
+            <if test="custname != null">
+                CUSTNAME = #{custname,jdbcType=VARCHAR},
+            </if>
+            <if test="idtype != null">
+                IDTYPE = #{idtype,jdbcType=VARCHAR},
+            </if>
+            <if test="idno != null">
+                IDNO = #{idno,jdbcType=VARCHAR},
+            </if>
+            <if test="ethnic != null">
+                ETHNIC = #{ethnic,jdbcType=VARCHAR},
+            </if>
+            <if test="mobileno != null">
+                MOBILENO = #{mobileno,jdbcType=VARCHAR},
+            </if>
+            <if test="certuid != null">
+                CERTUID = #{certuid,jdbcType=VARCHAR},
+            </if>
+            <if test="branchno != null">
+                BRANCHNO = #{branchno,jdbcType=VARCHAR},
+            </if>
+            <if test="postid != null">
+                POSTID = #{postid,jdbcType=VARCHAR},
+            </if>
+            <if test="addr != null">
+                ADDR = #{addr,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                STATE = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null">
+                CREATEDATE = #{createdate,jdbcType=VARCHAR},
+            </if>
+            <if test="usersex != null">
+                USERSEX = #{usersex,jdbcType=VARCHAR},
+            </if>
+            <if test="borthday != null">
+                BORTHDAY = #{borthday,jdbcType=VARCHAR},
+            </if>
+            <if test="nationality != null">
+                NATIONALITY = #{nationality,jdbcType=VARCHAR},
+            </if>
+            <if test="idbegindate != null">
+                IDBEGINDATE = #{idbegindate,jdbcType=VARCHAR},
+            </if>
+            <if test="idenddate != null">
+                IDENDDATE = #{idenddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bkmobileno1 != null">
+                BKMOBILENO1 = #{bkmobileno1,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedate != null">
+                UPDATEDATE = #{updatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="policeorg != null">
+                POLICEORG = #{policeorg,jdbcType=VARCHAR},
+            </if>
+            <if test="natives != null">
+                NATIVE = #{natives,jdbcType=VARCHAR},
+            </if>
+            <if test="riskexp != null">
+                RISKEXP = #{riskexp,jdbcType=VARCHAR},
+            </if>
+            <if test="accessChannel != null">
+                ACCESS_CHANNEL = #{accessChannel,jdbcType=DECIMAL},
+            </if>
+            <if test="ipaddr != null">
+                IPADDR = #{ipaddr,jdbcType=VARCHAR},
+            </if>
+            <if test="macaddr != null">
+                MACADDR = #{macaddr,jdbcType=VARCHAR},
+            </if>
+            <if test="extendSource != null">
+                EXTEND_SOURCE = #{extendSource,jdbcType=VARCHAR},
+            </if>
+            <if test="extendCompany != null">
+                EXTEND_COMPANY = #{extendCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="banktype != null">
+                BANKTYPE = #{banktype,jdbcType=VARCHAR},
+            </if>
+            <if test="bankcode != null">
+                BANKCODE = #{bankcode,jdbcType=VARCHAR},
+            </if>
+            <if test="infocolectChannel != null">
+                INFOCOLECT_CHANNEL = #{infocolectChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="edu != null">
+                EDU = #{edu,jdbcType=VARCHAR},
+            </if>
+            <if test="professionCode != null">
+                PROFESSION_CODE = #{professionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="opacctkindFlag != null">
+                OPACCTKIND_FLAG = #{opacctkindFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="bkmoblieno1 != null">
+                BKMOBLIENO1 = #{bkmoblieno1,jdbcType=VARCHAR},
+            </if>
+            <if test="recommendno != null">
+                RECOMMENDNO = #{recommendno,jdbcType=VARCHAR},
+            </if>
+            <if test="commission != null">
+                COMMISSION = #{commission,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <select id="query" parameterType="acceptedCertInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from OSOADATA.T_ACCEPTED_CERT_INFO
+        <if test="_parameter != null">
+            <include refid="queryParam"/>
+        </if>
+    </select>
+    <select id="queryOne" parameterType="acceptedCertInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from OSOADATA.T_ACCEPTED_CERT_INFO
+        <if test="_parameter != null">
+            <include refid="queryParam"/>
+        </if>
+    </select>
+    <update id="updateByMoblieNoSelective" parameterType="acceptedCertInfo">
+        update OSOADATA.T_ACCEPTED_CERT_INFO
+        <set>
+            <if test="id != null">
+                ID = #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="custname != null">
+                CUSTNAME = #{custname,jdbcType=VARCHAR},
+            </if>
+            <if test="idtype != null">
+                IDTYPE = #{idtype,jdbcType=VARCHAR},
+            </if>
+            <if test="idno != null">
+                IDNO = #{idno,jdbcType=VARCHAR},
+            </if>
+            <if test="ethnic != null">
+                ETHNIC = #{ethnic,jdbcType=VARCHAR},
+            </if>
+            <if test="certuid != null">
+                CERTUID = #{certuid,jdbcType=VARCHAR},
+            </if>
+            <if test="branchno != null">
+                BRANCHNO = #{branchno,jdbcType=VARCHAR},
+            </if>
+            <if test="postid != null">
+                POSTID = #{postid,jdbcType=VARCHAR},
+            </if>
+            <if test="addr != null">
+                ADDR = #{addr,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                STATE = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null">
+                CREATEDATE = #{createdate,jdbcType=VARCHAR},
+            </if>
+            <if test="usersex != null">
+                USERSEX = #{usersex,jdbcType=VARCHAR},
+            </if>
+            <if test="borthday != null">
+                BORTHDAY = #{borthday,jdbcType=VARCHAR},
+            </if>
+            <if test="nationality != null">
+                NATIONALITY = #{nationality,jdbcType=VARCHAR},
+            </if>
+            <if test="idbegindate != null">
+                IDBEGINDATE = #{idbegindate,jdbcType=VARCHAR},
+            </if>
+            <if test="idenddate != null">
+                IDENDDATE = #{idenddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bkmobileno1 != null">
+                BKMOBILENO1 = #{bkmobileno1,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedate != null">
+                UPDATEDATE = #{updatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="policeorg != null">
+                POLICEORG = #{policeorg,jdbcType=VARCHAR},
+            </if>
+            <if test="natives != null">
+                NATIVE = #{natives,jdbcType=VARCHAR},
+            </if>
+            <if test="riskexp != null">
+                RISKEXP = #{riskexp,jdbcType=VARCHAR},
+            </if>
+            <if test="accessChannel != null">
+                ACCESS_CHANNEL = #{accessChannel,jdbcType=DECIMAL},
+            </if>
+            <if test="ipaddr != null">
+                IPADDR = #{ipaddr,jdbcType=VARCHAR},
+            </if>
+            <if test="macaddr != null">
+                MACADDR = #{macaddr,jdbcType=VARCHAR},
+            </if>
+            <if test="extendSource != null">
+                EXTEND_SOURCE = #{extendSource,jdbcType=VARCHAR},
+            </if>
+            <if test="extendCompany != null">
+                EXTEND_COMPANY = #{extendCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="banktype != null">
+                BANKTYPE = #{banktype,jdbcType=VARCHAR},
+            </if>
+            <if test="bankcode != null">
+                BANKCODE = #{bankcode,jdbcType=VARCHAR},
+            </if>
+            <if test="infocolectChannel != null">
+                INFOCOLECT_CHANNEL = #{infocolectChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="edu != null">
+                EDU = #{edu,jdbcType=VARCHAR},
+            </if>
+            <if test="professionCode != null">
+                PROFESSION_CODE = #{professionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="opacctkindFlag != null">
+                OPACCTKIND_FLAG = #{opacctkindFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="bkmoblieno1 != null">
+                BKMOBLIENO1 = #{bkmoblieno1,jdbcType=VARCHAR},
+            </if>
+            <if test="recommendno != null">
+                RECOMMENDNO = #{recommendno,jdbcType=VARCHAR},
+            </if>
+            <if test="commission != null">
+                COMMISSION = #{commission,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where MOBILENO = #{mobileno,jdbcType=VARCHAR}
+    </update>-->
+    <select id="getCertInfoAcceptedSchedule" resultMap="BaseResultMap">
+        select
+        a.ID, a.CUSTNAME, a.IDTYPE, a.IDNO, a.ETHNIC, a.MOBILENO, a.CERTUID, a.BRANCHNO, a.POSTID, a.ADDR, a.STATE,
+        a.CREATEDATE, a.USERSEX, a.BORTHDAY, a.NATIONALITY, a.IDBEGINDATE, a.IDENDDATE, a.BKMOBILENO1,
+        a.UPDATEDATE, a.POLICEORG, a.NATIVE, a.RISKEXP, a.ACCESS_CHANNEL, a.IPADDR, a.MACADDR, a.EXTEND_SOURCE,
+        a.EXTEND_COMPANY, a.BANKTYPE, a.BANKCODE, a.INFOCOLECT_CHANNEL, a.EDU, a.PROFESSION_CODE, a.OPACCTKIND_FLAG,
+        a.BKMOBLIENO1, a.RECOMMENDNO, a.COMMISSION
+        from t_accepted_cert_info a,t_accepted_schedule b where a.id = b.user_id
+        <![CDATA[ and a.idno = #{idno} and a.idtype='00' and a.id <> #{userId} and b.lastcomplete_step <> 'uploadimg' ]]>
+    </select>
+</mapper>

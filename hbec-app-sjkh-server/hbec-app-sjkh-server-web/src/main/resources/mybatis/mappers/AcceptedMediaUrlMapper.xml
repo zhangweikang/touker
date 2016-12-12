@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedMediaUrlMapper">
+  <resultMap id="BaseResultMap" type="acceptedMediaUrl">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USERID" jdbcType="VARCHAR" property="userid" />
+    <result column="MEDIA_ID" jdbcType="VARCHAR" property="mediaId" />
+    <result column="MEDIAURL" jdbcType="OTHER" property="mediaurl" />
+    <result column="IS_AGREE" jdbcType="VARCHAR" property="isAgree" />
+    <result column="CREATE_DATE" jdbcType="VARCHAR" property="createDate" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate" />
+    <result column="TREADY_ID" jdbcType="VARCHAR" property="treadyId" />
+    <result column="SIGNATRUE" jdbcType="VARCHAR" property="signatrue" />
+    <result column="TOSIGN" jdbcType="OTHER" property="tosign" />
+    <result column="START_TIME" jdbcType="VARCHAR" property="startTime" />
+    <result column="BRANCH_ID" jdbcType="VARCHAR" property="branchId" />
+    <result column="SRV_ID" jdbcType="VARCHAR" property="srvId" />
+    <result column="SRV_NAME" jdbcType="OTHER" property="srvName" />
+    <result column="SYS_PATH" jdbcType="VARCHAR" property="sysPath" />
+    <result column="PROTOCOL_DCSIGN" jdbcType="VARCHAR" property="protocolDcsign" />
+    <result column="IMG_TYPE" jdbcType="VARCHAR" property="imgType" />
+    <result column="SIGNMSG" jdbcType="CLOB" property="signmsg" />
+    <result column="MEDIA_CONTENT" jdbcType="CLOB" property="mediaContent" />
+    <result column="PROTOCOL_CONTENT" jdbcType="CLOB" property="protocolContent" />
+    <result column="MEDIA_MINI_CONTENT" jdbcType="CLOB" property="mediaMiniContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USERID, MEDIA_ID, MEDIAURL, IS_AGREE, CREATE_DATE, CREATE_BY, UPDATE_DATE, TREADY_ID, 
+    SIGNATRUE, TOSIGN, START_TIME, BRANCH_ID, SRV_ID, SRV_NAME, SYS_PATH, PROTOCOL_DCSIGN, 
+    IMG_TYPE,SIGNMSG, MEDIA_CONTENT, PROTOCOL_CONTENT, MEDIA_MINI_CONTENT
+  </sql>
+  <select id="querySequence" resultType="java.lang.String">
+    SELECT SEQ_ACCEPTED_MEDIA_URL.nextval FROM DUAL
+  </select>
+</mapper>

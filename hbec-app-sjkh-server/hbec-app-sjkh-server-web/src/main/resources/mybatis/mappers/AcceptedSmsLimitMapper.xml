@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedSmsLimitMapper" >
+  <resultMap id="BaseResultMap" type="acceptedSmsLimit" >
+    <id column="CLIENT_SOURCE" property="clientSource" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="SEND_COUNT" property="sendCount" jdbcType="DECIMAL" />
+    <result column="MSG_CODE" property="msgCode" jdbcType="VARCHAR" />
+    <result column="SEND_DATE" property="sendDate" jdbcType="VARCHAR" />
+    <result column="MSGCODE_STATE" property="msgcodeState" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CLIENT_SOURCE, MOBILE, SEND_COUNT, MSG_CODE, SEND_DATE, MSGCODE_STATE
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="clientSource != null">
+        AND CLIENT_SOURCE = #{clientSource,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null" >
+        AND MOBILE = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="sendCount != null" >
+        AND SEND_COUNT = #{sendCount,jdbcType=DECIMAL}
+      </if>
+      <if test="msgCode != null" >
+        AND MSG_CODE = #{msgCode,jdbcType=VARCHAR}
+      </if>
+      <if test="sendDate != null" >
+        AND SEND_DATE = #{sendDate,jdbcType=VARCHAR}
+      </if>
+      <if test="msgcodeState != null" >
+        AND MSGCODE_STATE = #{msgcodeState,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from OSOADATA.T_ACCEPTED_SMS_LIMIT
+    where CLIENT_SOURCE = #{clientSource,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OSOADATA.T_ACCEPTED_SMS_LIMIT
+    where CLIENT_SOURCE = #{clientSource,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="acceptedSmsLimit" >
+    insert into OSOADATA.T_ACCEPTED_SMS_LIMIT (CLIENT_SOURCE, MOBILE, SEND_COUNT,
+      MSG_CODE, SEND_DATE, MSGCODE_STATE
+      )
+    values (#{clientSource,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{sendCount,jdbcType=DECIMAL},
+      #{msgCode,jdbcType=VARCHAR}, #{sendDate,jdbcType=VARCHAR}, #{msgcodeState,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="acceptedSmsLimit" >
+    update OSOADATA.T_ACCEPTED_SMS_LIMIT
+    <set >
+      <if test="mobile != null" >
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sendCount != null" >
+        SEND_COUNT = #{sendCount,jdbcType=DECIMAL},
+      </if>
+      <if test="msgCode != null" >
+        MSG_CODE = #{msgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sendDate != null" >
+        SEND_DATE = #{sendDate,jdbcType=VARCHAR},
+      </if>
+      <if test="msgcodeState != null" >
+        MSGCODE_STATE = #{msgcodeState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CLIENT_SOURCE = #{clientSource,jdbcType=VARCHAR}
+  </update>
+  <select id="query" parameterType="acceptedSmsLimit" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from OSOADATA.T_ACCEPTED_SMS_LIMIT
+    <if test="_parameter != null">
+      <include refid="queryParam" />
+    </if>
+  </select>
+  <select id="queryOne" parameterType="acceptedSmsLimit" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from OSOADATA.T_ACCEPTED_SMS_LIMIT
+    <if test="_parameter != null">
+      <include refid="queryParam" />
+    </if>
+  </select>-->
+</mapper>

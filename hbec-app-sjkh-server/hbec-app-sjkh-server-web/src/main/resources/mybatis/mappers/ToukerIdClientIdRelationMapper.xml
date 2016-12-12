@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.ToukerIdClientIdRelationMapper" >
+  <resultMap id="BaseResultMap" type="toukerIdClientIdRelation" >
+    <result column="MOBILENO" property="mobileno" jdbcType="VARCHAR" />
+    <result column="TOUKER_ID" property="toukerId" jdbcType="VARCHAR" />
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CLIENT_ID" property="clientId" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createtime" jdbcType="VARCHAR" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="VARCHAR" />
+    <result column="SOURCE" property="source" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="SYNCH_FLAG" property="synchFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MOBILENO, TOUKER_ID, ID, CLIENT_ID, CREATETIME, UPDATETIME, SOURCE, MEMO, SYNCH_FLAG
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="id != null" >
+        AND ID = #{id,jdbcType=DECIMAL}
+      </if>
+      <if test="clientId != null" >
+        AND CLIENT_ID = #{clientId,jdbcType=VARCHAR}
+      </if>
+      <if test="createtime != null" >
+        AND CREATETIME = #{createtime,jdbcType=VARCHAR}
+      </if>
+      <if test="updatetime != null" >
+        AND UPDATETIME = #{updatetime,jdbcType=VARCHAR}
+      </if>
+      <if test="source != null" >
+        AND SOURCE = #{source,jdbcType=VARCHAR}
+      </if>
+      <if test="memo != null" >
+        AND MEMO = #{memo,jdbcType=VARCHAR}
+      </if>
+      <if test="synchFlag != null" >
+        AND SYNCH_FLAG = #{synchFlag,jdbcType=CHAR}
+      </if>
+      <if test="mobileno != null" >
+        AND MOBILENO = #{mobileno,jdbcType=VARCHAR}
+      </if>
+      <if test="toukerId != null" >
+        AND TOUKER_ID = #{toukerId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="querySequence" resultType="java.lang.String">
+    SELECT SEQ_TOUKERID_CLIENTID_RELATION.nextval FROM DUAL
+  </select>
+</mapper>

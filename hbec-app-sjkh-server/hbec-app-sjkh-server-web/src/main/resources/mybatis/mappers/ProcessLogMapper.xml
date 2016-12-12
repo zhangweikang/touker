@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.ProcessLogMapper" >
+  <resultMap id="BaseResultMap" type="processLog" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FUNCTIONNO" property="functionno" jdbcType="VARCHAR" />
+    <result column="TARGETSYSTEM" property="targetsystem" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="VARCHAR" />
+    <result column="END_TIME" property="endTime" jdbcType="VARCHAR" />
+    <result column="EXCEPTION_DES" property="exceptionDes" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createdate" jdbcType="VARCHAR" />
+  </resultMap>
+
+</mapper>

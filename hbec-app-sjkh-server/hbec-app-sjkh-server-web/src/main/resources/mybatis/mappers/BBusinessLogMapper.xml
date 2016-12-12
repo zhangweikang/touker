@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.BBusinessLogMapper" >
+  <resultMap id="BaseResultMap" type="bBusinessLog" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR" />
+    <result column="LOG_TYPE" property="logType" jdbcType="VARCHAR" />
+    <result column="INPUT_PARAM" property="inputParam" jdbcType="VARCHAR" />
+    <result column="BEGINTIME" property="begintime" jdbcType="VARCHAR" />
+    <result column="ENDTIME" property="endtime" jdbcType="VARCHAR" />
+    <result column="ERR_NO" property="errNo" jdbcType="VARCHAR" />
+    <result column="ERR_MSG" property="errMsg" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="MAC" property="mac" jdbcType="VARCHAR" />
+    <result column="OPWAY" property="opway" jdbcType="VARCHAR" />
+    <result column="OPERATOR_NAME" property="operatorName" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, OPERATOR_ID, LOG_TYPE, INPUT_PARAM, BEGINTIME, ENDTIME, ERR_NO, ERR_MSG, IP, MAC, OPWAY, OPERATOR_NAME, COMPANY
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="id != null" >
+        AND ID = #{id,jdbcType=DECIMAL}
+      </if>
+      <if test="operatorId != null" >
+        AND OPERATOR_ID = #{operatorId,jdbcType=VARCHAR}
+      </if>
+      <if test="logType != null" >
+        AND LOG_TYPE = #{logType,jdbcType=VARCHAR}
+      </if>
+      <if test="inputParam != null" >
+        AND INPUT_PARAM = #{inputParam,jdbcType=VARCHAR}
+      </if>
+      <if test="begintime != null" >
+        AND BEGINTIME = #{begintime,jdbcType=VARCHAR}
+      </if>
+      <if test="endtime != null" >
+        AND ENDTIME = #{endtime,jdbcType=VARCHAR}
+      </if>
+      <if test="errNo != null" >
+        AND ERR_NO = #{errNo,jdbcType=VARCHAR}
+      </if>
+      <if test="errMsg != null" >
+        AND ERR_MSG = #{errMsg,jdbcType=VARCHAR}
+      </if>
+      <if test="ip != null" >
+        AND IP = #{ip,jdbcType=VARCHAR}
+      </if>
+      <if test="mac != null" >
+        AND MAC = #{mac,jdbcType=VARCHAR}
+      </if>
+      <if test="opway != null" >
+        AND OPWAY = #{opway,jdbcType=VARCHAR}
+      </if>
+      <if test="operatorName != null" >
+        AND OPERATOR_NAME = #{operatorName,jdbcType=VARCHAR}
+      </if>
+      <if test="company != null" >
+        AND COMPANY = #{company,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="querySequence" resultType="java.lang.String">
+    SELECT SEQ_B_BUSINESS_LOG.nextval FROM DUAL
+  </select>
+</mapper>

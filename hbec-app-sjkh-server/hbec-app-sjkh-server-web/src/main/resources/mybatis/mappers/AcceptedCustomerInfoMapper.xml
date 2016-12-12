@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedCustomerInfoMapper">
+    <resultMap id="BaseResultMap" type="acceptedCustomerInfo">
+        <id column="ID" property="id" jdbcType="DECIMAL"/>
+        <result column="USERID" property="userid" jdbcType="DECIMAL"/>
+        <result column="MGR_ID" property="mgrId" jdbcType="VARCHAR"/>
+        <result column="FULLNAME" property="fullname" jdbcType="VARCHAR"/>
+        <result column="CUSTNAME" property="custname" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="USERSEX" property="usersex" jdbcType="VARCHAR"/>
+        <result column="IDTYPE" property="idtype" jdbcType="VARCHAR"/>
+        <result column="IDNO" property="idno" jdbcType="VARCHAR"/>
+        <result column="INPUT_TYPE" property="inputType" jdbcType="CHAR"/>
+        <result column="ORGANNSDATE" property="organnsdate" jdbcType="VARCHAR"/>
+        <result column="BUSINESSLIC" property="businesslic" jdbcType="VARCHAR"/>
+        <result column="BUSINESSLIC_BEGINDATE" property="businesslicBegindate" jdbcType="VARCHAR"/>
+        <result column="BUSINESSLIC_ENDDATE" property="businesslicEnddate" jdbcType="VARCHAR"/>
+        <result column="BUSINESS_AUDITDATE" property="businessAuditdate" jdbcType="VARCHAR"/>
+        <result column="STATETAXESCODE" property="statetaxescode" jdbcType="VARCHAR"/>
+        <result column="STATETAXE_BENGINDATE" property="statetaxeBengindate" jdbcType="VARCHAR"/>
+        <result column="STATETAXE_ENDDATE" property="statetaxeEnddate" jdbcType="VARCHAR"/>
+        <result column="COWNRENTCODE" property="cownrentcode" jdbcType="VARCHAR"/>
+        <result column="COWNRENT_BENGINDATE" property="cownrentBengindate" jdbcType="VARCHAR"/>
+        <result column="COWNRENT_ENDDATE" property="cownrentEnddate" jdbcType="VARCHAR"/>
+        <result column="CERTIFICATETYPE" property="certificatetype" jdbcType="VARCHAR"/>
+        <result column="CERTIFICATECODE" property="certificatecode" jdbcType="VARCHAR"/>
+        <result column="LEGALNAME" property="legalname" jdbcType="VARCHAR"/>
+        <result column="CERTIFICATE_BENGINDATE" property="certificateBengindate" jdbcType="VARCHAR"/>
+        <result column="CERTIFICATE_ENDDATE" property="certificateEnddate" jdbcType="VARCHAR"/>
+        <result column="LEGALPHONE" property="legalphone" jdbcType="VARCHAR"/>
+        <result column="SUPPLY_PERMISSION" property="supplyPermission" jdbcType="VARCHAR"/>
+        <result column="PERMISSION_BEGINDATE" property="permissionBegindate" jdbcType="VARCHAR"/>
+        <result column="PERMISSION_ENDDATE" property="permissionEnddate" jdbcType="VARCHAR"/>
+        <result column="POLICEORG" property="policeorg" jdbcType="VARCHAR"/>
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR"/>
+        <result column="IDBEGINDATE" property="idbegindate" jdbcType="VARCHAR"/>
+        <result column="IDENDDATE" property="idenddate" jdbcType="VARCHAR"/>
+        <result column="BORTHDAY" property="borthday" jdbcType="VARCHAR"/>
+        <result column="ETHNIC" property="ethnic" jdbcType="VARCHAR"/>
+        <result column="MOBILENO" property="mobileno" jdbcType="VARCHAR"/>
+        <result column="TELNO" property="telno" jdbcType="VARCHAR"/>
+        <result column="POSTID" property="postid" jdbcType="VARCHAR"/>
+        <result column="COMPANY" property="company" jdbcType="VARCHAR"/>
+        <result column="ADDR" property="addr" jdbcType="VARCHAR"/>
+        <result column="EDU" property="edu" jdbcType="VARCHAR"/>
+        <result column="OCCUPATION" property="occupation" jdbcType="VARCHAR"/>
+        <result column="RISKEXP" property="riskexp" jdbcType="VARCHAR"/>
+        <result column="BANKTYPE" property="banktype" jdbcType="VARCHAR"/>
+        <result column="BANKCODE" property="bankcode" jdbcType="VARCHAR"/>
+        <result column="TYPEHA" property="typeha" jdbcType="VARCHAR"/>
+        <result column="HASECUIDHA" property="hasecuidha" jdbcType="VARCHAR"/>
+        <result column="TYPESE" property="typese" jdbcType="VARCHAR"/>
+        <result column="SECUIDSA" property="secuidsa" jdbcType="VARCHAR"/>
+        <result column="CREATEDATE" property="createdate" jdbcType="VARCHAR"/>
+        <result column="CONTACTFQ" property="contactfq" jdbcType="VARCHAR"/>
+        <result column="CUSTSOURCE" property="custsource" jdbcType="VARCHAR"/>
+        <result column="ANTIMONEYRISK" property="antimoneyrisk" jdbcType="VARCHAR"/>
+        <result column="AGENTTYPE" property="agenttype" jdbcType="VARCHAR"/>
+        <result column="AGENTCODE" property="agentcode" jdbcType="VARCHAR"/>
+        <result column="AGENT_BEGINDATE" property="agentBegindate" jdbcType="VARCHAR"/>
+        <result column="AGENT_ENDDATE" property="agentEnddate" jdbcType="VARCHAR"/>
+        <result column="AGENTNAME" property="agentname" jdbcType="VARCHAR"/>
+        <result column="AGENTSEX" property="agentsex" jdbcType="VARCHAR"/>
+        <result column="AGENTTEL" property="agenttel" jdbcType="VARCHAR"/>
+        <result column="AGENTPOSTNO" property="agentpostno" jdbcType="VARCHAR"/>
+        <result column="AGENTNATIVE" property="agentnative" jdbcType="VARCHAR"/>
+        <result column="AGENTBIRTHDAY" property="agentbirthday" jdbcType="VARCHAR"/>
+        <result column="AGENTADDR" property="agentaddr" jdbcType="VARCHAR"/>
+        <result column="STATE_PROPERTY" property="stateProperty" jdbcType="VARCHAR"/>
+        <result column="MARKET_PROPERTY" property="marketProperty" jdbcType="VARCHAR"/>
+        <result column="CAPITAL_PROPERTY" property="capitalProperty" jdbcType="VARCHAR"/>
+        <result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR"/>
+        <result column="MANAGE_LIMITS" property="manageLimits" jdbcType="VARCHAR"/>
+        <result column="OTHER_POSTNO" property="otherPostno" jdbcType="VARCHAR"/>
+        <result column="OTHER_CITYNO" property="otherCityno" jdbcType="VARCHAR"/>
+        <result column="OTHER_INDUSTRY" property="otherIndustry" jdbcType="VARCHAR"/>
+        <result column="OTHER_ADDR" property="otherAddr" jdbcType="VARCHAR"/>
+        <result column="OTHER_SOURCE" property="otherSource" jdbcType="VARCHAR"/>
+        <result column="OTHER_RISK" property="otherRisk" jdbcType="VARCHAR"/>
+        <result column="OTHER_ANTIMONEYRISK" property="otherAntimoneyrisk" jdbcType="VARCHAR"/>
+        <result column="CONTACT_TYPE" property="contactType" jdbcType="VARCHAR"/>
+        <result column="CONTACT_IDNO" property="contactIdno" jdbcType="VARCHAR"/>
+        <result column="CONTACT_NAME" property="contactName" jdbcType="VARCHAR"/>
+        <result column="CONTACT_BEGINDATE" property="contactBegindate" jdbcType="VARCHAR"/>
+        <result column="CONTACT_ENDDATE" property="contactEnddate" jdbcType="VARCHAR"/>
+        <result column="CONTACT_MOBILENO" property="contactMobileno" jdbcType="VARCHAR"/>
+        <result column="HANDLER_TYPE" property="handlerType" jdbcType="VARCHAR"/>
+        <result column="HANDLER_IDNO" property="handlerIdno" jdbcType="VARCHAR"/>
+        <result column="HANDLER_NAME" property="handlerName" jdbcType="VARCHAR"/>
+        <result column="HANDLER_BEGINDATE" property="handlerBegindate" jdbcType="VARCHAR"/>
+        <result column="HANDLER_ENDDATE" property="handlerEnddate" jdbcType="VARCHAR"/>
+        <result column="HANDLER_MOBILENO" property="handlerMobileno" jdbcType="VARCHAR"/>
+        <result column="RESPONSE_TYPE" property="responseType" jdbcType="VARCHAR"/>
+        <result column="RESPONSE_IDNO" property="responseIdno" jdbcType="VARCHAR"/>
+        <result column="RESPONSE_NAME" property="responseName" jdbcType="VARCHAR"/>
+        <result column="RESPONSE_BEGINDATE" property="responseBegindate" jdbcType="VARCHAR"/>
+        <result column="RESPONSE_ENDDATE" property="responseEnddate" jdbcType="VARCHAR"/>
+        <result column="RESPONSE_MOBILENO" property="responseMobileno" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR"/>
+        <result column="LEGAI_TYPE" property="legaiType" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_TYPE" property="enterpriseType" jdbcType="VARCHAR"/>
+        <result column="INDUSTRY_CODE" property="industryCode" jdbcType="VARCHAR"/>
+        <result column="NATIVE" property="natives" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="CUSTTYPE" property="custtype" jdbcType="VARCHAR"/>
+        <result column="BRANCHNO" property="branchno" jdbcType="VARCHAR"/>
+        <result column="CLIENT_ID" property="clientId" jdbcType="VARCHAR"/>
+        <result column="FUND_ACCOUNT" property="fundAccount" jdbcType="VARCHAR"/>
+        <result column="TRADE_PWD_TRUE" property="tradePwdTrue" jdbcType="VARCHAR"/>
+        <result column="FUND_PWD_TRUE" property="fundPwdTrue" jdbcType="VARCHAR"/>
+        <result column="TYPEHA_CN" property="typehaCn" jdbcType="VARCHAR"/>
+        <result column="TYPESE_CN" property="typeseCn" jdbcType="VARCHAR"/>
+        <result column="PROFESSION_CODE" property="professionCode" jdbcType="VARCHAR"/>
+        <result column="AGENTMOBILE" property="agentmobile" jdbcType="VARCHAR"/>
+        <result column="AGENTPOSTEMAIL" property="agentpostemail" jdbcType="VARCHAR"/>
+        <result column="ENTRUSTEDWAY" property="entrustedway" jdbcType="VARCHAR"/>
+        <result column="SERVICEPROJECT" property="serviceproject" jdbcType="VARCHAR"/>
+        <result column="MONEYTYPE" property="moneytype" jdbcType="VARCHAR"/>
+        <result column="SZTYPEB" property="sztypeb" jdbcType="VARCHAR"/>
+        <result column="SHTYPEB" property="shtypeb" jdbcType="VARCHAR"/>
+        <result column="SHASELECT" property="shaselect" jdbcType="VARCHAR"/>
+        <result column="SHAACCOUNT" property="shaaccount" jdbcType="VARCHAR"/>
+        <result column="SZASELECT" property="szaselect" jdbcType="VARCHAR"/>
+        <result column="SZAACCOUNT" property="szaaccount" jdbcType="VARCHAR"/>
+        <result column="SHBSELECT" property="shbselect" jdbcType="VARCHAR"/>
+        <result column="SHBACCOUNT" property="shbaccount" jdbcType="VARCHAR"/>
+        <result column="SZBSELECT" property="szbselect" jdbcType="VARCHAR"/>
+        <result column="SZBACCOUNT" property="szbaccount" jdbcType="VARCHAR"/>
+        <result column="SFSELECT" property="sfselect" jdbcType="VARCHAR"/>
+        <result column="SBAACCOUNT" property="sbaaccount" jdbcType="VARCHAR"/>
+        <result column="HFSELECT" property="hfselect" jdbcType="VARCHAR"/>
+        <result column="SBBACCOUNT" property="sbbaccount" jdbcType="VARCHAR"/>
+        <result column="AUTH_CODE" property="authCode" jdbcType="VARCHAR"/>
+        <result column="PREENGAGE_ID" property="preengageId" jdbcType="VARCHAR"/>
+        <result column="HACN_ACCOUNT" property="hacnAccount" jdbcType="VARCHAR"/>
+        <result column="ZACN_ACCOUNT" property="zacnAccount" jdbcType="VARCHAR"/>
+        <result column="ENTRUSTWAYS" property="entrustways" jdbcType="VARCHAR"/>
+        <result column="ACCOPENSTATE" property="accopenstate" jdbcType="DECIMAL"/>
+        <result column="HACNSELECT" property="hacnselect" jdbcType="VARCHAR"/>
+        <result column="ZACNSELECT" property="zacnselect" jdbcType="VARCHAR"/>
+        <result column="PAYMENT_TYPE" property="paymentType" jdbcType="VARCHAR"/>
+        <result column="REJECTSERIAL" property="rejectserial" jdbcType="DECIMAL"/>
+        <result column="OFFICETELNO" property="officetelno" jdbcType="VARCHAR"/>
+        <result column="MAINPHONE" property="mainphone" jdbcType="VARCHAR"/>
+        <result column="MAINADDRESS" property="mainaddress" jdbcType="VARCHAR"/>
+        <result column="COMPPOSTID" property="comppostid" jdbcType="VARCHAR"/>
+        <result column="FAX" property="fax" jdbcType="VARCHAR"/>
+        <result column="NATIONALITY" property="nationality" jdbcType="VARCHAR"/>
+        <result column="IDENTITY_CHECKSTAT" property="identityCheckstat" jdbcType="VARCHAR"/>
+        <result column="CHINACLEAR_CHECKSTAT" property="chinaclearCheckstat" jdbcType="VARCHAR"/>
+        <result column="INFOCOLECT_CHANNEL" property="infocolectChannel" jdbcType="VARCHAR"/>
+        <result column="SECONDCONTACTNAME" property="secondcontactname" jdbcType="VARCHAR"/>
+        <result column="SECONDCONTACTTEL" property="secondcontacttel" jdbcType="VARCHAR"/>
+        <result column="SECONDCONTACTRELATION" property="secondcontactrelation" jdbcType="VARCHAR"/>
+        <result column="CERTSIGNBUFP7" property="certsignbufp7" jdbcType="VARCHAR"/>
+        <result column="CERTSERIALNUMBER" property="certserialnumber" jdbcType="VARCHAR"/>
+        <result column="VIDEOACCEPTED_TYPE" property="videoacceptedType" jdbcType="VARCHAR"/>
+        <result column="SHAACCOUNT_NEW" property="shaaccountNew" jdbcType="VARCHAR"/>
+        <result column="SHBACCOUNT_NEW" property="shbaccountNew" jdbcType="VARCHAR"/>
+        <result column="SZAACCOUNT_NEW" property="szaaccountNew" jdbcType="VARCHAR"/>
+        <result column="SZBACCOUNT_NEW" property="szbaccountNew" jdbcType="VARCHAR"/>
+        <result column="SEC_MGR_ID" property="secMgrId" jdbcType="VARCHAR"/>
+        <result column="CERTUID" property="certuid" jdbcType="VARCHAR"/>
+        <result column="FEESTATE" property="feestate" jdbcType="VARCHAR"/>
+        <result column="CUBSBSCOPENACCTFLAG" property="cubsbscopenacctflag" jdbcType="VARCHAR"/>
+        <result column="HOMETOWN" property="hometown" jdbcType="VARCHAR"/>
+        <result column="IPADDR" property="ipaddr" jdbcType="VARCHAR"/>
+        <result column="MACADDR" property="macaddr" jdbcType="VARCHAR"/>
+        <result column="RECOMMENDNO" property="recommendno" jdbcType="VARCHAR"/>
+        <result column="ACCESS_CHANNEL" property="accessChannel" jdbcType="DECIMAL"/>
+        <result column="BANKBINDTYPE" property="bankbindtype" jdbcType="VARCHAR"/>
+        <result column="EXTEND_SOURCE" property="extendSource" jdbcType="VARCHAR"/>
+        <result column="EXTEND_COMPANY" property="extendCompany" jdbcType="VARCHAR"/>
+        <result column="OPACCTKIND_FLAG" property="opacctkindFlag" jdbcType="VARCHAR"/>
+        <result column="ACCOUNTNOTE" property="accountnote" jdbcType="VARCHAR"/>
+        <result column="STKNEWOPENFLAG" property="stknewopenflag" jdbcType="VARCHAR"/>
+        <result column="COMMISSION" property="commission" jdbcType="VARCHAR"/>
+        <result column="EQPWD" property="eqpwd" jdbcType="VARCHAR"/>
+        <result column="PROGRESS_STATE" property="progressState" jdbcType="VARCHAR"/>
+        <result column="NULLACCOUNT" property="nullaccount" jdbcType="VARCHAR"/>
+        <result column="ISSENDSMS" property="issendsms" jdbcType="VARCHAR"/>
+        <result column="PROCESSSTATE" property="processstate" jdbcType="VARCHAR"/>
+        <result column="PROCESSTYPE" property="processtype" jdbcType="VARCHAR"/>
+        <result column="AUDIT_ID" property="auditId" jdbcType="DECIMAL"/>
+        <result column="updateTime" property="updateTime" jdbcType="VARCHAR"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="is_recommend" property="isRecommend" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, USERID, MGR_ID, FULLNAME, CUSTNAME, TYPE, USERSEX, IDTYPE, IDNO, INPUT_TYPE,
+    ORGANNSDATE, BUSINESSLIC, BUSINESSLIC_BEGINDATE, BUSINESSLIC_ENDDATE, BUSINESS_AUDITDATE,
+    STATETAXESCODE, STATETAXE_BENGINDATE, STATETAXE_ENDDATE, COWNRENTCODE, COWNRENT_BENGINDATE,
+    COWNRENT_ENDDATE, CERTIFICATETYPE, CERTIFICATECODE, LEGALNAME, CERTIFICATE_BENGINDATE,
+    CERTIFICATE_ENDDATE, LEGALPHONE, SUPPLY_PERMISSION, PERMISSION_BEGINDATE, PERMISSION_ENDDATE,
+    POLICEORG, PROVINCE, IDBEGINDATE, IDENDDATE, BORTHDAY, ETHNIC, MOBILENO, TELNO, POSTID,
+    COMPANY, ADDR, EDU, OCCUPATION, RISKEXP, BANKTYPE, BANKCODE, TYPEHA, HASECUIDHA,
+    TYPESE, SECUIDSA, CREATEDATE, CONTACTFQ, CUSTSOURCE, ANTIMONEYRISK, AGENTTYPE, AGENTCODE,
+    AGENT_BEGINDATE, AGENT_ENDDATE, AGENTNAME, AGENTSEX, AGENTTEL, AGENTPOSTNO, AGENTNATIVE,
+    AGENTBIRTHDAY, AGENTADDR, STATE_PROPERTY, MARKET_PROPERTY, CAPITAL_PROPERTY, BUSINESS_TYPE,
+    MANAGE_LIMITS, OTHER_POSTNO, OTHER_CITYNO, OTHER_INDUSTRY, OTHER_ADDR, OTHER_SOURCE,
+    OTHER_RISK, OTHER_ANTIMONEYRISK, CONTACT_TYPE, CONTACT_IDNO, CONTACT_NAME, CONTACT_BEGINDATE,
+    CONTACT_ENDDATE, CONTACT_MOBILENO, HANDLER_TYPE, HANDLER_IDNO, HANDLER_NAME, HANDLER_BEGINDATE,
+    HANDLER_ENDDATE, HANDLER_MOBILENO, RESPONSE_TYPE, RESPONSE_IDNO, RESPONSE_NAME, RESPONSE_BEGINDATE,
+    RESPONSE_ENDDATE, RESPONSE_MOBILENO, PRODUCT_TYPE, LEGAI_TYPE, ENTERPRISE_TYPE, INDUSTRY_CODE,
+    NATIVE, EMAIL, CUSTTYPE, BRANCHNO, CLIENT_ID, FUND_ACCOUNT, TRADE_PWD_TRUE, FUND_PWD_TRUE,
+    TYPEHA_CN, TYPESE_CN, PROFESSION_CODE, AGENTMOBILE, AGENTPOSTEMAIL, ENTRUSTEDWAY,
+    SERVICEPROJECT, MONEYTYPE, SZTYPEB, SHTYPEB, SHASELECT, SHAACCOUNT, SZASELECT, SZAACCOUNT,
+    SHBSELECT, SHBACCOUNT, SZBSELECT, SZBACCOUNT, SFSELECT, SBAACCOUNT, HFSELECT, SBBACCOUNT,
+    AUTH_CODE, PREENGAGE_ID, HACN_ACCOUNT, ZACN_ACCOUNT, ENTRUSTWAYS, ACCOPENSTATE, HACNSELECT,
+    ZACNSELECT, PAYMENT_TYPE, REJECTSERIAL, OFFICETELNO, MAINPHONE, MAINADDRESS, COMPPOSTID,
+    FAX, NATIONALITY, IDENTITY_CHECKSTAT, CHINACLEAR_CHECKSTAT, INFOCOLECT_CHANNEL, SECONDCONTACTNAME,
+    SECONDCONTACTTEL, SECONDCONTACTRELATION, CERTSIGNBUFP7, CERTSERIALNUMBER, VIDEOACCEPTED_TYPE,
+    SHAACCOUNT_NEW, SHBACCOUNT_NEW, SZAACCOUNT_NEW, SZBACCOUNT_NEW, SEC_MGR_ID, CERTUID,
+    FEESTATE, CUBSBSCOPENACCTFLAG, HOMETOWN, IPADDR, MACADDR, RECOMMENDNO, ACCESS_CHANNEL,
+    BANKBINDTYPE, EXTEND_SOURCE, EXTEND_COMPANY, OPACCTKIND_FLAG, ACCOUNTNOTE, STKNEWOPENFLAG,
+    COMMISSION, EQPWD, PROGRESS_STATE, NULLACCOUNT, ISSENDSMS, PROCESSSTATE, PROCESSTYPE,
+    AUDIT_ID
+  </sql>
+    <sql id="queryParam">
+        <where>
+            <if test="id != null">
+                AND ID = #{id,jdbcType=DECIMAL}
+            </if>
+            <if test="userid != null">
+                AND USERID = #{userid,jdbcType=DECIMAL}
+            </if>
+            <if test="mgrId != null">
+                AND MGR_ID = #{mgrId,jdbcType=VARCHAR}
+            </if>
+            <if test="fullname != null">
+                AND FULLNAME = #{fullname,jdbcType=VARCHAR}
+            </if>
+            <if test="custname != null">
+                AND CUSTNAME = #{custname,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null">
+                AND TYPE = #{type,jdbcType=VARCHAR}
+            </if>
+            <if test="usersex != null">
+                AND USERSEX = #{usersex,jdbcType=VARCHAR}
+            </if>
+            <if test="idtype != null">
+                AND IDTYPE = #{idtype,jdbcType=VARCHAR}
+            </if>
+            <if test="idno != null">
+                AND IDNO = #{idno,jdbcType=VARCHAR}
+            </if>
+            <if test="inputType != null">
+                AND INPUT_TYPE = #{inputType,jdbcType=CHAR}
+            </if>
+            <if test="organnsdate != null">
+                AND ORGANNSDATE = #{organnsdate,jdbcType=VARCHAR}
+            </if>
+            <if test="businesslic != null">
+                AND BUSINESSLIC = #{businesslic,jdbcType=VARCHAR}
+            </if>
+            <if test="businesslicBegindate != null">
+                AND BUSINESSLIC_BEGINDATE = #{businesslicBegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="businesslicEnddate != null">
+                AND BUSINESSLIC_ENDDATE = #{businesslicEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="businessAuditdate != null">
+                AND BUSINESS_AUDITDATE = #{businessAuditdate,jdbcType=VARCHAR}
+            </if>
+            <if test="statetaxescode != null">
+                AND STATETAXESCODE = #{statetaxescode,jdbcType=VARCHAR}
+            </if>
+            <if test="statetaxeBengindate != null">
+                AND STATETAXE_BENGINDATE = #{statetaxeBengindate,jdbcType=VARCHAR}
+            </if>
+            <if test="statetaxeEnddate != null">
+                AND STATETAXE_ENDDATE = #{statetaxeEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="cownrentcode != null">
+                AND COWNRENTCODE = #{cownrentcode,jdbcType=VARCHAR}
+            </if>
+            <if test="cownrentBengindate != null">
+                AND COWNRENT_BENGINDATE = #{cownrentBengindate,jdbcType=VARCHAR}
+            </if>
+            <if test="cownrentEnddate != null">
+                AND COWNRENT_ENDDATE = #{cownrentEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="certificatetype != null">
+                AND CERTIFICATETYPE = #{certificatetype,jdbcType=VARCHAR}
+            </if>
+            <if test="certificatecode != null">
+                AND CERTIFICATECODE = #{certificatecode,jdbcType=VARCHAR}
+            </if>
+            <if test="legalname != null">
+                AND LEGALNAME = #{legalname,jdbcType=VARCHAR}
+            </if>
+            <if test="certificateBengindate != null">
+                AND CERTIFICATE_BENGINDATE = #{certificateBengindate,jdbcType=VARCHAR}
+            </if>
+            <if test="certificateEnddate != null">
+                AND CERTIFICATE_ENDDATE = #{certificateEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="legalphone != null">
+                AND LEGALPHONE = #{legalphone,jdbcType=VARCHAR}
+            </if>
+            <if test="supplyPermission != null">
+                AND SUPPLY_PERMISSION = #{supplyPermission,jdbcType=VARCHAR}
+            </if>
+            <if test="permissionBegindate != null">
+                AND PERMISSION_BEGINDATE = #{permissionBegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="permissionEnddate != null">
+                AND PERMISSION_ENDDATE = #{permissionEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="policeorg != null">
+                AND POLICEORG = #{policeorg,jdbcType=VARCHAR}
+            </if>
+            <if test="province != null">
+                AND PROVINCE = #{province,jdbcType=VARCHAR}
+            </if>
+            <if test="idbegindate != null">
+                AND IDBEGINDATE = #{idbegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="idenddate != null">
+                AND IDENDDATE = #{idenddate,jdbcType=VARCHAR}
+            </if>
+            <if test="borthday != null">
+                AND BORTHDAY = #{borthday,jdbcType=VARCHAR}
+            </if>
+            <if test="ethnic != null">
+                AND ETHNIC = #{ethnic,jdbcType=VARCHAR}
+            </if>
+            <if test="mobileno != null">
+                AND MOBILENO = #{mobileno,jdbcType=VARCHAR}
+            </if>
+            <if test="telno != null">
+                AND TELNO = #{telno,jdbcType=VARCHAR}
+            </if>
+            <if test="postid != null">
+                AND POSTID = #{postid,jdbcType=VARCHAR}
+            </if>
+            <if test="company != null">
+                AND COMPANY = #{company,jdbcType=VARCHAR}
+            </if>
+            <if test="addr != null">
+                AND ADDR = #{addr,jdbcType=VARCHAR}
+            </if>
+            <if test="edu != null">
+                AND EDU = #{edu,jdbcType=VARCHAR}
+            </if>
+            <if test="occupation != null">
+                AND OCCUPATION = #{occupation,jdbcType=VARCHAR}
+            </if>
+            <if test="riskexp != null">
+                AND RISKEXP = #{riskexp,jdbcType=VARCHAR}
+            </if>
+            <if test="banktype != null">
+                AND BANKTYPE = #{banktype,jdbcType=VARCHAR}
+            </if>
+            <if test="bankcode != null">
+                AND BANKCODE = #{bankcode,jdbcType=VARCHAR}
+            </if>
+            <if test="typeha != null">
+                AND TYPEHA = #{typeha,jdbcType=VARCHAR}
+            </if>
+            <if test="hasecuidha != null">
+                AND HASECUIDHA = #{hasecuidha,jdbcType=VARCHAR}
+            </if>
+            <if test="typese != null">
+                AND TYPESE = #{typese,jdbcType=VARCHAR}
+            </if>
+            <if test="secuidsa != null">
+                AND SECUIDSA = #{secuidsa,jdbcType=VARCHAR}
+            </if>
+            <if test="createdate != null">
+                AND CREATEDATE = #{createdate,jdbcType=VARCHAR}
+            </if>
+            <if test="contactfq != null">
+                AND CONTACTFQ = #{contactfq,jdbcType=VARCHAR}
+            </if>
+            <if test="custsource != null">
+                AND CUSTSOURCE = #{custsource,jdbcType=VARCHAR}
+            </if>
+            <if test="antimoneyrisk != null">
+                AND ANTIMONEYRISK = #{antimoneyrisk,jdbcType=VARCHAR}
+            </if>
+            <if test="agenttype != null">
+                AND AGENTTYPE = #{agenttype,jdbcType=VARCHAR}
+            </if>
+            <if test="agentcode != null">
+                AND AGENTCODE = #{agentcode,jdbcType=VARCHAR}
+            </if>
+            <if test="agentBegindate != null">
+                AND AGENT_BEGINDATE = #{agentBegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="agentEnddate != null">
+                AND AGENT_ENDDATE = #{agentEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="agentname != null">
+                AND AGENTNAME = #{agentname,jdbcType=VARCHAR}
+            </if>
+            <if test="agentsex != null">
+                AND AGENTSEX = #{agentsex,jdbcType=VARCHAR}
+            </if>
+            <if test="agenttel != null">
+                AND AGENTTEL = #{agenttel,jdbcType=VARCHAR}
+            </if>
+            <if test="agentpostno != null">
+                AND AGENTPOSTNO = #{agentpostno,jdbcType=VARCHAR}
+            </if>
+            <if test="agentnative != null">
+                AND AGENTNATIVE = #{agentnative,jdbcType=VARCHAR}
+            </if>
+            <if test="agentbirthday != null">
+                AND AGENTBIRTHDAY = #{agentbirthday,jdbcType=VARCHAR}
+            </if>
+            <if test="agentaddr != null">
+                AND AGENTADDR = #{agentaddr,jdbcType=VARCHAR}
+            </if>
+            <if test="stateProperty != null">
+                AND STATE_PROPERTY = #{stateProperty,jdbcType=VARCHAR}
+            </if>
+            <if test="marketProperty != null">
+                AND MARKET_PROPERTY = #{marketProperty,jdbcType=VARCHAR}
+            </if>
+            <if test="capitalProperty != null">
+                AND CAPITAL_PROPERTY = #{capitalProperty,jdbcType=VARCHAR}
+            </if>
+            <if test="businessType != null">
+                AND BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR}
+            </if>
+            <if test="manageLimits != null">
+                AND MANAGE_LIMITS = #{manageLimits,jdbcType=VARCHAR}
+            </if>
+            <if test="otherPostno != null">
+                AND OTHER_POSTNO = #{otherPostno,jdbcType=VARCHAR}
+            </if>
+            <if test="otherCityno != null">
+                AND OTHER_CITYNO = #{otherCityno,jdbcType=VARCHAR}
+            </if>
+            <if test="otherIndustry != null">
+                AND OTHER_INDUSTRY = #{otherIndustry,jdbcType=VARCHAR}
+            </if>
+            <if test="otherAddr != null">
+                AND OTHER_ADDR = #{otherAddr,jdbcType=VARCHAR}
+            </if>
+            <if test="otherSource != null">
+                AND OTHER_SOURCE = #{otherSource,jdbcType=VARCHAR}
+            </if>
+            <if test="otherRisk != null">
+                AND OTHER_RISK = #{otherRisk,jdbcType=VARCHAR}
+            </if>
+            <if test="otherAntimoneyrisk != null">
+                AND OTHER_ANTIMONEYRISK = #{otherAntimoneyrisk,jdbcType=VARCHAR}
+            </if>
+            <if test="contactType != null">
+                AND CONTACT_TYPE = #{contactType,jdbcType=VARCHAR}
+            </if>
+            <if test="contactIdno != null">
+                AND CONTACT_IDNO = #{contactIdno,jdbcType=VARCHAR}
+            </if>
+            <if test="contactName != null">
+                AND CONTACT_NAME = #{contactName,jdbcType=VARCHAR}
+            </if>
+            <if test="contactBegindate != null">
+                AND CONTACT_BEGINDATE = #{contactBegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="contactEnddate != null">
+                AND CONTACT_ENDDATE = #{contactEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="contactMobileno != null">
+                AND CONTACT_MOBILENO = #{contactMobileno,jdbcType=VARCHAR}
+            </if>
+            <if test="handlerType != null">
+                AND HANDLER_TYPE = #{handlerType,jdbcType=VARCHAR}
+            </if>
+            <if test="handlerIdno != null">
+                AND HANDLER_IDNO = #{handlerIdno,jdbcType=VARCHAR}
+            </if>
+            <if test="handlerName != null">
+                AND HANDLER_NAME = #{handlerName,jdbcType=VARCHAR}
+            </if>
+            <if test="handlerBegindate != null">
+                AND HANDLER_BEGINDATE = #{handlerBegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="handlerEnddate != null">
+                AND HANDLER_ENDDATE = #{handlerEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="handlerMobileno != null">
+                AND HANDLER_MOBILENO = #{handlerMobileno,jdbcType=VARCHAR}
+            </if>
+            <if test="responseType != null">
+                AND RESPONSE_TYPE = #{responseType,jdbcType=VARCHAR}
+            </if>
+            <if test="responseIdno != null">
+                AND RESPONSE_IDNO = #{responseIdno,jdbcType=VARCHAR}
+            </if>
+            <if test="responseName != null">
+                AND RESPONSE_NAME = #{responseName,jdbcType=VARCHAR}
+            </if>
+            <if test="responseBegindate != null">
+                AND RESPONSE_BEGINDATE = #{responseBegindate,jdbcType=VARCHAR}
+            </if>
+            <if test="responseEnddate != null">
+                AND RESPONSE_ENDDATE = #{responseEnddate,jdbcType=VARCHAR}
+            </if>
+            <if test="responseMobileno != null">
+                AND RESPONSE_MOBILENO = #{responseMobileno,jdbcType=VARCHAR}
+            </if>
+            <if test="productType != null">
+                AND PRODUCT_TYPE = #{productType,jdbcType=VARCHAR}
+            </if>
+            <if test="legaiType != null">
+                AND LEGAI_TYPE = #{legaiType,jdbcType=VARCHAR}
+            </if>
+            <if test="enterpriseType != null">
+                AND ENTERPRISE_TYPE = #{enterpriseType,jdbcType=VARCHAR}
+            </if>
+            <if test="industryCode != null">
+                AND INDUSTRY_CODE = #{industryCode,jdbcType=VARCHAR}
+            </if>
+            <if test="natives != null">
+                AND NATIVE = #{natives,jdbcType=VARCHAR}
+            </if>
+            <if test="email != null">
+                AND EMAIL = #{email,jdbcType=VARCHAR}
+            </if>
+            <if test="custtype != null">
+                AND CUSTTYPE = #{custtype,jdbcType=VARCHAR}
+            </if>
+            <if test="branchno != null">
+                AND BRANCHNO = #{branchno,jdbcType=VARCHAR}
+            </if>
+            <if test="clientId != null">
+                AND CLIENT_ID = #{clientId,jdbcType=VARCHAR}
+            </if>
+            <if test="fundAccount != null">
+                AND FUND_ACCOUNT = #{fundAccount,jdbcType=VARCHAR}
+            </if>
+            <if test="tradePwdTrue != null">
+                AND TRADE_PWD_TRUE = #{tradePwdTrue,jdbcType=VARCHAR}
+            </if>
+            <if test="fundPwdTrue != null">
+                AND FUND_PWD_TRUE = #{fundPwdTrue,jdbcType=VARCHAR}
+            </if>
+            <if test="typehaCn != null">
+                AND TYPEHA_CN = #{typehaCn,jdbcType=VARCHAR}
+            </if>
+            <if test="typeseCn != null">
+                AND TYPESE_CN = #{typeseCn,jdbcType=VARCHAR}
+            </if>
+            <if test="professionCode != null">
+                AND PROFESSION_CODE = #{professionCode,jdbcType=VARCHAR}
+            </if>
+            <if test="agentmobile != null">
+                AND AGENTMOBILE = #{agentmobile,jdbcType=VARCHAR}
+            </if>
+            <if test="agentpostemail != null">
+                AND AGENTPOSTEMAIL = #{agentpostemail,jdbcType=VARCHAR}
+            </if>
+            <if test="entrustedway != null">
+                AND ENTRUSTEDWAY = #{entrustedway,jdbcType=VARCHAR}
+            </if>
+            <if test="serviceproject != null">
+                AND SERVICEPROJECT = #{serviceproject,jdbcType=VARCHAR}
+            </if>
+            <if test="moneytype != null">
+                AND MONEYTYPE = #{moneytype,jdbcType=VARCHAR}
+            </if>
+            <if test="sztypeb != null">
+                AND SZTYPEB = #{sztypeb,jdbcType=VARCHAR}
+            </if>
+            <if test="shtypeb != null">
+                AND SHTYPEB = #{shtypeb,jdbcType=VARCHAR}
+            </if>
+            <if test="shaselect != null">
+                AND SHASELECT = #{shaselect,jdbcType=VARCHAR}
+            </if>
+            <if test="shaaccount != null">
+                AND SHAACCOUNT = #{shaaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="szaselect != null">
+                AND SZASELECT = #{szaselect,jdbcType=VARCHAR}
+            </if>
+            <if test="szaaccount != null">
+                AND SZAACCOUNT = #{szaaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="shbselect != null">
+                AND SHBSELECT = #{shbselect,jdbcType=VARCHAR}
+            </if>
+            <if test="shbaccount != null">
+                AND SHBACCOUNT = #{shbaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="szbselect != null">
+                AND SZBSELECT = #{szbselect,jdbcType=VARCHAR}
+            </if>
+            <if test="szbaccount != null">
+                AND SZBACCOUNT = #{szbaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="sfselect != null">
+                AND SFSELECT = #{sfselect,jdbcType=VARCHAR}
+            </if>
+            <if test="sbaaccount != null">
+                AND SBAACCOUNT = #{sbaaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="hfselect != null">
+                AND HFSELECT = #{hfselect,jdbcType=VARCHAR}
+            </if>
+            <if test="sbbaccount != null">
+                AND SBBACCOUNT = #{sbbaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="authCode != null">
+                AND AUTH_CODE = #{authCode,jdbcType=VARCHAR}
+            </if>
+            <if test="preengageId != null">
+                AND PREENGAGE_ID = #{preengageId,jdbcType=VARCHAR}
+            </if>
+            <if test="hacnAccount != null">
+                AND HACN_ACCOUNT = #{hacnAccount,jdbcType=VARCHAR}
+            </if>
+            <if test="zacnAccount != null">
+                AND ZACN_ACCOUNT = #{zacnAccount,jdbcType=VARCHAR}
+            </if>
+            <if test="entrustways != null">
+                AND ENTRUSTWAYS = #{entrustways,jdbcType=VARCHAR}
+            </if>
+            <if test="accopenstate != null">
+                AND ACCOPENSTATE = #{accopenstate,jdbcType=DECIMAL}
+            </if>
+            <if test="hacnselect != null">
+                AND HACNSELECT = #{hacnselect,jdbcType=VARCHAR}
+            </if>
+            <if test="zacnselect != null">
+                AND ZACNSELECT = #{zacnselect,jdbcType=VARCHAR}
+            </if>
+            <if test="paymentType != null">
+                AND PAYMENT_TYPE = #{paymentType,jdbcType=VARCHAR}
+            </if>
+            <if test="rejectserial != null">
+                AND REJECTSERIAL = #{rejectserial,jdbcType=DECIMAL}
+            </if>
+            <if test="officetelno != null">
+                AND OFFICETELNO = #{officetelno,jdbcType=VARCHAR}
+            </if>
+            <if test="mainphone != null">
+                AND MAINPHONE = #{mainphone,jdbcType=VARCHAR}
+            </if>
+            <if test="mainaddress != null">
+                AND MAINADDRESS = #{mainaddress,jdbcType=VARCHAR}
+            </if>
+            <if test="comppostid != null">
+                AND COMPPOSTID = #{comppostid,jdbcType=VARCHAR}
+            </if>
+            <if test="fax != null">
+                AND FAX = #{fax,jdbcType=VARCHAR}
+            </if>
+            <if test="nationality != null">
+                AND NATIONALITY = #{nationality,jdbcType=VARCHAR}
+            </if>
+            <if test="identityCheckstat != null">
+                AND IDENTITY_CHECKSTAT = #{identityCheckstat,jdbcType=VARCHAR}
+            </if>
+            <if test="chinaclearCheckstat != null">
+                AND CHINACLEAR_CHECKSTAT = #{chinaclearCheckstat,jdbcType=VARCHAR}
+            </if>
+            <if test="infocolectChannel != null">
+                AND INFOCOLECT_CHANNEL = #{infocolectChannel,jdbcType=VARCHAR}
+            </if>
+            <if test="secondcontactname != null">
+                AND SECONDCONTACTNAME = #{secondcontactname,jdbcType=VARCHAR}
+            </if>
+            <if test="secondcontacttel != null">
+                AND SECONDCONTACTTEL = #{secondcontacttel,jdbcType=VARCHAR}
+            </if>
+            <if test="secondcontactrelation != null">
+                AND SECONDCONTACTRELATION = #{secondcontactrelation,jdbcType=VARCHAR}
+            </if>
+            <if test="certsignbufp7 != null">
+                AND CERTSIGNBUFP7 = #{certsignbufp7,jdbcType=VARCHAR}
+            </if>
+            <if test="certserialnumber != null">
+                AND CERTSERIALNUMBER = #{certserialnumber,jdbcType=VARCHAR}
+            </if>
+            <if test="videoacceptedType != null">
+                AND VIDEOACCEPTED_TYPE = #{videoacceptedType,jdbcType=VARCHAR}
+            </if>
+            <if test="shaaccountNew != null">
+                AND SHAACCOUNT_NEW = #{shaaccountNew,jdbcType=VARCHAR}
+            </if>
+            <if test="shbaccountNew != null">
+                AND SHBACCOUNT_NEW = #{shbaccountNew,jdbcType=VARCHAR}
+            </if>
+            <if test="szaaccountNew != null">
+                AND SZAACCOUNT_NEW = #{szaaccountNew,jdbcType=VARCHAR}
+            </if>
+            <if test="szbaccountNew != null">
+                AND SZBACCOUNT_NEW = #{szbaccountNew,jdbcType=VARCHAR}
+            </if>
+            <if test="secMgrId != null">
+                AND SEC_MGR_ID = #{secMgrId,jdbcType=VARCHAR}
+            </if>
+            <if test="certuid != null">
+                AND CERTUID = #{certuid,jdbcType=VARCHAR}
+            </if>
+            <if test="feestate != null">
+                AND FEESTATE = #{feestate,jdbcType=VARCHAR}
+            </if>
+            <if test="cubsbscopenacctflag != null">
+                AND CUBSBSCOPENACCTFLAG = #{cubsbscopenacctflag,jdbcType=VARCHAR}
+            </if>
+            <if test="hometown != null">
+                AND HOMETOWN = #{hometown,jdbcType=VARCHAR}
+            </if>
+            <if test="ipaddr != null">
+                AND IPADDR = #{ipaddr,jdbcType=VARCHAR}
+            </if>
+            <if test="macaddr != null">
+                AND MACADDR = #{macaddr,jdbcType=VARCHAR}
+            </if>
+            <if test="recommendno != null">
+                AND RECOMMENDNO = #{recommendno,jdbcType=VARCHAR}
+            </if>
+            <if test="accessChannel != null">
+                AND ACCESS_CHANNEL = #{accessChannel,jdbcType=DECIMAL}
+            </if>
+            <if test="bankbindtype != null">
+                AND BANKBINDTYPE = #{bankbindtype,jdbcType=VARCHAR}
+            </if>
+            <if test="extendSource != null">
+                AND EXTEND_SOURCE = #{extendSource,jdbcType=VARCHAR}
+            </if>
+            <if test="extendCompany != null">
+                AND EXTEND_COMPANY = #{extendCompany,jdbcType=VARCHAR}
+            </if>
+            <if test="opacctkindFlag != null">
+                AND OPACCTKIND_FLAG = #{opacctkindFlag,jdbcType=VARCHAR}
+            </if>
+            <if test="accountnote != null">
+                AND ACCOUNTNOTE = #{accountnote,jdbcType=VARCHAR}
+            </if>
+            <if test="stknewopenflag != null">
+                AND STKNEWOPENFLAG = #{stknewopenflag,jdbcType=VARCHAR}
+            </if>
+            <if test="commission != null">
+                AND COMMISSION = #{commission,jdbcType=VARCHAR}
+            </if>
+            <if test="eqpwd != null">
+                AND EQPWD = #{eqpwd,jdbcType=VARCHAR}
+            </if>
+            <if test="progressState != null">
+                AND PROGRESS_STATE = #{progressState,jdbcType=VARCHAR}
+            </if>
+            <if test="nullaccount != null">
+                AND NULLACCOUNT = #{nullaccount,jdbcType=VARCHAR}
+            </if>
+            <if test="issendsms != null">
+                AND ISSENDSMS = #{issendsms,jdbcType=VARCHAR}
+            </if>
+            <if test="processstate != null">
+                AND PROCESSSTATE = #{processstate,jdbcType=VARCHAR}
+            </if>
+            <if test="processtype != null">
+                AND PROCESSTYPE = #{processtype,jdbcType=VARCHAR}
+            </if>
+            <if test="auditId != null">
+                AND AUDIT_ID = #{auditId,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </sql>
+    <delete id="deleteByMobileNo" parameterType="java.lang.String">
+    delete from OSOADATA.T_ACCEPTED_CUSTOMER_INFO
+    where MOBILENO = #{mobileno,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+    delete from OSOADATA.T_ACCEPTED_CUSTOMER_INFO
+    where USERID = #{userid,jdbcType=DECIMAL}
+  </delete>
+    <select id="getTimedOpenAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select t3.custname CUSTNAME, t3.idno IDNO, t3.mobileno MOBILENO,t3.client_id CLIENT_ID,
+           t3.updateTime,t4.source, decode(p.cust_phone,null,'0','1') is_recommend
+      from
+        (select t1.custname, t1.idno, t1.mobileno, t1.client_id, to_char(t2.modify_date,'yyyy-mm-dd hh24:mi:ss') as updateTime
+          from t_accepted_customer_info t1,
+            (select user_id, modify_date from t_kh_task
+              where status = 2 and task_name = 'ddstockkh'
+                <![CDATA[and modify_date >to_date(#{beginDate},'yyyy-mm-dd hh24:mi:ss')
+                and modify_date <=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')]]>
+            ) t2
+          where t1.userid = t2.user_id
+        ) t3
+      left join t_toukerid_clientid_relation t4
+           on t3.mobileno = t4.mobileno
+      left join (select distinct cust_phone from hbec_apptools.t_promote_customer) p
+           on t3.mobileno=p.cust_phone
+      order by t3.updateTime
+  </select>
+</mapper>

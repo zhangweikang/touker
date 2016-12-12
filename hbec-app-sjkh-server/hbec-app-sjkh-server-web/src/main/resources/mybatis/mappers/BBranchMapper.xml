@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.BBranchMapper">
+ <resultMap id="BaseResultMap" type="bBranch">
+    <id column="BRANCHNO" property="branchno" jdbcType="VARCHAR"/>
+    <result column="BRANCHNAME" property="branchname" jdbcType="VARCHAR"/>
+    <result column="BRANCHCODE" property="branchcode" jdbcType="VARCHAR"/>
+    <result column="ORDERNUM" property="ordernum" jdbcType="VARCHAR"/>
+    <result column="ISDISPLAY" property="isdisplay" jdbcType="VARCHAR"/>
+    <result column="REGIONNO" property="regionno" jdbcType="VARCHAR"/>
+    <result column="PROVINCENO" property="provinceno" jdbcType="VARCHAR"/>
+    <result column="CITYNO" property="cityno" jdbcType="VARCHAR"/>
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+    <result column="TRAINFO" property="trainfo" jdbcType="VARCHAR"/>
+    <result column="LAT" property="lat" jdbcType="VARCHAR"/>
+    <result column="LNT" property="lnt" jdbcType="VARCHAR"/>
+    <result column="ZOOM" property="zoom" jdbcType="DECIMAL"/>
+    <result column="COMPANYNO" property="companyno" jdbcType="VARCHAR"/>
+    <result column="MAXZOOM" property="maxzoom" jdbcType="DECIMAL"/>
+    <result column="SZ_SITE" property="szSite" jdbcType="VARCHAR"/>
+    <result column="SH_SITE" property="shSite" jdbcType="VARCHAR"/>
+    <result column="XW_SHA" property="xwSha" jdbcType="VARCHAR"/>
+    <result column="XW_SHB" property="xwShb" jdbcType="VARCHAR"/>
+    <result column="JS_SHA" property="jsSha" jdbcType="VARCHAR"/>
+    <result column="JS_SHB" property="jsShb" jdbcType="VARCHAR"/>
+    <result column="KH_SHA" property="khSha" jdbcType="VARCHAR"/>
+    <result column="KH_SHB" property="khShb" jdbcType="VARCHAR"/>
+    <result column="CUACCT_CLS" property="cuacctCls" jdbcType="VARCHAR"/>
+    <result column="CUST_CODE" property="custCode" jdbcType="VARCHAR"/>
+    <result column="CUST_PWD" property="custPwd" jdbcType="VARCHAR"/>
+    <result column="INTRO" property="intro" jdbcType="CLOB"/>
+</resultMap>
+ <sql id="Base_Column_List">
+BRANCHNO, BRANCHNAME, BRANCHCODE, ORDERNUM, ISDISPLAY, REGIONNO, PROVINCENO, CITYNO,
+ADDRESS, TRAINFO, LAT, LNT, ZOOM, COMPANYNO, MAXZOOM, SZ_SITE, SH_SITE, XW_SHA, XW_SHB,
+JS_SHA, JS_SHB, KH_SHA, KH_SHB, CUACCT_CLS, CUST_CODE, CUST_PWD, INTRO
+</sql>
+ <select id="getBranchInfo" parameterType="java.lang.String" resultType="java.lang.String">
+    select t.branchname from t_b_branch t, t_b_city c, t_b_province p, t_b_region r
+    where t.branchcode = #{branchNo} and t.cityno = c.id and t.provinceno = p.id and t.regionno = r.id
+  </select>
+  <select id="getBranchNo" resultType="java.lang.String">
+     select branchno from t_b_branch t where t.isdisplay='0'
+     <![CDATA[ and branchno<>'9999'  order by t.ordernum ]]>
+  </select>
+</mapper>

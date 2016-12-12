@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.KhTaskMapper" >
+  <resultMap id="BaseResultMap" type="khTask" >
+    <id column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="DATE" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+    <result column="TASK_DESC" property="taskDesc" jdbcType="VARCHAR" />
+    <result column="IS_LOOP" property="isLoop" jdbcType="CHAR" />
+    <result column="CUSTNAME" property="custname" jdbcType="VARCHAR" />
+    <result column="USERID" property="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TASK_ID, USER_ID, CREATE_DATE, MODIFY_DATE, STATUS, TASK_NAME, TASK_DESC, IS_LOOP
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="taskId != null" >
+        AND TASK_ID = #{taskId,jdbcType=DECIMAL}
+      </if>
+      <if test="userId != null" >
+        AND USER_ID = #{userId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        AND CREATE_DATE = #{createDate,jdbcType=DATE}
+      </if>
+      <if test="modifyDate != null" >
+        AND MODIFY_DATE = #{modifyDate,jdbcType=DATE}
+      </if>
+      <if test="status != null" >
+        AND STATUS = #{status,jdbcType=CHAR}
+      </if>
+      <if test="taskName != null" >
+        AND TASK_NAME = #{taskName,jdbcType=VARCHAR}
+      </if>
+      <if test="taskDesc != null" >
+        AND TASK_DESC = #{taskDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="isLoop != null" >
+        AND IS_LOOP = #{isLoop,jdbcType=CHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="getSuccOrFailList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT A.TASK_ID, A.USER_ID, A.CREATE_DATE, A.MODIFY_DATE, A.STATUS, A.TASK_NAME, A.TASK_DESC, A.IS_LOOP,B.CUSTNAME, B.USERID
+    FROM T_KH_TASK A, T_ACCEPTED_CUSTOMER_INFO B WHERE 1 = 1 AND A.USER_ID = B.USERID AND B.mobileno= #{mobileNo}
+  </select>
+</mapper>

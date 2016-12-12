@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.EnumValueMapper" >
+  <resultMap id="BaseResultMap" type="enumValue" >
+    <id column="ENUM_TYPE" property="enumType" jdbcType="VARCHAR" />
+    <id column="ITEM_VALUE" property="itemValue" jdbcType="VARCHAR" />
+    <id column="SITENO" property="siteno" jdbcType="VARCHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="IS_SYSTEM" property="isSystem" jdbcType="DECIMAL" />
+    <result column="ORDERLINE" property="orderline" jdbcType="DECIMAL" />
+    <result column="ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ENUM_TYPE, ITEM_VALUE, SITENO, ITEM_NAME, IS_SYSTEM, ORDERLINE, ITEM_CODE
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="itemName != null" >
+        AND ITEM_NAME = #{itemName,jdbcType=VARCHAR}
+      </if>
+      <if test="isSystem != null" >
+        AND IS_SYSTEM = #{isSystem,jdbcType=DECIMAL}
+      </if>
+      <if test="orderline != null" >
+        AND ORDERLINE = #{orderline,jdbcType=DECIMAL}
+      </if>
+      <if test="itemCode != null" >
+        AND ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+      </if>
+      <if test="enumType != null" >
+        AND ENUM_TYPE = #{enumType,jdbcType=VARCHAR}
+      </if>
+      <if test="itemValue != null" >
+        AND ITEM_VALUE = #{itemValue,jdbcType=VARCHAR}
+      </if>
+      <if test="siteno != null" >
+        AND SITENO = #{siteno,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+</mapper>

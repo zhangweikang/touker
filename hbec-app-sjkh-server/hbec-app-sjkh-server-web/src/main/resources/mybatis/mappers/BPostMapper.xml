@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.BPostMapper" >
+  <resultMap id="BaseResultMap" type="bPost" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="POST" property="post" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="MUNICIPALITY" property="municipality" jdbcType="VARCHAR" />
+    <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, POST, PROVINCE, MUNICIPALITY, DISTRICT
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="id != null" >
+        AND ID = #{id,jdbcType=DECIMAL}
+      </if>
+      <if test="post != null" >
+        AND POST = #{post,jdbcType=VARCHAR}
+      </if>
+      <if test="province != null" >
+        AND PROVINCE = #{province,jdbcType=VARCHAR}
+      </if>
+      <if test="municipality != null" >
+        AND MUNICIPALITY = #{municipality,jdbcType=VARCHAR}
+      </if>
+      <if test="district != null" >
+        AND DISTRICT = #{district,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="queryPostId" parameterType="java.lang.String" resultType="java.lang.String">
+    select post from t_b_post where (instr( #{natives},province)>0 and
+		instr( #{natives},municipality)>0 and instr( #{natives},district)>0) or
+		(instr( #{natives},province)>0 and instr( #{natives},district)>0) or
+		(instr( #{natives},municipality)>0 and instr( #{natives},district)>0)
+  </select>
+</mapper>

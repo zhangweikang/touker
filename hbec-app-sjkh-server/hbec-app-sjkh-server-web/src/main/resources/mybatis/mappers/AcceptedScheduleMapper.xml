@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedScheduleMapper" >
+  <resultMap id="BaseResultMap" type="acceptedSchedule" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="MGR_ID" property="mgrId" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="BUSINESS" property="business" jdbcType="VARCHAR" />
+    <result column="CURRENT_STEP" property="currentStep" jdbcType="VARCHAR" />
+    <result column="SENDWAY" property="sendway" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="BACK_STEP" property="backStep" jdbcType="VARCHAR" />
+    <result column="FAOPEN_STEP" property="faopenStep" jdbcType="VARCHAR" />
+    <result column="UPLOADIMG_FLAG" property="uploadimgFlag" jdbcType="VARCHAR" />
+    <result column="IDCONFIRM_FLAG" property="idconfirmFlag" jdbcType="VARCHAR" />
+    <result column="WITNESS_FLAG" property="witnessFlag" jdbcType="VARCHAR" />
+    <result column="CERTINTALL_FLAG" property="certintallFlag" jdbcType="VARCHAR" />
+    <result column="CAPITALACCT_FLAG" property="capitalacctFlag" jdbcType="VARCHAR" />
+    <result column="STKACCT_FLAG" property="stkacctFlag" jdbcType="VARCHAR" />
+    <result column="OPFNDACCT_FLAG" property="opfndacctFlag" jdbcType="VARCHAR" />
+    <result column="SETPWD_FLAG" property="setpwdFlag" jdbcType="VARCHAR" />
+    <result column="TPBANK_FLAG" property="tpbankFlag" jdbcType="VARCHAR" />
+    <result column="RISKSURVEY_FLAG" property="risksurveyFlag" jdbcType="VARCHAR" />
+    <result column="VISITSURVEY_FLAG" property="visitsurveyFlag" jdbcType="VARCHAR" />
+    <result column="LASTCOMPLETE_STEP" property="lastcompleteStep" jdbcType="VARCHAR" />
+    <result column="REJECT_RESON" property="rejectReson" jdbcType="VARCHAR" />
+    <result column="STEP" property="step" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="mobileno" property="mobileno" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, MGR_ID, STATE, BUSINESS, CURRENT_STEP, SENDWAY, START_TIME, UPDATE_TIME,
+    BACK_STEP, FAOPEN_STEP, UPLOADIMG_FLAG, IDCONFIRM_FLAG, WITNESS_FLAG, CERTINTALL_FLAG,
+    CAPITALACCT_FLAG, STKACCT_FLAG, OPFNDACCT_FLAG, SETPWD_FLAG, TPBANK_FLAG, RISKSURVEY_FLAG,
+    VISITSURVEY_FLAG, LASTCOMPLETE_STEP, REJECT_RESON
+  </sql>
+  <sql id="queryParam">
+    <where>
+      <if test="id != null" >
+        AND ID = #{id,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null" >
+        AND USER_ID = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="mgrId != null" >
+        AND MGR_ID = #{mgrId,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null" >
+        AND STATE = #{state,jdbcType=VARCHAR}
+      </if>
+      <if test="business != null" >
+        AND BUSINESS = #{business,jdbcType=VARCHAR}
+      </if>
+      <if test="currentStep != null" >
+        AND CURRENT_STEP = #{currentStep,jdbcType=VARCHAR}
+      </if>
+      <if test="sendway != null" >
+        AND SENDWAY = #{sendway,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime != null" >
+        AND START_TIME = #{startTime,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null" >
+        AND UPDATE_TIME = #{updateTime,jdbcType=VARCHAR}
+      </if>
+      <if test="backStep != null" >
+        AND BACK_STEP = #{backStep,jdbcType=VARCHAR}
+      </if>
+      <if test="faopenStep != null" >
+        AND FAOPEN_STEP = #{faopenStep,jdbcType=VARCHAR}
+      </if>
+      <if test="uploadimgFlag != null" >
+        AND UPLOADIMG_FLAG = #{uploadimgFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="idconfirmFlag != null" >
+        AND IDCONFIRM_FLAG = #{idconfirmFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="witnessFlag != null" >
+        AND WITNESS_FLAG = #{witnessFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="certintallFlag != null" >
+        AND CERTINTALL_FLAG = #{certintallFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="capitalacctFlag != null" >
+        AND CAPITALACCT_FLAG = #{capitalacctFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="stkacctFlag != null" >
+        AND STKACCT_FLAG = #{stkacctFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="opfndacctFlag != null" >
+        AND OPFNDACCT_FLAG = #{opfndacctFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="setpwdFlag != null" >
+        AND SETPWD_FLAG = #{setpwdFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="tpbankFlag != null" >
+        AND TPBANK_FLAG = #{tpbankFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="risksurveyFlag != null" >
+        AND RISKSURVEY_FLAG = #{risksurveyFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="visitsurveyFlag != null" >
+        AND VISITSURVEY_FLAG = #{visitsurveyFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="lastcompleteStep != null" >
+        AND LASTCOMPLETE_STEP = #{lastcompleteStep,jdbcType=VARCHAR}
+      </if>
+      <if test="rejectReson != null" >
+        AND REJECT_RESON = #{rejectReson,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="getAuditInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT A.State, substr(A.CURRENT_STEP, instr(A.CURRENT_STEP, ',', -1) + 1) as STEP,  A.BACK_STEP
+		FROM T_ACCEPTED_SCHEDULE A  INNER JOIN T_ACCEPTED_CUSTOMER_INFO B ON A.USER_ID = B.USERID
+		WHERE 1 = 1 AND A.BACK_STEP = #{backStep} and mobileno= #{mobileNo}
+  </select>
+  <select id="getScheduleReport" parameterType="String" resultMap="BaseResultMap">
+    select r.source, t.*
+      from (select i.mobileno, s.*
+              from t_accepted_schedule s, t_accepted_cert_info i
+                where s.user_id = i.id(+)
+                  <![CDATA[and s.start_time >= #{beginDate}
+                           and s.start_time <= #{endDate}]]>
+                order by s.start_time) t,t_toukerid_clientid_relation r
+      where t.mobileno = r.mobileno(+)
+  </select>
+</mapper>

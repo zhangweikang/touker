@@ -1,0 +1,22 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 定义Mybatis的SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 指定数据源 -->
+		<property name="dataSource" ref="multipleDataSource" />
+		<!-- 指定Mybatis的全局配置文件 -->
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+		<!-- 定义mapper.xml扫描器 -->
+		<property name="mapperLocations" value="classpath:mybatis/mappers/**/*.xml" />
+		<!-- 定义别名扫描包 -->
+		<property name="typeAliasesPackage" value="com.app.sjkh.pojo.local"/>
+	</bean>
+	
+	<!-- 定义mapper接口扫描包 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	     <property name="basePackage" value="com.app.sjkh.mapper" />
+	</bean>
+	
+</beans>
