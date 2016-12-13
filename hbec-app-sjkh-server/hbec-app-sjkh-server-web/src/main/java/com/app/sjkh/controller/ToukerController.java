@@ -110,11 +110,18 @@ public class ToukerController {
     }
 
     /**
+     * 校验短信验证码,返回用户信息
+     * @param request
      * @return
      */
+    @RequestMapping(value = "chakeSMSCode", method = RequestMethod.POST)
+    @ResponseBody
     public ResultResponse chakeSMSCode(HttpServletRequest request) {
         String mobileNo = request.getParameter("mobileNo");
         String mobileCode = request.getParameter("mobileCode");
+        String source = request.getParameter("source");
+        String ip = request.getParameter("ip");
+        String mac = request.getParameter("mac");
 
 //      String mobileNo = (String) request.getAttribute("mobileNo");
 //      String mobileCode = (String) request.getAttribute("mobileCode");
@@ -126,7 +133,7 @@ public class ToukerController {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "手机号码格式不正确");
         }
 
-        //toukerService.
+        toukerService.valiSmsCheckUserInfo(mobileNo,mobileCode,source,ip,mac);
         return null;
     }
 
@@ -205,8 +212,10 @@ public class ToukerController {
         String mobileNo = request.getParameter("mobileNo");
         String channel = request.getParameter("channel");
         String customerId = request.getParameter("khh");
-        String loginFlag = request.getParameter("login_flag");
-        String opway = request.getParameter("op_way");
+        String mobileCode = request.getParameter("mobileCode");
+        String source = request.getParameter("source");
+        String ip = request.getParameter("ip");
+        String mac = request.getParameter("mac");
 
 //        String mobileNo = (String) request.getAttribute("mobileNo");
 //        String channel = (String) request.getAttribute("channel");
@@ -215,16 +224,19 @@ public class ToukerController {
 //        String opway = (String) request.getAttribute("op_way");
 
         if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(channel)) {
-            logger.info("mobileNo=" + mobileNo + "channel=" + channel + "login_flag=" + loginFlag + "op_way=" + opway);
+            logger.info("mobileNo=" + mobileNo + "channel=" + channel + "source=" + source);
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "参数不能为空!");
         }
 
         try {
+            //校验短信
+            ResultResponse resultResponse2 = toukerService.valiSmsCheckUserInfo(mobileNo, mobileCode, source, ip, mac);
+
             //手机号绑定toukerId
             toukerService.mobileRelationUserId(mobileNo, channel);
 
             //校验用户数据
-            ResultResponse resultResponse = toukerService.validateCustInfo(mobileNo, customerId, loginFlag, StringUtils.isEmpty(opway) ? 0 : Integer.valueOf(opway));
+            ResultResponse resultResponse = toukerService.validateCustInfo(mobileNo, customerId, StringUtils.isEmpty(source) ? 0 : Integer.valueOf(source));
 
             //判断用户绑卡数据
             Map<String, String> data = (Map<String, String>) resultResponse.getData();
@@ -243,8 +255,11 @@ public class ToukerController {
                 data.put("tpbankFlg", ResultCode.HBEC_001020.getCode());
                 data.put("tpAddr", "");
             }
+            data.putAll((Map<String,String>) resultResponse2.getData());
+            if (ResultCode.HBEC_001040.getCode().compareTo(resultResponse2.getStatus()) == 0){
+                data.put("reject","reject");
+            }
             resultResponse.setData(data);
-
             return resultResponse;
         } catch (Exception e) {
             logger.error("系统异常", e);
@@ -372,17 +387,5 @@ public class ToukerController {
             logger.error("获取用户上传身份证影像失败", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "获取用户上传身份证影像失败");
         }
-    }
-
-    @RequestMapping(value = "getDD", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultResponse getYHXX() throws IOException {
-        Map<String, String> map = new HashMap<>();
-        map.put("pay_cust_num", "010000062501");
-        map.put("ywxt", "1000");
-        //String s = esbApiService.esbBusinessService("esb.zfpt.lcgl.lcqyxxcx", map);
-        return esbApiService.queryCustomerInfoByDingDian("010000062501");
-
-        //return ResultResponse.ok(s);
     }
 }

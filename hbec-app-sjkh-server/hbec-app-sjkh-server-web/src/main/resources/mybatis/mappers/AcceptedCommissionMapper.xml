@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedCommissionMapper">
+  <resultMap id="BaseResultMap" type="acceptedCommission">
+    <id column="ID" jdbcType="NUMBER" property="id" />
+    <result column="BRANCH_NO" jdbcType="VARCHAR" property="branchNo" />
+    <result column="SORT_NO" jdbcType="VARCHAR" property="sortNo" />
+    <result column="COMMISSION" jdbcType="DECIMAL" property="commission" />
+    <result column="ORDER_LINE" jdbcType="DECIMAL" property="orderLine" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="CREATE_DATE" jdbcType="VARCHAR" property="createDate" />
+    <result column="MODIFY_BY" jdbcType="VARCHAR" property="modifyBy" />
+    <result column="MODIFY_DATE" jdbcType="VARCHAR" property="modifyDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, BRANCH_NO, SORT_NO, COMMISSION, ORDER_LINE, CREATE_BY, CREATE_DATE, MODIFY_BY, 
+    MODIFY_DATE
+  </sql>
+</mapper>

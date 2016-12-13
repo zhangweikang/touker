@@ -35,7 +35,12 @@ BRANCHNO, BRANCHNAME, BRANCHCODE, ORDERNUM, ISDISPLAY, REGIONNO, PROVINCENO, CIT
 ADDRESS, TRAINFO, LAT, LNT, ZOOM, COMPANYNO, MAXZOOM, SZ_SITE, SH_SITE, XW_SHA, XW_SHB,
 JS_SHA, JS_SHB, KH_SHA, KH_SHB, CUACCT_CLS, CUST_CODE, CUST_PWD, INTRO
 </sql>
- <select id="getBranchInfo" parameterType="java.lang.String" resultType="java.lang.String">
+ <sql id="Base_Column_List2">
+t.BRANCHNO, t.BRANCHNAME, t.BRANCHCODE, t.ORDERNUM, t.ISDISPLAY, t.REGIONNO, t.PROVINCENO, t.CITYNO,
+t.ADDRESS, t.TRAINFO, t.LAT, t.LNT, t.ZOOM, t.COMPANYNO, t.MAXZOOM, t.SZ_SITE, t.SH_SITE, t.XW_SHA, t.XW_SHB,
+t.JS_SHA, t.JS_SHB, t.KH_SHA, t.KH_SHB, t.CUACCT_CLS, t.CUST_CODE, t.CUST_PWD, t.INTRO
+</sql>
+ <select id="getBranchName" parameterType="java.lang.String" resultType="java.lang.String">
     select t.branchname from t_b_branch t, t_b_city c, t_b_province p, t_b_region r
     where t.branchcode = #{branchNo} and t.cityno = c.id and t.provinceno = p.id and t.regionno = r.id
   </select>
@@ -43,4 +48,11 @@ JS_SHA, JS_SHB, KH_SHA, KH_SHB, CUACCT_CLS, CUST_CODE, CUST_PWD, INTRO
      select branchno from t_b_branch t where t.isdisplay='0'
      <![CDATA[ and branchno<>'9999'  order by t.ordernum ]]>
   </select>
+
+   <select id="getBranchInfo" parameterType="java.lang.String" resultType="BaseResultMap">
+      select
+      <include refid="Base_Column_List2"/>
+      from t_b_branch t, t_b_city c, t_b_province p, t_b_region r
+      where t.branchcode = #{branchNo} and t.cityno = c.id and t.provinceno = p.id and t.regionno = r.id
+   </select>
 </mapper>

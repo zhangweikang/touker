@@ -88,4 +88,9 @@ public class Constants {
 
 	/** 字符编码集 */
 	public static final String CODECHAR = "UTF-8";
+
+	/** 登陆日志记录类别,短信 */
+	public static final String BUSINESS_LOGTYPE_SMS = "sms";
+	/** 登陆日志记录类别,登陆成功 */
+	public static final String BUSINESS_LOGTYPE_LOGIN = "login";
 }

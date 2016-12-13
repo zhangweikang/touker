@@ -1,5 +1,6 @@
 package com.app.sjkh.service;
 
+import com.app.sjkh.commons.utils.JacksonUtil;
 import com.app.sjkh.service.runnable.SynImgRunnable;
 import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.servier.RedisService;
@@ -70,6 +71,12 @@ public class ToukerService {
     private AcceptedMediaUrlService acceptedMediaUrlService;
 
     @Autowired
+    private AcceptedRejectLogService acceptedRejectLogService;
+
+    @Autowired
+    private AcceptedCommissionService acceptedCommissionService;
+
+    @Autowired
     private PropertiesUtils propertiesUtils;
 
     @Autowired
@@ -114,7 +121,7 @@ public class ToukerService {
         String code = NumberUtils.generateCode(Constants.CODELENGTH);
         logger.info("【生成验证码】code=" + code);
         String code_time = code + "_" + DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date());
-        redisService.set(key, code_time, Constants.SMSCODESAVE_TIME);
+        redisService.set(key, code_time, NumberUtils.getIntegerValue(propertiesUtils.get("smsTimeOut"), Constants.SMSCODESAVE_TIME));
         logger.info("存入缓存服务器的" + key + "," + code_time);
 
         //是否是投客注册用户
@@ -187,21 +194,114 @@ public class ToukerService {
     /**
      * @param mobileNo
      * @param mobileCode
-     * @return
+     * @return 001038, 短信已过期
+     * 001039,短信错误
+     * 000000,校验成功
      */
-    public ResultResponse chakeSMSCode(String mobileNo, String mobileCode) {
+    public ResultResponse chakeSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac) {
 
         String redisSmsCode = redisService.get("REDISSMSCODEKEY" + mobileNo);
 
+        //记录登陆日志
+        BBusinessLog bean = new BBusinessLog();
+        bean.setBegintime(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+        String input = "{mobileNo = " + mobileNo + ",mobileCode = " + mobileCode + "}";
+        bean.setInputParam(input);
+        bean.setIp(ip);
+        bean.setMac(mac);
+        bean.setLogType(Constants.BUSINESS_LOGTYPE_LOGIN);
+        bean.setOpway(source);
+        bean.setOperatorId(mobileNo);
+        bean.setOperatorName(mobileCode);
+        bean.setErrNo("ToukerService.chakeSMSCode");
         //短信验证标示
         String smsValidateFlg = propertiesUtils.get("smsValidateFlg");
+        //测试环境不校验短信
         if ("0".equals(smsValidateFlg)) {
-            if (mobileCode.equals(redisSmsCode)) {
+            if (StringUtils.isBlank(redisSmsCode)) {
 
+                bean.setErrMsg(ResultCode.HBEC_001038.getMemo());
+                bBusinessLogService.saveSelective(bean);
+                return ResultResponse.build(ResultCode.HBEC_001038.getCode(), ResultCode.HBEC_001038.getMemo());
+            }
+            if (mobileCode.equals(redisSmsCode)) {
+                bean.setErrMsg(ResultCode.HBEC_001039.getMemo());
+                bBusinessLogService.saveSelective(bean);
+                return ResultResponse.build(ResultCode.HBEC_001039.getCode(), ResultCode.HBEC_001039.getMemo());
             }
         }
+        bean.setErrMsg(ResultCode.HBEC_000000.getMemo());
+        bBusinessLogService.saveSelective(bean);
 
-        return null;
+        return ResultResponse.ok();
+    }
+
+    /**
+     * @param mobileNo
+     * @param mobileCode
+     * @param source
+     * @param ip
+     * @param mac
+     * @return
+     */
+    public ResultResponse valiSmsCheckUserInfo(String mobileNo, String mobileCode, String source, String ip, String mac) {
+        ResultResponse resultResponse = chakeSMSCode(mobileNo, mobileCode, source, ip, mac);
+        if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
+            return resultResponse;
+        }
+        return valiUserInfo(mobileNo);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @param mobileNo
+     * @return 000000, 正常
+     * 001040,有驳回
+     */
+    public ResultResponse valiUserInfo(String mobileNo) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            //获取用户数据
+            AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo);
+            resultMap.put("certInfo", certInfo);
+            //获取用户流程
+            AcceptedSchedule acceptedSchedule = acceptedScheduleService.getSchedule(certInfo.getId().toString());
+            resultMap.put("acceptedSchedule", acceptedSchedule);
+            //获取用户开户信息
+            AcceptedCustomerInfo acceptedCustomerInfo = acceptedCustomerInfoService.queryById(certInfo.getId());
+
+            if (acceptedCustomerInfo != null) {
+                resultMap.put("acceptedCustomerInfo", acceptedCustomerInfo);
+                String branchno = acceptedCustomerInfo.getBranchno();
+                String commission = acceptedCustomerInfo.getCommission();
+                if (StringUtils.isNotBlank(branchno)) {
+                    //获取营业部信息
+                    BBranch branchInfo = bBranchService.getBranchInfo(branchno);
+
+                    resultMap.put("branchInfo", branchInfo);
+                    if (StringUtils.isNotBlank(commission)) {
+                        AcceptedCommission queryBean = new AcceptedCommission();
+                        queryBean.setBranchNo(branchno);
+                        queryBean.setSortNo(commission);
+                        //获取营业部佣金
+                        AcceptedCommission acceptedCommission = acceptedCommissionService.queryOneByWhere(queryBean);
+
+                        resultMap.put("acceptedCommission", acceptedCommission);
+                    }
+                }
+                //获取用户驳回信息
+                List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());
+                if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
+                    resultMap.put("acceptedRejectLogs", acceptedRejectLogs);
+                    return ResultResponse.build(ResultCode.HBEC_001040.getCode(), JacksonUtil.toJSon(resultMap));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResultResponse.ok(JacksonUtil.toJSon(resultMap));
     }
 
     /**
@@ -514,7 +614,6 @@ public class ToukerService {
      *
      * @param mobileNo
      * @param customerId
-     * @param loginFlag
      * @param opway
      * @return 000000, 用户信息正常
      * 001004,参数异常
@@ -524,7 +623,7 @@ public class ToukerService {
      * 001003,系统异常
      * @throws Exception
      */
-    public ResultResponse validateCustInfo(String mobileNo, String customerId, String loginFlag, Integer opway) throws Exception {
+    public ResultResponse validateCustInfo(String mobileNo, String customerId, Integer opway) throws Exception {
         Map<String, String> resultMap = new HashMap<String, String>();
         String idnoDD;    //顶点客户号对应身份证号
         logger.info("validateCustInfo:mobileno=" + mobileNo + " khh=" + customerId);
@@ -662,7 +761,7 @@ public class ToukerService {
                 AcceptedCertInfo updateCertInfo = new AcceptedCertInfo();
                 updateCertInfo.setId(certInfo.getId());
                 updateCertInfo.setMobileno(mobileNo);
-                updateCertInfo.setOpacctkindFlag(loginFlag);
+                updateCertInfo.setOpacctkindFlag("0");
                 updateCertInfo.setAccessChannel(opway);
                 updateCertInfo.setState(AcceptedCertInfo.State_0);
                 updateCertInfo.setBranchno(yyb);    //重置营业部
@@ -892,7 +991,7 @@ public class ToukerService {
             //理论上跟经济人关联的记录的营业部不为空
             branchNo = customerServiceBranches.get(0).getBranchno();    //经济人营业部编号
         }
-        String branchName = bBranchService.getBranchInfo(branchNo);
+        String branchName = bBranchService.getBranchName(branchNo);
         resultMap.put("branchNo", branchNo);
         resultMap.put("branchName", branchName);
 

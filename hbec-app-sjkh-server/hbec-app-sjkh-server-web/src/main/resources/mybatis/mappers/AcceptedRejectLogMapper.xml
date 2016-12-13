@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedRejectLogMapper">
+  <resultMap id="BaseResultMap" type="acceptedRejectLog">
+    <id column="ID" jdbcType="NUMBER" property="id" />
+    <result column="USERID" jdbcType="DECIMAL" property="userid" />
+    <result column="FIELDENNAME" jdbcType="VARCHAR" property="fieldenname" />
+    <result column="FIELDDESC" jdbcType="VARCHAR" property="fielddesc" />
+    <result column="REJFIELDVAL" jdbcType="VARCHAR" property="rejfieldval" />
+    <result column="REJFIELDTABLE" jdbcType="VARCHAR" property="rejfieldtable" />
+    <result column="REJREASON" jdbcType="VARCHAR" property="rejreason" />
+    <result column="REJDATE" jdbcType="VARCHAR" property="rejdate" />
+    <result column="REJAREA" jdbcType="VARCHAR" property="rejarea" />
+    <result column="REVIEWERSID" jdbcType="DECIMAL" property="reviewersid" />
+    <result column="REJSERIAL" jdbcType="DECIMAL" property="rejserial" />
+    <result column="ISFIX" jdbcType="VARCHAR" property="isfix" />
+    <result column="FIXVAL" jdbcType="VARCHAR" property="fixval" />
+    <result column="STEP" jdbcType="VARCHAR" property="step" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USERID, FIELDENNAME, FIELDDESC, REJFIELDVAL, REJFIELDTABLE, REJREASON, REJDATE, 
+    REJAREA, REVIEWERSID, REJSERIAL, ISFIX, FIXVAL, STEP
+  </sql>
+</mapper>

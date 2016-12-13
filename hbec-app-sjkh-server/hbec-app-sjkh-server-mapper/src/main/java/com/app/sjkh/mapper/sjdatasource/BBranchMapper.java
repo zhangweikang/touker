@@ -11,7 +11,9 @@ import java.util.List;
  */
 public interface BBranchMapper extends Mapper<BBranch> {
 
-	List<String> getBranchInfo(@Param("branchNo") String branchNo);
+	List<String> getBranchName(@Param("branchNo") String branchNo);
 
 	List<String> getBranchNo();
+
+	BBranch getBranchInfo(@Param("branchNo") String branchNo);
 }

@@ -118,14 +118,14 @@ define(function (require, exports, module) {
             appUtils.pageInit(codePage, "account/backSetPwd", pwdParam);
             return;
         }
-        // 4.驳回三方存管
-        if (thirdParam["needThirdDeposit"] == 1) {
-            appUtils.pageInit(codePage, "account/backThirdDepository", thirdParam);
-            return;
-        }
-        // 5.驳回开立账户
+        // 4.驳回开立账户
         if (accountParam["need_account"] == 1) {
             appUtils.pageInit(codePage, "account/backSignProtocol", accountParam);
+            return;
+        }
+        // 5.驳回三方存管
+        if (thirdParam["needThirdDeposit"] == 1) {
+            appUtils.pageInit(codePage, "account/backThirdDepository", thirdParam);
             return;
         }
 
@@ -308,7 +308,7 @@ define(function (require, exports, module) {
      * 校验用户数据
      * 按用户流程跳转
      **/
-    function valiDataCustomeInfo(result, param, codePage) {
+    function valiDataCustomeInfo(param, codePage) {
 
         if (utils.isAndroid()) {
             var data = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));

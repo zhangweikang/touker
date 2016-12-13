@@ -8,6 +8,7 @@ define("project/scripts/account/phoneCodeVerify", function (require, exports, mo
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"), // 弹出层对象
         utils = require("utils"),
+        source = require("gconfig").platform,
         validatorUtil = require("validatorUtil"),
         startCountDown = null,
         checkSmsPage = require("checkSmsPage"),
@@ -89,35 +90,40 @@ define("project/scripts/account/phoneCodeVerify", function (require, exports, mo
         console.log("进入 checkSmsCode");
 
         appUtils.setSStorageInfo("mobileNo", phoneNum);
+        var khh = appUtils.getSStorageInfo("khh");
         var paramCheck = {
             "mobileNo": phoneNum,
-            "mobileCode": getEvent(".mobileCode").val()
+            "mobileCode": getEvent(".mobileCode").val(),
+            "channel": "stock_app",
+            "source": source,
+            "khh": khh,
+            "ip": appUtils.getSStorageInfo("ip"),
+            "mac": appUtils.getSStorageInfo("mac")
         };
-
-        var khh = appUtils.getSStorageInfo("khh");
-        console.log("mobile_no=" + phoneNum + " khh=" + khh);
         //思迪校验
-        service.checkSmsCode(paramCheck, function (data) {
-            console.log("入参:" + JSON.stringify(paramCheck) + "出参:" + JSON.stringify(data));
-            var error_no = data.error_no;
-            var result = data.results;
-            if (error_no == "0" && result.length != 0) {
-                appUtils.setSStorageInfo("smsCodeVail", "true");
-                console.log("思迪调用完成");
-                checkSmsPage.setSessionStorage(result[0]);
-                //华宝客户信息校验、关联
-                var param = {
-                    "step": "validateCustInfo",
-                    "channel": "stock_app",
-                    "mobileNo": phoneNum,
-                    "khh": khh
-                };
+        /*service.checkSmsCode(paramCheck, function (data) {
+         console.log("入参:" + JSON.stringify(paramCheck) + "出参:" + JSON.stringify(data));
+         var error_no = data.error_no;
+         var result = data.results;
+         if (error_no == "0" && result.length != 0) {
+         appUtils.setSStorageInfo("smsCodeVail", "true");
+         console.log("思迪调用完成");
+         checkSmsPage.setSessionStorage(result[0]);
+         //华宝客户信息校验
+         var param = {
+         "step": "validateCustInfo",
+         "channel": "stock_app",
+         "mobileNo": phoneNum,
+         "khh": khh
+         };
 
-                checkSmsPage.valiDataCustomeInfo(result[0], param, "account/phoneCodeVerify");
-            } else {
-                layerUtils.iMsg(-1, "请输入正确的短信验证码！");
-            }
-        });
+         checkSmsPage.valiDataCustomeInfo(result[0], param, "account/phoneCodeVerify");
+         } else {
+         layerUtils.iMsg(-1, "请输入正确的短信验证码！");
+         }
+         });*/
+
+        checkSmsPage.valiDataCustomeInfo(param, "account/phoneCodeVerify");
     }
 
 

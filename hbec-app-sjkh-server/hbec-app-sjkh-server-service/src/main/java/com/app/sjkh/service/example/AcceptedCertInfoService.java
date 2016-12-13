@@ -24,4 +24,22 @@ public class AcceptedCertInfoService extends HbecBaseService<AcceptedCertInfo, L
 	public List<AcceptedCertInfo> getCertInfoAcceptedSchedule(String idno, String userId) throws Exception {
 		return acceptedCertInfoMapper.getCertInfoAcceptedSchedule(idno, userId);
 	}
+
+	/**
+	 * 根据手机号获取用户信息,如果不存在则创建用户
+	 * @param mobileNo
+	 * @return
+     */
+	public AcceptedCertInfo getCertInfo(String mobileNo){
+		AcceptedCertInfo queryBean = new AcceptedCertInfo();
+		queryBean.setMobileno(mobileNo);
+		AcceptedCertInfo acceptedCertInfo = super.queryOneByWhere(queryBean);
+
+		if (acceptedCertInfo == null) {
+			super.saveSelective(queryBean);
+			return queryBean;
+		}
+
+		return acceptedCertInfo;
+	}
 }

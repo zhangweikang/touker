@@ -127,4 +127,8 @@
                 order by s.start_time) t,t_toukerid_clientid_relation r
       where t.mobileno = r.mobileno(+)
   </select>
+
+  <select id="querySequence" resultType="java.lang.String">
+    SELECT SEQ_ACCEPTED_SCHEDULE.nextval FROM DUAL
+  </select>
 </mapper>
