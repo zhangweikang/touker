@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedRejectLogMapper">
   <resultMap id="BaseResultMap" type="acceptedRejectLog">
-    <id column="ID" jdbcType="NUMBER" property="id" />
+    <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="USERID" jdbcType="DECIMAL" property="userid" />
     <result column="FIELDENNAME" jdbcType="VARCHAR" property="fieldenname" />
     <result column="FIELDDESC" jdbcType="VARCHAR" property="fielddesc" />

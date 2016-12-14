@@ -49,7 +49,7 @@ t.JS_SHA, t.JS_SHB, t.KH_SHA, t.KH_SHB, t.CUACCT_CLS, t.CUST_CODE, t.CUST_PWD, t
      <![CDATA[ and branchno<>'9999'  order by t.ordernum ]]>
   </select>
 
-   <select id="getBranchInfo" parameterType="java.lang.String" resultType="BaseResultMap">
+   <select id="getBranchInfo" parameterType="java.lang.String" resultType="bBranch">
       select
       <include refid="Base_Column_List2"/>
       from t_b_branch t, t_b_city c, t_b_province p, t_b_region r

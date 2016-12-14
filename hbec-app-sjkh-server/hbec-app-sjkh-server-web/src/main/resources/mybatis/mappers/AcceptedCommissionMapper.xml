@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.app.sjkh.mapper.sjdatasource.AcceptedCommissionMapper">
   <resultMap id="BaseResultMap" type="acceptedCommission">
-    <id column="ID" jdbcType="NUMBER" property="id" />
+    <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="BRANCH_NO" jdbcType="VARCHAR" property="branchNo" />
     <result column="SORT_NO" jdbcType="VARCHAR" property="sortNo" />
     <result column="COMMISSION" jdbcType="DECIMAL" property="commission" />
