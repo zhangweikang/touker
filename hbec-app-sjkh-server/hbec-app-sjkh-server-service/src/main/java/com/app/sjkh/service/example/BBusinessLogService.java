@@ -23,13 +23,7 @@ public class BBusinessLogService extends HbecBaseService<BBusinessLog,String> {
 	 * 获取序列
 	 * @return
 	 */
-	public String querySequence(){
-		String sequence = "";
-		try {
-			sequence = bBusinessLogMapper.querySequence();
-		} catch (Exception e) {
-			logger.error("获取序列失败",e);
-		}
-		return sequence;
+	public String querySequence() throws Exception {
+		return bBusinessLogMapper.querySequence();
 	}
 }

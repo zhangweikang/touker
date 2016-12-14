@@ -310,7 +310,7 @@ define(function (require, exports, module) {
      **/
     function valiDataCustomeInfo(param, codePage) {
 
-        if (utils.isAndroid()) {
+        /*if (utils.isAndroid()) {
             var data = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
             toukerServerPluginCallback(data);
         } else {
@@ -318,8 +318,8 @@ define(function (require, exports, module) {
                 toukerServerPluginCallback(param);
             }, function (data) {
             }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
-        }
-
+        }*/
+        toukerServerPluginCallback(param);
         function toukerServerPluginCallback(param) {
             service.serviceAjax("/touker/validateCustInfo", param, function (data) {
                 var code = data.status;

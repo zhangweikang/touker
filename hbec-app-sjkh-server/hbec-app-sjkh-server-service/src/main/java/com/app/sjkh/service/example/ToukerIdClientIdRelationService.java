@@ -23,14 +23,8 @@ public class ToukerIdClientIdRelationService extends HbecBaseService<ToukerIdCli
 	 * 获取序列
 	 * @return
 	 */
-	public String querySequence(){
-		String sequence = "";
-		try {
-			sequence = toukerIdClientIdRelationMapper.querySequence();
-		} catch (Exception e) {
-			logger.error("获取序列失败",e);
-		}
-		return sequence;
+	public String querySequence() throws Exception {
+		return toukerIdClientIdRelationMapper.querySequence();
 	}
 
 }

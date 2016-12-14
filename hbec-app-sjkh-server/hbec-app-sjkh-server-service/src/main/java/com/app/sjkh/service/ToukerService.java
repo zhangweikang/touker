@@ -213,11 +213,11 @@ public class ToukerService {
         bean.setOpway(source);
         bean.setOperatorId(mobileNo);
         bean.setOperatorName(mobileCode);
-        bean.setErrNo("ToukerService.chakeSMSCode");
+        bean.setErrNo("chakeSMSCode");
         //短信验证标示
         String smsValidateFlg = propertiesUtils.get("smsValidateFlg");
         //测试环境不校验短信
-        if ("0".equals(smsValidateFlg)) {
+        if (!"0".equals(smsValidateFlg)) {
             if (StringUtils.isBlank(redisSmsCode)) {
 
                 bean.setErrMsg(ResultCode.HBEC_001038.getMemo());
@@ -525,7 +525,7 @@ public class ToukerService {
      * @param opway
      * @return
      */
-    private ResultResponse setBusinessLog(String smsTemplete, String savedCode, String mobileNo, String ip, String mac, String opway) {
+    private ResultResponse setBusinessLog(String smsTemplete, String savedCode, String mobileNo, String ip, String mac, String opway) throws Exception {
 
         //拼接短信内容，记录日志
         String content = "";
@@ -745,12 +745,11 @@ public class ToukerService {
                 certInfo.setBranchno(yyb);    //重置营业部
                 certInfo.setMobileno(mobileNo);
                 acceptedCertInfoService.updateByMoblieNoSelective(certInfo);
-
                 //判断是否需要拉去身份证
                 ResultResponse imgFromTouker = getImgFromTouker(mobileNo, certInfo.getId().toString(), customerInfo);
                 Map<String, String> data = (Map<String, String>) imgFromTouker.getData();
-                data.putAll(resultMap);
-                imgFromTouker.setData(data);
+                resultMap.putAll(data);
+                imgFromTouker.setData(resultMap);
                 return imgFromTouker;
             }
 

@@ -41,14 +41,14 @@ public class EsbApiService {
     private static Long timeOut = 3600000l;
 
     @Autowired
-    private static PropertiesUtils propertiesUtils;
+    private PropertiesUtils propertiesUtils;
 
     @Autowired
     private ApiService apiService;
 
     private void esbLogin() {
         logger.info("进入ESB登陆方法,isLogin = " + isLogin);
-        String loginUrl = EsbApiService.getEsbUrl("login");
+        String loginUrl = getEsbUrl("login");
         Map<String, String> map = new HashMap<>();
         map.put("loginId", propertiesUtils.get("loginId"));
         map.put("loginPwd", propertiesUtils.get("loginPwd"));
@@ -150,7 +150,7 @@ public class EsbApiService {
      * @param business(请求业务业务)
      * @return
      */
-    public static String getEsbUrl(String business) {
+    public String getEsbUrl(String business) {
         StringBuffer sb = new StringBuffer();
         sb.append("https://");
         sb.append(propertiesUtils.get("esbUrl"));

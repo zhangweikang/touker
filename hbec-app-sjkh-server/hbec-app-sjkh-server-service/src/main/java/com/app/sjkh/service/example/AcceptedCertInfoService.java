@@ -30,16 +30,25 @@ public class AcceptedCertInfoService extends HbecBaseService<AcceptedCertInfo, L
 	 * @param mobileNo
 	 * @return
      */
-	public AcceptedCertInfo getCertInfo(String mobileNo){
+	public AcceptedCertInfo getCertInfo(String mobileNo) throws Exception {
 		AcceptedCertInfo queryBean = new AcceptedCertInfo();
 		queryBean.setMobileno(mobileNo);
 		AcceptedCertInfo acceptedCertInfo = super.queryOneByWhere(queryBean);
 
 		if (acceptedCertInfo == null) {
+			queryBean.setId(Long.valueOf(querySequence()));
 			super.saveSelective(queryBean);
 			return queryBean;
 		}
 
 		return acceptedCertInfo;
+	}
+
+	/**
+	 * 获取序列
+	 * @return
+	 */
+	public String querySequence() throws Exception {
+		return acceptedCertInfoMapper.querySequence();
 	}
 }

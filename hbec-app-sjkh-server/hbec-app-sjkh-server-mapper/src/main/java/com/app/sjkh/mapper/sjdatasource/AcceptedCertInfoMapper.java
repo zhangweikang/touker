@@ -28,4 +28,12 @@ public interface AcceptedCertInfoMapper extends Mapper<AcceptedCertInfo> {
 	 * @throws Exception
 	 */
 	List<AcceptedCertInfo> getCertInfoAcceptedSchedule(@Param("idno") String idno, @Param("userId") String userId) throws Exception;
+
+	/**
+	 * 获取序列
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	String querySequence() throws Exception;
 }

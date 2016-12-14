@@ -123,7 +123,7 @@ define("project/scripts/account/phoneCodeVerify", function (require, exports, mo
          }
          });*/
 
-        checkSmsPage.valiDataCustomeInfo(param, "account/phoneCodeVerify");
+        checkSmsPage.valiDataCustomeInfo(paramCheck, "account/phoneCodeVerify");
     }
 
 

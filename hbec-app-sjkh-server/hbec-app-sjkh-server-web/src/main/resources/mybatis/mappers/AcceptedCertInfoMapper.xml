@@ -322,7 +322,7 @@
         <if test="_parameter != null">
             <include refid="queryParam"/>
         </if>
-    </select>
+    </select>-->
     <update id="updateByMoblieNoSelective" parameterType="acceptedCertInfo">
         update OSOADATA.T_ACCEPTED_CERT_INFO
         <set>
@@ -433,7 +433,7 @@
             </if>
         </set>
         where MOBILENO = #{mobileno,jdbcType=VARCHAR}
-    </update>-->
+    </update>
     <select id="getCertInfoAcceptedSchedule" resultMap="BaseResultMap">
         select
         a.ID, a.CUSTNAME, a.IDTYPE, a.IDNO, a.ETHNIC, a.MOBILENO, a.CERTUID, a.BRANCHNO, a.POSTID, a.ADDR, a.STATE,
@@ -443,5 +443,9 @@
         a.BKMOBLIENO1, a.RECOMMENDNO, a.COMMISSION
         from t_accepted_cert_info a,t_accepted_schedule b where a.id = b.user_id
         <![CDATA[ and a.idno = #{idno} and a.idtype='00' and a.id <> #{userId} and b.lastcomplete_step <> 'uploadimg' ]]>
+    </select>
+
+    <select id="querySequence" resultType="java.lang.String">
+        SELECT SEQ_ACCEPTED_CERT_INFO.nextval FROM DUAL
     </select>
 </mapper>
