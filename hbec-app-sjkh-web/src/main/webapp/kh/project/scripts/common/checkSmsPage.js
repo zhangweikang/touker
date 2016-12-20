@@ -27,10 +27,6 @@ define(function (require, exports, module) {
             "visitsurvey": "account/openConfirm",
             "success": "account/accountSuccess"
         },
-        newStepMap0 = {
-            "uploadimg": "account/uploadPhotoChange",
-            "witness": "account/digitalCertificate"
-        },
 
     //已绑定了三方存管的流程跳转
         depositorySteps = ["uploadimg", "idconfirm", "setpwd", "witness",
@@ -75,115 +71,92 @@ define(function (require, exports, module) {
      * result 校验短信通过后返回用户数据
      * codePage 当前页面
      **/
-    function valiDataReject(result, codePage) {
-        //驳回情况：身份证正面、反面、大头像、交易密码、资金密码、三方存管、转户驳回到视频见证
-        var photoParam = {
-            "needFront": result.need_photo_front != undefined ? result.need_photo_front : "0",
-            "needBack": result.need_photo_back != undefined ? result.need_photo_back : "0",
-            "needNohat": result.need_photo_nohat != undefined ? result.need_photo_nohat : "0"
-        };
-        //交易密码
-        var pwdParam = {
-            "needBusinessPwd": result.need_business_password != undefined ? result.need_business_password : "0",
-            "needFundPwd": result.need_fund_password != undefined ? result.need_fund_password : "0"
-        };
-        //开立账户
-        var accountParam = {
-            "need_account": result.need_account != undefined ? result.need_account : "0"
-        };
-        //视频见证
-        var videoParam = {
-            "need_video": result.need_video != undefined ? result.need_video : "0"
-        };
-        //三方存管
-        var thirdParam = {
-            "needThirdDeposit": result.need_third_deposit != undefined ? result.need_third_deposit : "0"
-        };
-        appUtils.setSStorageInfo("videoParam", JSON.stringify(videoParam));
-        appUtils.setSStorageInfo("pwdParam", JSON.stringify(pwdParam));
-        appUtils.setSStorageInfo("thirdParam", JSON.stringify(thirdParam));
-        appUtils.setSStorageInfo("accountParam", JSON.stringify(accountParam));
-        // 1.补全照片
-        if (photoParam["needFront"] == 1 || photoParam["needBack"] == 1 || photoParam["needNohat"] == 1) {
-            appUtils.pageInit("account/phoneCodeVerify", "account/backUploadPhoto", photoParam);
+    function valiDataReject(acceptedRejectLogs, acceptedCustomerInfo, codePage) {
+
+        var photoParam = {"photo_5005": "", "photo_5006": "", "photo_5007": ""};
+        if (acceptedRejectLogs.photo_5005) {
+            photoParam.photo_5005 = acceptedRejectLogs.photo_5005;
+        }
+        if (acceptedRejectLogs.photo_5006) {
+            photoParam.photo_5006 = acceptedRejectLogs.photo_5006;
+        }
+        if (acceptedRejectLogs.photo_5007) {
+            photoParam.photo_5007 = acceptedRejectLogs.photo_5007;
+        }
+
+        // 1.驳回:身份证正面、反面、大头像
+        if (acceptedRejectLogs.photo_5005 || acceptedRejectLogs.photo_5006 || acceptedRejectLogs.photo_5007) {
+            appUtils.pageInit(codePage, "account/backUploadPhoto", photoParam);
             return;
         }
         // 2.驳回视频见证
-        if (videoParam["need_video"] == 1) {
-            appUtils.pageInit(codePage, "account/videoNotice", videoParam);
+        if (acceptedRejectLogs.video) {
+            appUtils.pageInit(codePage, "account/videoNotice", {"video": acceptedRejectLogs.video});
             return;
         }
         // 3.驳回密码设置
-        if (pwdParam["needBusinessPwd"] == 1 || pwdParam["needFundPwd"] == 1) {
-            appUtils.pageInit(codePage, "account/backSetPwd", pwdParam);
+        if ((!acceptedCustomerInfo.clientId && acceptedCustomerInfo.fundPwdTrue == "0") || (!acceptedCustomerInfo.clientId && acceptedCustomerInfo.tradePwdTrue == "0")) {
+            appUtils.pageInit(codePage, "account/backSetPwd");
             return;
         }
         // 4.驳回开立账户
-        if (accountParam["need_account"] == 1) {
-            appUtils.pageInit(codePage, "account/backSignProtocol", accountParam);
+        if (acceptedRejectLogs.account) {
+            appUtils.pageInit(codePage, "account/backSignProtocol", {"account": acceptedRejectLogs.account});
             return;
         }
         // 5.驳回三方存管
-        if (thirdParam["needThirdDeposit"] == 1) {
-            appUtils.pageInit(codePage, "account/backThirdDepository", thirdParam);
+        if (acceptedCustomerInfo.cubsbscopenacctflag == "0") {
+            appUtils.pageInit(codePage, "account/backThirdDepository");
             return;
         }
-
-        return true;
     }
 
     /**
      * 用户没有驳回数据,用户继续开户
-     * result 短信校验成功后返回用户数据
+     * acceptedSchedule 用户流程数据
      * tpbankFlg 0：未绑定三方存管和三方支付 1：一定绑定了三方存管，还可能绑定了三方支付 2：只绑定了三方支付
      * codePage 当前页面
      **/
-    function pageNextStep(result, tpbankFlg, codePage) {
+    function pageNextStep(acceptedSchedule, tpbankFlg, codePage) {
         console.log("继续开户tpbankFlg=" + tpbankFlg);
         var newPageCode = "";
-        var openAccountFlag = result.opacctkind_flag;
         var depositoryPageCode = ""; //已绑定三方存管
         var partiesPayPageCode = ""; //已绑定三方支付
-        var currentStep = result["lastcomplete_step"]; //断点：上次走的最后一步
-        appUtils.setSStorageInfo("currentStep", currentStep);
-        if (currentStep && currentStep.length > 0) {
+        var lastcompleteStep = acceptedSchedule.lastcompleteStep; //断点：上次走的最后一步
+        appUtils.setSStorageInfo("lastcompleteStep", lastcompleteStep);
+        if (lastcompleteStep) {
             var index;
             if (tpbankFlg == "1") {
-                index = depositorySteps.indexOf(currentStep);
+                index = depositorySteps.indexOf(lastcompleteStep);
                 if (index < (depositorySteps.length - 1)) {
-                    currentStep = depositorySteps[index + 1];
+                    lastcompleteStep = depositorySteps[index + 1];
                 }
             } else if (tpbankFlg == "2") {
-                index = partiesPaySteps.indexOf(currentStep);
+                index = partiesPaySteps.indexOf(lastcompleteStep);
                 if (index < (partiesPaySteps.length - 1)) {
-                    currentStep = partiesPaySteps[index + 1];
+                    lastcompleteStep = partiesPaySteps[index + 1];
                 }
             } else {
-                index = newSteps.indexOf(currentStep);
+                index = newSteps.indexOf(lastcompleteStep);
                 if (index < (newSteps.length - 1)) {
-                    currentStep = newSteps[index + 1];
+                    lastcompleteStep = newSteps[index + 1];
                 }
             }
-
-            //新开户
-            newPageCode = newStepMap[currentStep];
-            depositoryPageCode = depositoryStepsMap[currentStep];
-            partiesPayPageCode = partiesPayStepMap[currentStep];
+            //用户流程
+            newPageCode = newStepMap[lastcompleteStep];//新用户流程
+            depositoryPageCode = depositoryStepsMap[lastcompleteStep];//三方存管流程
+            partiesPayPageCode = partiesPayStepMap[lastcompleteStep];//三方支付流程
         }
 
-        if (newPageCode && newPageCode.length > 0) {
-            // 如果是直接跳转到 视频认证 页面，将 QQ 保存到 session 中
-            if (newPageCode == "account/videoNotice") {
-                appUtils.setSStorageInfo("qq", result.im_code);
-            }
+        if (newPageCode) {
             //开通三方存管或者三方支付标志（1：一定绑定了三方存管，还可能绑定了三方支付  	2：只绑定了三方支付	0：未绑定三方存管和三方支付）
             console.log("继续开户tpbankFlg=" + tpbankFlg + " currentStep=" + currentStep + " newPageCode=" + newPageCode + " depositoryPageCode=" + depositoryPageCode + " partiesPayPageCode=" + partiesPayPageCode);
             if (tpbankFlg == '1') { //绑定了三方存管
-                appUtils.pageInit("account/phoneCodeVerify", depositoryPageCode);
+                appUtils.pageInit(codePage, depositoryPageCode);
             } else if (tpbankFlg == '2') { //绑定了三方支付
-                appUtils.pageInit("account/phoneCodeVerify", partiesPayPageCode);
+                appUtils.pageInit(codePage, partiesPayPageCode);
             } else { //未绑定三方存管和三方支付
-                appUtils.pageInit("account/phoneCodeVerify", newPageCode);
+                appUtils.pageInit(codePage, newPageCode);
             }
         } else {
             if (global.openChannel == "1") {
@@ -195,16 +168,26 @@ define(function (require, exports, module) {
         }
     }
 
-    function setSessionStorage(result) {
+    function setSessionStorage(obj) {
+        var acceptedCertInfo = obj.acceptedCertInfo;
+        var branchInfo = obj.branchInfo;
         // user_id保存到session
-        if (result.user_id) {
-            appUtils.setSStorageInfo("user_id", result.user_id);
+        if (acceptedCertInfo.id) {
+            appUtils.setSStorageInfo("userId", acceptedCertInfo.id);
         }
         // 身份证号保存到session
-        if (result.idno) {
-            appUtils.setSStorageInfo("idCardNo", result.idno);
+        if (acceptedCertInfo.idno) {
+            appUtils.setSStorageInfo("idCardNo", acceptedCertInfo.idno);
         }
-        //手机号保存到session
+        // 将营业部Id保存到session
+        if (branchInfo && branchInfo.branchno) {
+            appUtils.setSStorageInfo("branchNo", branchInfo.branchno);
+        }
+        // 将营业部名称保存到session
+        if (branchInfo && branchInfo.branchname) {
+            appUtils.setSStorageInfo("branchName", branchInfo.branchname);
+        }
+        /*//手机号保存到session
         if (result.mobileno) {
             appUtils.setSStorageInfo("mobileNo", result.mobileno);
         }
@@ -252,22 +235,7 @@ define(function (require, exports, module) {
         if (result.jsessionid) {
             appUtils.setSStorageInfo("jsessionid", result.jsessionid);
         }
-        // 将佣金id保存到session
-        if (result.commission) {
-            appUtils.setSStorageInfo("commission", result.commission);
-        }
-        // 将佣金值保存到session
-        if (result.commissionname) {
-            appUtils.setSStorageInfo("commissionname", result.commissionname);
-        }
-        // 将营业部Id保存到session
-        if (result.branchno) {
-            appUtils.setSStorageInfo("branchno", result.branchno);
-        }
-        // 将营业部名称保存到session
-        if (result.branchname) {
-            appUtils.setSStorageInfo("branchname", result.branchname);
-        }
+
         // 将省份保存到session
         if (result.provincename) {
             appUtils.setSStorageInfo("provincename", result.provincename);
@@ -275,9 +243,9 @@ define(function (require, exports, module) {
         // 将城市保存到session
         if (result.cityname) {
             appUtils.setSStorageInfo("cityname", result.cityname);
-        }
+        }*/
         // 将银行代码保存到session
-        if (result.banktype) {
+        if (acceptedCertInfo.banktype) {
             var queryParam = {
                 "bindtype": "",
                 "ispwd": "",
@@ -297,11 +265,11 @@ define(function (require, exports, module) {
             }, true, true, null);
 
         }
-        appUtils.setSStorageInfo("shaselect", result.shaselect); // 是否选择沪A
+        /*appUtils.setSStorageInfo("shaselect", result.shaselect); // 是否选择沪A
         appUtils.setSStorageInfo("szaselect", result.szaselect); // 是否选择深A
         appUtils.setSStorageInfo("hacnselect", result.shaselect); // 是否选择沪开放式基金
         appUtils.setSStorageInfo("zacnselect", result.szaselect); // 是否选择深开放式基金
-        appUtils.setSStorageInfo("openChannel", "new");
+        appUtils.setSStorageInfo("openChannel", "new");*/
     }
 
     /**
@@ -311,20 +279,21 @@ define(function (require, exports, module) {
     function valiDataCustomeInfo(param, codePage) {
 
         /*if (utils.isAndroid()) {
-            var data = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
-            toukerServerPluginCallback(data);
-        } else {
-            require("shellPlugin").callShellMethod("toukerServerPlugin", function (param) {
-                toukerServerPluginCallback(param);
-            }, function (data) {
-            }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
-        }*/
+         var data = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
+         toukerServerPluginCallback(data);
+         } else {
+         require("shellPlugin").callShellMethod("toukerServerPlugin", function (param) {
+         toukerServerPluginCallback(param);
+         }, function (data) {
+         }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
+         }*/
         toukerServerPluginCallback(param);
         function toukerServerPluginCallback(param) {
             service.serviceAjax("/touker/validateCustInfo", param, function (data) {
                 var code = data.status;
                 var obj = data.data;
-                if ("001003" == code || "001004" == code) {
+                var reject = obj.reject;
+                if ("001003" == code || "001004" == code || "001013" == code || "001038" == code || "001039" == code) {
                     layerUtils.iMsg(-1, data.msg);
                 } else {
                     var tpbankFlg = obj.tpbankFlg;
@@ -332,8 +301,9 @@ define(function (require, exports, module) {
 
                     appUtils.setSStorageInfo("tpbankFlg", tpbankFlg);//用户开户标示
                     appUtils.setSStorageInfo("tpAddr", tpAddr);//重置交易密码地址(投客网或者网厅)
-                    appUtils.setSStorageInfo("idnoDD", dataSet.idnoDD);//顶点保存的客户身份证号
+                    appUtils.setSStorageInfo("idnoDD", obj.idnoDD);//顶点保存的客户身份证号
 
+                    setSessionStorage(obj);
                     //顶点保存的开户营业部
                     var branchnoDD = obj.branch;
                     if (null != branchnoDD && "undefined" != branchnoDD && "" != branchnoDD) {
@@ -361,14 +331,24 @@ define(function (require, exports, module) {
                         appUtils.pageInit("account/phoneCodeVerify", "account/uploadPhoto");
                     } else if (code == "001025") {
                         //待审核,开户成功
-                        if (valiDataReject(result, codePage)) {
+                        /*if (valiDataReject(result, codePage)) {
+                         appUtils.pageInit("account/phoneCodeVerify", "account/accountSuccess", {"backUrl": "account/phoneNumberVerify"});
+                         }*/
+                        if ("reject" == reject) {
+                            valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)
+                        } else {
                             appUtils.pageInit("account/phoneCodeVerify", "account/accountSuccess", {"backUrl": "account/phoneNumberVerify"});
                         }
                     } else {
                         //判断是否驳回，若驳回 则走驳回流程
-                        if (valiDataReject(result, codePage)) {
-                            //未驳回，则正常走流程
-                            pageNextStep(result, tpbankFlg, codePage);
+                        /*if (valiDataReject(result, codePage)) {
+                         //未驳回，则正常走流程
+                         pageNextStep(result, tpbankFlg, codePage);
+                         }*/
+                        if ("reject" == reject) {
+                            valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)
+                        } else {
+                            pageNextStep(obj.acceptedSchedule, tpbankFlg, codePage);
                         }
                     }
                 }

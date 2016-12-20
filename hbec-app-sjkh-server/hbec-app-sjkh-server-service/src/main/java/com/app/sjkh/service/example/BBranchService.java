@@ -1,58 +1,50 @@
 package com.app.sjkh.service.example;
 
-import com.app.sjkh.mapper.sjdatasource.BBranchMapper;
+import com.app.sjkh.commons.vo.ResultResponse;
 import com.app.sjkh.pojo.local.BBranch;
-import com.app.sjkh.service.base.HbecBaseService;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
- * Created by zhangweikang on 2016/8/22.
+ * Created by Administrator on 2016/12/19.
  */
-@Service
-public class BBranchService extends HbecBaseService<BBranch, String> {
+public interface BBranchService {
 
-	@Autowired
-	private BBranchMapper bBranchMapper;
-
-	/**
-	 * 根据营业部号,获取营业部名称
-	 * @param branchNo
-	 * @return
+    /**
+     * 根据营业部号,获取营业部名称
+     *
+     * @param branchNo
+     * @return
      */
-	public String getBranchName(String branchNo) {
-		List<String> branchInfo = bBranchMapper.getBranchName(branchNo);
+    String getBranchName(String branchNo);
 
-		if (branchInfo != null && branchInfo.isEmpty()) {
-			return branchInfo.get(0);
-		}
-		return "";
-	}
-
-	/**
-	 * 获取所有营业部
-	 * @return
+    /**
+     * 获取所有营业部
+     *
+     * @return
      */
-	public LinkedList<String> getBranchNo() {
+    LinkedList<String> getBranchNo();
 
-		LinkedList<String> branchNoList = new LinkedList<String>();
-		List<String> branchNo = bBranchMapper.getBranchNo();
-		for (String branchno : branchNo) {
-			branchNoList.add(branchno);
-		}
-		return branchNoList;
-	}
-
-	/**
-	 * 获取营业部信息
-	 * @param branchNo
-	 * @return
+    /**
+     * 获取营业部信息
+     *
+     * @param branchNo
+     * @return
      */
-	public BBranch getBranchInfo(String branchNo){
-		return bBranchMapper.getBranchInfo(branchNo);
-	}
+    BBranch getBranchInfo(String branchNo);
+
+    /**
+     * 根据手机号码获取用户已选择的服务营业部,为空则设置默认
+     * @param mobileNo
+     * @return
+     */
+    ResultResponse getBranchInfoByMobilNo (String mobileNo);
+
+    /**
+     * 绑定用户营业部
+     * @param mobileNo
+     * @param branchNo
+     * @return
+     */
+    ResultResponse bindServiceBranch(String mobileNo,String branchNo) throws Exception;
 }

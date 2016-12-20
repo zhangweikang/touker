@@ -1,6 +1,7 @@
 package com.app.sjkh.service;
 
-import com.app.sjkh.commons.utils.JacksonUtil;
+import com.app.sjkh.service.example.impl.AcceptedCertInfoServiceImpl;
+import com.app.sjkh.service.example.impl.BBranchServiceImpl;
 import com.app.sjkh.service.runnable.SynImgRunnable;
 import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.servier.RedisService;
@@ -53,7 +54,7 @@ public class ToukerService {
     private AcceptedScheduleService acceptedScheduleService;
 
     @Autowired
-    private AcceptedCertInfoService acceptedCertInfoService;
+    private AcceptedCertInfoServiceImpl acceptedCertInfoService;
 
     @Autowired
     private BPostService bPostService;
@@ -65,7 +66,7 @@ public class ToukerService {
     private CustomerServiceBranchService customerServiceBranchService;
 
     @Autowired
-    private BBranchService bBranchService;
+    private BBranchServiceImpl bBranchServiceImpl;
 
     @Autowired
     private AcceptedMediaUrlService acceptedMediaUrlService;
@@ -264,7 +265,7 @@ public class ToukerService {
         try {
             //获取用户数据
             AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo);
-            resultMap.put("certInfo", certInfo);
+            resultMap.put("acceptedCertInfo", certInfo);
             //获取用户流程
             AcceptedSchedule acceptedSchedule = acceptedScheduleService.getSchedule(certInfo.getId().toString());
             resultMap.put("acceptedSchedule", acceptedSchedule);
@@ -277,7 +278,7 @@ public class ToukerService {
                 String commission = acceptedCustomerInfo.getCommission();
                 if (StringUtils.isNotBlank(branchno)) {
                     //获取营业部信息
-                    BBranch branchInfo = bBranchService.getBranchInfo(branchno);
+                    BBranch branchInfo = bBranchServiceImpl.getBranchInfo(branchno);
 
                     resultMap.put("branchInfo", branchInfo);
                     if (StringUtils.isNotBlank(commission)) {
@@ -293,15 +294,19 @@ public class ToukerService {
                 //获取用户驳回信息
                 List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());
                 if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
-                    resultMap.put("acceptedRejectLogs", acceptedRejectLogs);
-                    return ResultResponse.build(ResultCode.HBEC_001040.getCode(), JacksonUtil.toJSon(resultMap));
+                    Map<String,Object> beanMap = new HashMap<>();
+                    for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
+                        beanMap.put(acceptedRejectLog.getFieldenname(),acceptedRejectLog);
+                    }
+                    resultMap.put("acceptedRejectLogs", beanMap);
+                    return ResultResponse.build(ResultCode.HBEC_001040.getCode(),null,resultMap);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return ResultResponse.ok(JacksonUtil.toJSon(resultMap));
+        return ResultResponse.ok(resultMap);
     }
 
     /**
@@ -624,7 +629,7 @@ public class ToukerService {
      * @throws Exception
      */
     public ResultResponse validateCustInfo(String mobileNo, String customerId, Integer opway) throws Exception {
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, String> resultMap = new HashMap<>();
         String idnoDD;    //顶点客户号对应身份证号
         logger.info("validateCustInfo:mobileno=" + mobileNo + " khh=" + customerId);
         if (StringUtils.isEmpty(mobileNo)) {
@@ -634,7 +639,7 @@ public class ToukerService {
         //查询客户信息表中数据（T_Accepted_Customer_Info）
         AcceptedCustomerInfo acceptedCustomerInfo = acceptedCustomerInfoService.queryOneByMoblie(mobileNo);
 
-        if (!StringUtils.isEmpty(customerId)) {
+        if (StringUtils.isNotBlank(customerId)) {
             //顶点系统已经存在客户号的流程
 
             ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(customerId);//获取顶点用户信息
@@ -642,14 +647,11 @@ public class ToukerService {
                 logger.info("根据用户客户号查询用户信息失败");
                 return resultResponse;
             }
-            Map<String, String> customerInfo = (Map<String, String>) resultResponse.getData();
+            HashMap<String, String> customerInfo = (HashMap<String, String>) resultResponse.getData();
             //本地没有用户信息
             idnoDD = customerInfo.get("zjbh").trim();
             String yyb = customerInfo.get("yyb");
             logger.info("手机号" + mobileNo + "在顶点系统客户号" + customerId + "对应的身份证号：" + idnoDD + " 营业部:" + yyb);
-
-            resultMap.put("idnoDD", idnoDD);
-            resultMap.put("branch", "");
 
             //手机号在本地客户信息表中存在记录
             if (acceptedCustomerInfo != null) {
@@ -663,7 +665,6 @@ public class ToukerService {
                 //本地系统没有客户号
 
                 String branchno = acceptedCustomerInfo.getBranchno();//本地记录营业部
-                resultMap.put("branch", yyb);
 
                 //是否进入待审核或者回访状态
                 Long userid = acceptedCustomerInfo.getUserid();
@@ -706,9 +707,11 @@ public class ToukerService {
 
                     //判断是否需要拉取身份证（如果客户已经在投客网上传过身份证则直接拉去过来）
                     ResultResponse imgFromTouker = getImgFromTouker(mobileNo, acceptedCustomerInfo.getUserid().toString(), customerInfo);
-                    Map<String, String> data = (Map<String, String>) imgFromTouker.getData();
-                    data.putAll(resultMap);
-                    imgFromTouker.setData(data);
+                    Object obj = imgFromTouker.getData();
+                    if (obj != null){
+                        resultMap.putAll((HashMap<String, String>)obj);
+                    }
+                    imgFromTouker.setData(resultMap);
                     return imgFromTouker;
                 }
 
@@ -740,15 +743,16 @@ public class ToukerService {
 
             String idnoSD = certInfo.getIdno();
             logger.info("思迪系统证书表中身份号：" + idnoSD);
-            resultMap.put("branch", yyb);
             if (StringUtils.isEmpty(idnoSD)) {    //从未在app上传身份证
                 certInfo.setBranchno(yyb);    //重置营业部
                 certInfo.setMobileno(mobileNo);
                 acceptedCertInfoService.updateByMoblieNoSelective(certInfo);
                 //判断是否需要拉去身份证
                 ResultResponse imgFromTouker = getImgFromTouker(mobileNo, certInfo.getId().toString(), customerInfo);
-                Map<String, String> data = (Map<String, String>) imgFromTouker.getData();
-                resultMap.putAll(data);
+                Object obj = imgFromTouker.getData();
+                if (obj != null){
+                    resultMap.putAll((HashMap<String, String>)obj);
+                }
                 imgFromTouker.setData(resultMap);
                 return imgFromTouker;
             }
@@ -769,9 +773,11 @@ public class ToukerService {
 
                 //判断是否需要拉取身份证
                 ResultResponse imgFromTouker = getImgFromTouker(mobileNo, certInfo.getId().toString(), customerInfo);
-                Map<String, String> data = (Map<String, String>) imgFromTouker.getData();
-                data.putAll(resultMap);
-                imgFromTouker.setData(data);
+                Object obj = imgFromTouker.getData();
+                if (obj != null){
+                    resultMap.putAll((HashMap<String, String>)obj);
+                }
+                imgFromTouker.setData(resultMap);
                 return imgFromTouker;
             }
             //身份证号一致
@@ -783,8 +789,6 @@ public class ToukerService {
             return ResultResponse.ok(resultMap);
         }
 
-        resultMap.put("idnoDD", "");
-        resultMap.put("branch", "");
         //客户信息表不为空	步骤肯定已经在身份证信息确认之后
         if (acceptedCustomerInfo != null) {
             String clientId = acceptedCustomerInfo.getClientId();
@@ -805,6 +809,14 @@ public class ToukerService {
                 logger.info("手机号" + mobileNo + "的开户资料已提交，处于待审核或者回访状态");
                 return ResultResponse.build(ResultCode.HBEC_001025.getCode(), ResultCode.HBEC_001025.getMemo(), resultMap);
             }
+        }
+        ResultResponse resultResponse = valiUserInfo(mobileNo);
+        Object obj = resultResponse.getData();
+        if (obj != null){
+            resultMap.putAll((HashMap<String, String>)obj);
+        }
+        if (ResultCode.HBEC_001040.getCode().compareTo(resultResponse.getStatus()) == 0){
+            resultMap.put("reject","reject");
         }
         return ResultResponse.ok(resultMap);
     }
@@ -990,7 +1002,7 @@ public class ToukerService {
             //理论上跟经济人关联的记录的营业部不为空
             branchNo = customerServiceBranches.get(0).getBranchno();    //经济人营业部编号
         }
-        String branchName = bBranchService.getBranchName(branchNo);
+        String branchName = bBranchServiceImpl.getBranchName(branchNo);
         resultMap.put("branchNo", branchNo);
         resultMap.put("branchName", branchName);
 
@@ -1010,7 +1022,7 @@ public class ToukerService {
         if (customerServiceBranches == null || customerServiceBranches.size() == 0) {
             //如果上送过来的营业部为默认营业部（自贸区营业部）则需要平均分配
             if (defaultbranchNo.equals(branchNo)) {
-                LinkedList<String> branchNoList = bBranchService.getBranchNo();
+                LinkedList<String> branchNoList = bBranchServiceImpl.getBranchNo();
                 branchNo = branchNoList.peek();    //平均分配服务营业部
                 branchNoList.remove(branchNo);
                 branchNoList.add(branchNo);

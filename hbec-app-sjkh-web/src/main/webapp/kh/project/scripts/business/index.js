@@ -1,10 +1,4 @@
-﻿﻿﻿/**
- * 手机开户3.0
- * 
- * change history:
- * 2016-09-14 by zhangyq: remove unused method setBestAddress, queryVersAndAddr and execUpdate.
- */
-define("project/scripts/business/index",function(require, exports, module){
+﻿define("project/scripts/business/index",function(require, exports, module){
     /* 私有业务模块的全局变量 begin */
     var appUtils = require("appUtils"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据

@@ -19,26 +19,26 @@
 
     	</div>
     </section>
-    <script>
-    	$(function(){
-    		if($(".mobileCode").val()!="请输入验证码"){
-   				$(".mobileCode").css({color:"#E3E3E3"});
-   			}
-    		$(".mobileCode").on("click",function(){
-				if($(this).val()=="请输入手机号码" || $(this).val()==""){
-					$(this).css({color:"#2F2F2F"}).val("");
-				}
-    		});
-    		$(".mobileCode").on("blur",function(){
-    			if($(this).val()==""){
-    				$(this).val("请输入验证码").css({color:"#E3E3E3"});
-    			}
-    		});
-    	})
-    </script>
     <div class="fix_bot">
 		<div class="ct_btn">
         	<a href="javascript:void(0)">下一步</a>
         </div>
     </div>
 </div>
+<script>
+	$(function(){
+		if($(".mobileCode").val()!="请输入验证码"){
+			$(".mobileCode").css({color:"#E3E3E3"});
+		}
+		$(".mobileCode").on("click",function(){
+			if($(this).val()=="请输入手机号码" || $(this).val()==""){
+				$(this).css({color:"#2F2F2F"}).val("");
+			}
+		});
+		$(".mobileCode").on("blur",function(){
+			if($(this).val()==""){
+				$(this).val("请输入验证码").css({color:"#E3E3E3"});
+			}
+		});
+	})
+</script>

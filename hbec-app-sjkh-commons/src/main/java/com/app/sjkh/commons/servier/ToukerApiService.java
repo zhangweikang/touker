@@ -6,6 +6,7 @@ import com.app.sjkh.commons.utils.PropertiesUtils;
 import com.app.sjkh.commons.vo.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,18 +183,24 @@ public class ToukerApiService {
         Map<String, String> map = new HashMap<>();
         map.put("phone", mobileno);
         String response = sendApi(propertiesUtils.get("apiUrl") + "accountService.findByPhone", map);
+        if (StringUtils.isBlank(response)) {
+            logger.error("ToukerApi调用失败,phone = " + mobileno);
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+        }
+
         logger.info("【accountServiceFindByPhone-响应】" + response);
         JsonNode jsonNode = MAPPER.readTree(response).get("result");    //result:	1:成功    		 其他：失败
-        if (Constants.ApiSuccess.equals(jsonNode.asText())) {        //调用成功
-            JsonNode data = MAPPER.readTree(response).get("data");
-            if (data.isNull()) {
-                return ResultResponse.build(ResultCode.HBEC_001011.getCode(), ResultCode.HBEC_001011.getMemo());
-            }
-            return ResultResponse.build(ResultCode.HBEC_001012.getCode(), ResultCode.HBEC_001012.getMemo(), MAPPER.readValue(data.traverse(), Account.class));
-        } else {
+        if (!Constants.ApiSuccess.equals(jsonNode.textValue())) {
             logger.error("Api查询touker用户信息失败,phone = " + mobileno);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
         }
+
+        //调用成功
+        JsonNode data = MAPPER.readTree(response).get("data");
+        if (data.isNull()) {
+            return ResultResponse.build(ResultCode.HBEC_001011.getCode(), ResultCode.HBEC_001011.getMemo());
+        }
+        return ResultResponse.build(ResultCode.HBEC_001012.getCode(), ResultCode.HBEC_001012.getMemo(), MAPPER.readValue(data.traverse(), Account.class));
     }
 
     /**
@@ -242,6 +249,12 @@ public class ToukerApiService {
         map.put("acc", JacksonUtil.toJSon(regAccount));
 
         String response = sendApi(propertiesUtils.get("apiUrl") + "accountService.registService", map);
+
+        if (StringUtils.isBlank(response)) {
+            logger.error("ToukerApi调用失败,phone = " + mobileno);
+            return ResultResponse.build(ResultCode.HBEC_001014.getCode(), ResultCode.HBEC_001014.getMemo());
+        }
+
         logger.info("手机号" + mobileno + "【注册投客网返回】:" + response);
         JsonNode jsonNode = MAPPER.readTree(response);
         JsonNode data = jsonNode.get("data");
@@ -276,6 +289,10 @@ public class ToukerApiService {
             Map<String, String> map = new HashMap<String, String>();
             map.put("bean", JacksonUtil.toJSon(signInfo));
             String response = sendApi(propertiesUtils.get("apiUrl") + "SigningPayService.queryAuthenticationInfoService", map);
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,customerId = " + customerId);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
+            }
             logger.info("查询三方支付信息返回" + response);
             JsonNode jsonNode = MAPPER.readTree(response);
             if (!Constants.ApiSuccess.equals(jsonNode.get("result"))) {
@@ -313,6 +330,10 @@ public class ToukerApiService {
             Map<String, String> map = new HashMap<String, String>();
             map.put("accountId", toukerId.toString());
             String response = sendApi(propertiesUtils.get("apiUrl") + "accountFacade.findAccountById", map);
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,toukerId = " + toukerId);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
+            }
             logger.info("查询投客用户信息返回：" + response);
 
             JsonNode jsonNode = MAPPER.readTree(response);
@@ -345,6 +366,10 @@ public class ToukerApiService {
             map.put("width", "800");
             map.put("height", "600");
             String response = sendApi(propertiesUtils.get("apiUrl") + "uploadService.mobileAccImgUpload", map);
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,category = " + category + ";key = " + key);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
+            }
 
             JsonNode jsonNode = MAPPER.readTree(response);
 

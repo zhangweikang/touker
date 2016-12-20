@@ -188,6 +188,7 @@
                 f.src = a),
                 r = f,
                 f.src = (undefined != f.src && f.src.length == f.src.lastIndexOf('/')+1) ? '' : f.src,
+                //undefined!=f.src&&f.src.indexOf("/account/")>0?(f.src=f.src.replace('/account/','/account/min/'),f.src=f.src.replace('.js','.min.js'),console.log(f.src)):'',
                 H ? G.insertBefore(f, H) : G.appendChild(f),
                 r = null
             }

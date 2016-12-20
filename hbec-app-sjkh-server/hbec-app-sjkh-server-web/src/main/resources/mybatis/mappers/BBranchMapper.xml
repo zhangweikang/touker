@@ -55,4 +55,11 @@ t.JS_SHA, t.JS_SHB, t.KH_SHA, t.KH_SHB, t.CUACCT_CLS, t.CUST_CODE, t.CUST_PWD, t
       from t_b_branch t, t_b_city c, t_b_province p, t_b_region r
       where t.branchcode = #{branchNo} and t.cityno = c.id and t.provinceno = p.id and t.regionno = r.id
    </select>
+
+    <select id="getBranchInfoByMobilNo" parameterType="java.lang.String" resultType="bBranch">
+        select
+        <include refid="Base_Column_List2"/>
+        from t_b_branch t, t_accepted_cert_info c
+        where t.branchno = c.branchno AND c.MOBILENO = #{mobileNo}
+    </select>
 </mapper>

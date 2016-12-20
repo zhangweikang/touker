@@ -93,4 +93,7 @@ public class Constants {
 	public static final String BUSINESS_LOGTYPE_SMS = "sms";
 	/** 登陆日志记录类别,登陆成功 */
 	public static final String BUSINESS_LOGTYPE_LOGIN = "login";
+
+	/** crm营业部同步标示 */
+	public static final String NO_NEED_SYNC_SERVICE_BRANCH_FLAG = "2";
 }

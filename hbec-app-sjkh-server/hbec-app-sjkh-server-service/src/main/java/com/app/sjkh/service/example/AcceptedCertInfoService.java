@@ -1,54 +1,19 @@
 package com.app.sjkh.service.example;
 
-import com.app.sjkh.mapper.sjdatasource.AcceptedCertInfoMapper;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
-import com.app.sjkh.service.base.HbecBaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by zhangweikang on 2016/8/5.
+ * Created by Administrator on 2016/12/19.
  */
-@Service
-public class AcceptedCertInfoService extends HbecBaseService<AcceptedCertInfo, Long> {
+public interface AcceptedCertInfoService {
 
-	@Autowired
-	private AcceptedCertInfoMapper acceptedCertInfoMapper;
+    Integer updateByMoblieNoSelective(AcceptedCertInfo bean) throws Exception;
 
-	public Integer updateByMoblieNoSelective(AcceptedCertInfo bean) throws Exception {
-		return acceptedCertInfoMapper.updateByMoblieNoSelective(bean);
-	}
+    List<AcceptedCertInfo> getCertInfoAcceptedSchedule(String idno, String userId) throws Exception;
 
-	public List<AcceptedCertInfo> getCertInfoAcceptedSchedule(String idno, String userId) throws Exception {
-		return acceptedCertInfoMapper.getCertInfoAcceptedSchedule(idno, userId);
-	}
+    AcceptedCertInfo getCertInfo(String mobileNo) throws Exception;
 
-	/**
-	 * 根据手机号获取用户信息,如果不存在则创建用户
-	 * @param mobileNo
-	 * @return
-     */
-	public AcceptedCertInfo getCertInfo(String mobileNo) throws Exception {
-		AcceptedCertInfo queryBean = new AcceptedCertInfo();
-		queryBean.setMobileno(mobileNo);
-		AcceptedCertInfo acceptedCertInfo = super.queryOneByWhere(queryBean);
-
-		if (acceptedCertInfo == null) {
-			queryBean.setId(Long.valueOf(querySequence()));
-			super.saveSelective(queryBean);
-			return queryBean;
-		}
-
-		return acceptedCertInfo;
-	}
-
-	/**
-	 * 获取序列
-	 * @return
-	 */
-	public String querySequence() throws Exception {
-		return acceptedCertInfoMapper.querySequence();
-	}
+    String querySequence() throws Exception;
 }

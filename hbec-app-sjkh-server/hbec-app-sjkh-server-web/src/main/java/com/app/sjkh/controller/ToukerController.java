@@ -59,7 +59,7 @@ public class ToukerController {
 
         String mobileNo = request.getParameter("mobileNo");
 //        String mobileNo = (String) request.getAttribute("mobileNo");
-        if (StringUtils.isEmpty(mobileNo)) {
+        if (StringUtils.isBlank(mobileNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "手机号码不能为空");
         }
 
@@ -94,7 +94,7 @@ public class ToukerController {
 //        String op_way = (String) request.getAttribute("op_way");
 
         logger.info("【sendSmSapi】mobileno=" + mobileNo);
-        if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(ip)) {
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(ip)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "请求参数异常");
         }
         if (!NumberUtils.isMoblie(mobileNo)) {
@@ -114,9 +114,9 @@ public class ToukerController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "chakeSMSCode", method = RequestMethod.POST)
+    @RequestMapping(value = "checkSMSCode", method = RequestMethod.POST)
     @ResponseBody
-    public ResultResponse chakeSMSCode(HttpServletRequest request) {
+    public ResultResponse checkSMSCode(HttpServletRequest request) {
         String mobileNo = request.getParameter("mobileNo");
         String mobileCode = request.getParameter("mobileCode");
         String source = request.getParameter("source");
@@ -156,7 +156,7 @@ public class ToukerController {
         //String mobileNo = (String)request.getAttribute("mobileNo");
         //String channel = (String)request.getAttribute("channel");
 
-        if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(channel)) {
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(channel)) {
             logger.info("mobileNo=" + mobileNo + "channel=" + channel);
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "参数不能为空!");
         }
@@ -189,7 +189,7 @@ public class ToukerController {
         String loginPass = (String) request.getAttribute("loginPass");
         String channel = (String) request.getAttribute("channel");
 
-        if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(channel) || StringUtils.isEmpty(loginPass)) {
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(channel) || StringUtils.isBlank(loginPass)) {
             logger.info("mobileNo=" + mobileNo + "channel=" + channel);
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "参数不能为空!");
         }
@@ -216,6 +216,8 @@ public class ToukerController {
         String source = request.getParameter("source");
         String ip = request.getParameter("ip");
         String mac = request.getParameter("mac");
+        String isToukerRegister = request.getParameter("isToukerRegister");
+        String password = request.getParameter("password");
 
 //        String mobileNo = (String) request.getAttribute("mobileNo");
 //        String channel = (String) request.getAttribute("channel");
@@ -223,24 +225,41 @@ public class ToukerController {
 //        String loginFlag = (String) request.getAttribute("login_flag");
 //        String opway = (String) request.getAttribute("op_way");
 
-        if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(channel)) {
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(channel)) {
             logger.info("mobileNo=" + mobileNo + "channel=" + channel + "source=" + source);
+            return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "参数不能为空!");
+        }
+
+        if ("false".equals(isToukerRegister) && StringUtils.isBlank(password)){
+            logger.info("isToukerRegister=" + isToukerRegister + "password=" + password);
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "参数不能为空!");
         }
 
         try {
             //校验短信
-            ResultResponse resultResponse2 = toukerService.valiSmsCheckUserInfo(mobileNo, mobileCode, source, ip, mac);
+            ResultResponse resultResponse2 = toukerService.chakeSMSCode(mobileNo, mobileCode, source, ip, mac);
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse2.getStatus()) != 0){
+                return resultResponse2;
+            }
 
-            //手机号绑定toukerId
-            toukerService.mobileRelationUserId(mobileNo, channel);
+            //新用户注册投客网
+            if ("false".equals(isToukerRegister)) {
+                ResultResponse resultResponse = toukerService.registerTouker(mobileNo, password, channel);
+
+                if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0){
+                    return resultResponse;
+                }
+            } else {
+                //手机号绑定toukerId
+                toukerService.mobileRelationUserId(mobileNo, channel);
+            }
 
             //校验用户数据
-            ResultResponse resultResponse = toukerService.validateCustInfo(mobileNo, customerId, StringUtils.isEmpty(source) ? 0 : Integer.valueOf(source));
+            ResultResponse resultResponse = toukerService.validateCustInfo(mobileNo, customerId, StringUtils.isBlank(source) ? 0 : Integer.valueOf(source));
 
             //判断用户绑卡数据
-            Map<String, String> data = (Map<String, String>) resultResponse.getData();
-            if (StringUtils.isEmpty(customerId)) {
+            Map<String, Object> data = (Map<String, Object>) resultResponse.getData();
+            if (StringUtils.isNotBlank(customerId)) {
                 ResultResponse resultResponse1 = toukerService.queryInfoBank(customerId);
                 String status = resultResponse1.getStatus();
                 String tpAddr = "";
@@ -254,10 +273,6 @@ public class ToukerController {
             } else {
                 data.put("tpbankFlg", ResultCode.HBEC_001020.getCode());
                 data.put("tpAddr", "");
-            }
-            data.putAll((Map<String,String>) resultResponse2.getData());
-            if (ResultCode.HBEC_001040.getCode().compareTo(resultResponse2.getStatus()) == 0){
-                data.put("reject","reject");
             }
             resultResponse.setData(data);
             return resultResponse;
@@ -282,7 +297,7 @@ public class ToukerController {
 //		String userId = (String)request.getAttribute("user_id");
 //		String idno = (String)request.getAttribute("idno");
 
-        if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(idno)) {
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(idno)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
         try {
@@ -311,7 +326,7 @@ public class ToukerController {
 //		String password = (String)request.getAttribute("password");
 //		String ip = (String)request.getAttribute("ip");
 
-        if (StringUtils.isEmpty(customerId) || StringUtils.isEmpty(password) || StringUtils.isEmpty(ip)) {
+        if (StringUtils.isBlank(customerId) || StringUtils.isBlank(password) || StringUtils.isBlank(ip)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
 
@@ -323,7 +338,7 @@ public class ToukerController {
     public ResultResponse getBranchInfo(HttpServletRequest request) {
         String mobileNo = (String) request.getAttribute("mobileNo");
 
-        if (StringUtils.isEmpty(mobileNo)) {
+        if (StringUtils.isBlank(mobileNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
         try {
@@ -340,7 +355,7 @@ public class ToukerController {
         String mobileNo = (String) request.getAttribute("mobileNo");
         String branchNo = (String) request.getAttribute("branchno");
 
-        if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(branchNo)) {
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(branchNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
         try {
@@ -357,7 +372,7 @@ public class ToukerController {
     public ResultResponse getPhoto(HttpServletRequest request) {
         String id = (String) request.getAttribute("id");
 
-        if (StringUtils.isEmpty(id)) {
+        if (StringUtils.isBlank(id)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
 
@@ -376,7 +391,7 @@ public class ToukerController {
     public ResultResponse getCertInfo(HttpServletRequest request) {
         String id = (String) request.getAttribute("id");
 
-        if (StringUtils.isEmpty(id)) {
+        if (StringUtils.isBlank(id)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
 

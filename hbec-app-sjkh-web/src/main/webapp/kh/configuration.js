@@ -10,6 +10,7 @@ define(function (require, exports, module) {
     var openChannel = (navigator.userAgent.toLowerCase().indexOf("khmobile") < 0 ? "0" : (navigator.userAgent.toLowerCase().indexOf("qianqian") > 0 ? "1" : "0"));	//开户方式  0:证券开户    1:钱钱炒股
 
     var baseUrl = "http://10.0.31.89";
+    //var baseUrl = "http://sj.dev.hbec.com";
 
     var configuration = {
         /**
@@ -71,6 +72,8 @@ define(function (require, exports, module) {
             //"h5Path":"https://mk.touker.com" //H5页面地址
         }
     };
+
+    //require.async
 
     //暴露对外的接口
     module.exports = window.configuration = configuration;

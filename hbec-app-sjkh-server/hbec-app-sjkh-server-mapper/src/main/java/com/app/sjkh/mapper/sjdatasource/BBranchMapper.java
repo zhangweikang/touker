@@ -15,5 +15,7 @@ public interface BBranchMapper extends Mapper<BBranch> {
 
 	List<String> getBranchNo();
 
-	BBranch getBranchInfo(@Param("branchNo") String branchNo);
+	List<BBranch> getBranchInfo(@Param("branchNo") String branchNo);
+
+	BBranch getBranchInfoByMobilNo(@Param("mobileNo") String mobileNo);
 }
