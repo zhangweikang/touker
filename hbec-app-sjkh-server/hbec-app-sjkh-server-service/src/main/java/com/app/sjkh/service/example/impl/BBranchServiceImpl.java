@@ -128,24 +128,26 @@ public class BBranchServiceImpl extends HbecBaseService<BBranch, String> impleme
      *
      * @param mobileNo
      * @param branchNo
+     * @param commission
      * @return
      */
     @Override
-    public ResultResponse bindServiceBranch(String mobileNo, String branchNo) throws Exception {
+    public ResultResponse bindServiceBranch(String mobileNo, String branchNo, String commission) throws Exception {
         String defBranchNo = propertiesUtils.get("branchNo");
 
         AcceptedCertInfo updateBean = new AcceptedCertInfo();
         updateBean.setMobileno(mobileNo);
         updateBean.setBranchno(branchNo);
+        updateBean.setCommission(Integer.valueOf(commission));
         acceptedCertInfoService.updateByMoblieNoSelective(updateBean);
 
         CustomerServiceBranch serviceBranch = new CustomerServiceBranch();
         serviceBranch.setMobileno(mobileNo);
         serviceBranch.setSynclientidflg("0");
         List<CustomerServiceBranch> customerServiceBranches = customerServiceBranchService.queryByWhere(serviceBranch);
-        if(customerServiceBranches == null || customerServiceBranches.isEmpty()){
+        if (customerServiceBranches == null || customerServiceBranches.isEmpty()) {
             //如果上送过来的营业部为默认营业部（自贸区营业部）则需要平均分配
-            if(defBranchNo.equals(branchNo)){
+            if (defBranchNo.equals(branchNo)) {
 //				branchno = (String) branchList.peek();	//平均分配服务营业部
 //				branchList.remove(branchno);
 //				branchList.add(branchno);
@@ -157,10 +159,10 @@ public class BBranchServiceImpl extends HbecBaseService<BBranch, String> impleme
             serviceBranch.setUpdatetime(DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date()));
 
             customerServiceBranchService.saveSelective(serviceBranch);
-        }else{
+        } else {
             CustomerServiceBranch customerServiceBranch = customerServiceBranches.get(0);
             String channel = customerServiceBranch.getChannel();
-            if("1".equals(channel) && "0".equals(customerServiceBranch.getSyncrmflg())){		//如果是自行开户的需要更新服务营业部，推荐开户的不允许更新服务营业部
+            if ("1".equals(channel) && "0".equals(customerServiceBranch.getSyncrmflg())) {        //如果是自行开户的需要更新服务营业部，推荐开户的不允许更新服务营业部
                 customerServiceBranch.setBranchno(branchNo);
                 customerServiceBranch.setUpdatetime(DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date()));
                 customerServiceBranchService.updateSelective(customerServiceBranch);

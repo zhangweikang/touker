@@ -281,7 +281,7 @@ public class ToukerService {
                     BBranch branchInfo = bBranchServiceImpl.getBranchInfo(branchno);
 
                     resultMap.put("branchInfo", branchInfo);
-                    if (StringUtils.isNotBlank(commission)) {
+                    /*if (StringUtils.isNotBlank(commission)) {
                         AcceptedCommission queryBean = new AcceptedCommission();
                         queryBean.setBranchNo(branchno);
                         queryBean.setSortNo(commission);
@@ -289,7 +289,7 @@ public class ToukerService {
                         AcceptedCommission acceptedCommission = acceptedCommissionService.queryOneByWhere(queryBean);
 
                         resultMap.put("acceptedCommission", acceptedCommission);
-                    }
+                    }*/
                 }
                 //获取用户驳回信息
                 List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());

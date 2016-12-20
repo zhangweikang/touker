@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * request参数解密
- *
+ * <p/>
  * Created by zhangweikang on 2016/8/18.
  */
 public class RequestParamDecodeInterceptor extends HandlerInterceptorAdapter {
@@ -21,13 +21,14 @@ public class RequestParamDecodeInterceptor extends HandlerInterceptorAdapter {
     private final Log logger = LogFactory.getLog(RequestParamDecodeInterceptor.class);
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        logger.info("请求路径:" + request.getRequestURI());
         Map parameterMap = request.getParameterMap();
-        String _appCrypt_ = (String)parameterMap.get("_appCrypt_");    //密文
+        String _appCrypt_ = (String) parameterMap.get("_appCrypt_");    //密文
         logger.debug("_appCrypt_1:" + _appCrypt_);
         if (_appCrypt_.indexOf("%") > 0) {    //如果加密数据中存在%字符，则需要进行decode
             _appCrypt_ = URLDecoder.decode(_appCrypt_, "UTF8");        //加密数据
         }
-        String _appSign_ = (String)parameterMap.get("_appSign_");        //签名数据
+        String _appSign_ = (String) parameterMap.get("_appSign_");        //签名数据
         logger.debug("_appCrypt_2:" + _appCrypt_);
         logger.debug("_appSign_:" + _appSign_);
         if (StringUtils.isEmpty(_appCrypt_)) {
@@ -60,6 +61,7 @@ public class RequestParamDecodeInterceptor extends HandlerInterceptorAdapter {
                     value = oneParam[1];
                 }
                 request.setAttribute(key, value);
+                logger.info("请求参数: key = " + key + ";value = " + value);
             }
         }
         return true;

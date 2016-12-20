@@ -50,14 +50,16 @@ public class BranchController {
 
         String mobileNo = request.getParameter("mobileNo");
         String branchNo = request.getParameter("branchNo");
+        String commission = request.getParameter("commission");
 //        String mobileNo = (String) request.getAttribute("mobileNo");
 //        String branchNo = (String) request.getAttribute("branchNo");
-        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(branchNo)) {
+//        String commission = (String) request.getAttribute("commission");
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(branchNo) || StringUtils.isBlank(commission)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
 
         try {
-            return bBranchServiceImpl.bindServiceBranch(mobileNo,branchNo);
+            return bBranchServiceImpl.bindServiceBranch(mobileNo,branchNo,commission);
         } catch (Exception e) {
             logger.error("获取用户服务营业部失败!", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常.请稍后再试!");

@@ -44,7 +44,8 @@ public interface BBranchService {
      * 绑定用户营业部
      * @param mobileNo
      * @param branchNo
+     * @param commission
      * @return
      */
-    ResultResponse bindServiceBranch(String mobileNo,String branchNo) throws Exception;
+    ResultResponse bindServiceBranch(String mobileNo,String branchNo,String commission) throws Exception;
 }

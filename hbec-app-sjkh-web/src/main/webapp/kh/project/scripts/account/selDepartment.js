@@ -11,7 +11,8 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         utils = require("utils"),
         branchNo = "",
         branchName = "",
-        _pageId = "#account_selDepartment";
+        commissionJsonEavl = {};
+    _pageId = "#account_selDepartment";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -24,22 +25,7 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         // 初始化页面
         initPage();
         //查询客户是否与经纪人关联了，如果默认选择经纪人的营业部，否则默认显示自贸区营业部
-        initBranch();
-    }
-
-    //初始化显示营业部
-    function initBranch() {
-        service.serviceAjax("/branch/getBranchInfo", {"mobileNo": appUtils.getSStorageInfo("mobileNo")}, function (data) {
-            var code = data.status;
-            if (code == "000000") {
-                getEvent(".sel_branch").attr("branchcode", data.branchno);
-                getEvent(".sel_branch").html(data.branchname);
-                appUtils.setSStorageInfo("branchCode", data.branchno);
-                appUtils.setSStorageInfo("branchName", data.branchname);
-            } else {
-                layerUtils.iMsg(-1, data.msg);
-            }
-        });
+        //initBranch();
     }
 
     function bindPageEvent() {
@@ -79,10 +65,15 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
 
             //向后台发送服务营业部
             var mobileNo = appUtils.getSStorageInfo("mobileNo");
-            var branchNo = appUtils.getSStorageInfo("branchNo");
-            service.serviceAjax("/branch/bindServiceBranch", {"mobileNo": mobileNo,"branchNo":branchNo}, function (data) {
+            var branchNo = getEvent(".sel_branch").attr("branchcode");
+            var commission = getEvent(".sel_branch").attr("commission");
+            service.serviceAjax("/branch/bindServiceBranch", {
+                "mobileNo": mobileNo,
+                "branchNo": branchNo,
+                "commission": commission
+            }, function (data) {
                 var code = data.status;
-                if (code == "000000"){
+                if (code == "000000") {
                     appUtils.pageInit("account/selDepartment", "account/uploadPhoto");
                 } else {
                     layerUtils.iMsg(-1, data.msg);
@@ -103,6 +94,7 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         if (branchName && branchNo) {
             getEvent(".sel_branch").attr("branchcode", branchNo);
             getEvent(".sel_branch").html(branchName);
+            getEvent(".sel_branch").attr("commission", commission);
             getBranch();  // 获取营业部List
         }
         else {
@@ -110,15 +102,37 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         }
     }
 
+    //初始化显示营业部
+    function initBranch() {
+        service.serviceAjax("/branch/getBranchInfo", {"mobileNo": appUtils.getSStorageInfo("mobileNo")}, function (data) {
+            var code = data.status;
+            if (code == "000000") {
+                var branchNo = data.data.branchno;
+                var branchName = data.data.branchname;
+                var commission = commissionJsonEavl[parseInt(branchNo)];
+                getEvent(".sel_branch").attr("branchcode", branchNo);
+                getEvent(".sel_branch").attr("commission", commission);
+                getEvent(".sel_branch").html(branchName);
+                appUtils.setSStorageInfo("branchCode", branchNo);
+                appUtils.setSStorageInfo("branchName", branchName);
+                appUtils.setSStorageInfo("commission", commission);
+            } else {
+                layerUtils.iMsg(-1, data.msg);
+            }
+        });
+    }
+
     /* 获取营业部List */
     function getBranch() {
         service.queryBranch({}, function (data) {
             var error_no = data.error_no;
             if (error_no == "0" && data.dsName) {
-                if (!data.branchList) {
+                var branchList = data.branchList;
+                if (branchList) {
+                    commsionListEavl(data)//获取所有佣金
                     var branchcode = "", branchname = "";
                     var branchUl = getEvent(".branch ul");
-                    for (var j = 0; j < blen; j++) {
+                    for (var j = 0; j < branchList.length; j++) {
                         branchcode = branchList[j].branchcode,
                             branchname = branchList[j].branchname;
                         if (branchcode != "9999" && branchcode != "1100") {//剔除总部
@@ -132,6 +146,8 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
                         }
                     }
                     bindBranch();  //点击营业部
+                    //查询客户是否与经纪人关联了，如果默认选择经纪人的营业部，否则默认显示自贸区营业部
+                    initBranch();
                 }
             }
             else {
@@ -139,6 +155,17 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
             }
         }, true, true, handleTimeout);
     }
+
+    function commsionListEavl(data) {
+        if (!jQuery.isEmptyObject(commissionJsonEavl)) {
+            return;
+        }
+        var commissionList = data.commissionList;
+        for (var i = 0; i < commissionList.length; i++) {
+            commissionJsonEavl[commissionList[i].branchcode] = commissionList[i].commission;
+        }
+    }
+
 
     /* 处理请求超时 */
     function handleTimeout() {
@@ -153,10 +180,13 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
             var branchCode = $(this).attr("bid");
             $(this).addClass("active").siblings().removeClass("active");
             var branchName = $(this).text();  //当前选中营业部的值
+            var commission = commissionJsonEavl[parseInt(branchCode)];
             getEvent(".sel_branch").attr("branchcode", branchCode);
+            getEvent(".sel_branch").attr("commission", commission);
             getEvent(".sel_branch").text(branchName);	  //选中值赋给选择框
             appUtils.setSStorageInfo("branchCode", branchCode);
             appUtils.setSStorageInfo("branchName", branchName);
+            appUtils.setSStorageInfo("commission", commission);
             getEvent(".branch").slideUp("fast");	//隐藏下拉框
             e.stopPropagation();	// 阻止冒泡
         });

@@ -171,79 +171,88 @@ define(function (require, exports, module) {
     function setSessionStorage(obj) {
         var acceptedCertInfo = obj.acceptedCertInfo;
         var branchInfo = obj.branchInfo;
-        // user_id保存到session
-        if (acceptedCertInfo.id) {
-            appUtils.setSStorageInfo("userId", acceptedCertInfo.id);
+        var acceptedCommission = obj.acceptedCommission;
+        if (acceptedCertInfo) {
+            // user_id保存到session
+            if (acceptedCertInfo.id) {
+                appUtils.setSStorageInfo("userId", acceptedCertInfo.id);
+            }
+            // 身份证号保存到session
+            if (acceptedCertInfo.idno) {
+                appUtils.setSStorageInfo("idCardNo", acceptedCertInfo.idno);
+            }
         }
-        // 身份证号保存到session
-        if (acceptedCertInfo.idno) {
-            appUtils.setSStorageInfo("idCardNo", acceptedCertInfo.idno);
-        }
-        // 将营业部Id保存到session
-        if (branchInfo && branchInfo.branchno) {
-            appUtils.setSStorageInfo("branchNo", branchInfo.branchno);
-        }
-        // 将营业部名称保存到session
-        if (branchInfo && branchInfo.branchname) {
-            appUtils.setSStorageInfo("branchName", branchInfo.branchname);
+        if (branchInfo) {
+            // 将营业部Id保存到session
+            if (branchInfo.branchno) {
+                appUtils.setSStorageInfo("branchNo", branchInfo.branchno);
+            }
+            // 将营业部名称保存到session
+            if (branchInfo.branchname) {
+                appUtils.setSStorageInfo("branchName", branchInfo.branchname);
+            }
+            // 将营业部佣金保存到session
+            if (acceptedCertInfo && acceptedCertInfo.commission) {
+                appUtils.setSStorageInfo("commission", branchInfo.commission);
+            }
         }
         /*//手机号保存到session
-        if (result.mobileno) {
-            appUtils.setSStorageInfo("mobileNo", result.mobileno);
-        }
-        // 将客户姓名保存到 session 中
-        if (result.custname) {
-            appUtils.setSStorageInfo("custname", result.custname);
-        }
-        // 签发机关保存到session
-        if (result.policeorg) {
-            appUtils.setSStorageInfo("policeorg", result.policeorg);
-        }
-        // 证件地址保存到session
-        if (result.native) {
-            appUtils.setSStorageInfo("native", result.native);
-        }
-        // 联系地址保存到session
-        if (result.addr) {
-            appUtils.setSStorageInfo("addr", result.addr);
-        }
-        // 起始期限保存到session
-        if (result.idbegindate) {
-            appUtils.setSStorageInfo("idbegindate", result.idbegindate);
-        }
-        // 结束期限保存到session
-        if (result.idenddate) {
-            appUtils.setSStorageInfo("idenddate", result.idenddate);
-        }
-        // 邮编保存到session
-        if (result.postid) {
-            appUtils.setSStorageInfo("postid", result.postid);
-        }
-        // 职业保存到session
-        if (result.profession_code) {
-            appUtils.setSStorageInfo("profession_code", result.profession_code);
-        }
-        // 学历保存到session
-        if (result.edu) {
-            appUtils.setSStorageInfo("edu", result.edu);
-        }
-        // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
-        if (result.clientinfo) {
-            appUtils.setSStorageInfo("clientinfo", result.clientinfo);
-        }
-        // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
-        if (result.jsessionid) {
-            appUtils.setSStorageInfo("jsessionid", result.jsessionid);
-        }
+         if (result.mobileno) {
+         appUtils.setSStorageInfo("mobileNo", result.mobileno);
+         }
+         // 将客户姓名保存到 session 中
+         if (result.custname) {
+         appUtils.setSStorageInfo("custname", result.custname);
+         }
+         // 签发机关保存到session
+         if (result.policeorg) {
+         appUtils.setSStorageInfo("policeorg", result.policeorg);
+         }
+         // 证件地址保存到session
+         if (result.native) {
+         appUtils.setSStorageInfo("native", result.native);
+         }
+         // 联系地址保存到session
+         if (result.addr) {
+         appUtils.setSStorageInfo("addr", result.addr);
+         }
+         // 起始期限保存到session
+         if (result.idbegindate) {
+         appUtils.setSStorageInfo("idbegindate", result.idbegindate);
+         }
+         // 结束期限保存到session
+         if (result.idenddate) {
+         appUtils.setSStorageInfo("idenddate", result.idenddate);
+         }
+         // 邮编保存到session
+         if (result.postid) {
+         appUtils.setSStorageInfo("postid", result.postid);
+         }
+         // 职业保存到session
+         if (result.profession_code) {
+         appUtils.setSStorageInfo("profession_code", result.profession_code);
+         }
+         // 学历保存到session
+         if (result.edu) {
+         appUtils.setSStorageInfo("edu", result.edu);
+         }
+         // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
+         if (result.clientinfo) {
+         appUtils.setSStorageInfo("clientinfo", result.clientinfo);
+         }
+         // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
+         if (result.jsessionid) {
+         appUtils.setSStorageInfo("jsessionid", result.jsessionid);
+         }
 
-        // 将省份保存到session
-        if (result.provincename) {
-            appUtils.setSStorageInfo("provincename", result.provincename);
-        }
-        // 将城市保存到session
-        if (result.cityname) {
-            appUtils.setSStorageInfo("cityname", result.cityname);
-        }*/
+         // 将省份保存到session
+         if (result.provincename) {
+         appUtils.setSStorageInfo("provincename", result.provincename);
+         }
+         // 将城市保存到session
+         if (result.cityname) {
+         appUtils.setSStorageInfo("cityname", result.cityname);
+         }*/
         // 将银行代码保存到session
         if (acceptedCertInfo.banktype) {
             var queryParam = {
@@ -266,10 +275,10 @@ define(function (require, exports, module) {
 
         }
         /*appUtils.setSStorageInfo("shaselect", result.shaselect); // 是否选择沪A
-        appUtils.setSStorageInfo("szaselect", result.szaselect); // 是否选择深A
-        appUtils.setSStorageInfo("hacnselect", result.shaselect); // 是否选择沪开放式基金
-        appUtils.setSStorageInfo("zacnselect", result.szaselect); // 是否选择深开放式基金
-        appUtils.setSStorageInfo("openChannel", "new");*/
+         appUtils.setSStorageInfo("szaselect", result.szaselect); // 是否选择深A
+         appUtils.setSStorageInfo("hacnselect", result.shaselect); // 是否选择沪开放式基金
+         appUtils.setSStorageInfo("zacnselect", result.szaselect); // 是否选择深开放式基金
+         appUtils.setSStorageInfo("openChannel", "new");*/
     }
 
     /**
