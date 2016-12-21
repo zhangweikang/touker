@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.app.sjkh.web</groupId>
-    <artifactId>com-app-sjkh-web</artifactId>
+    <artifactId>hbec-app-sjkh-web</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 

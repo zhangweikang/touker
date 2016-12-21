@@ -11,8 +11,8 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         utils = require("utils"),
         branchNo = "",
         branchName = "",
-        commissionJsonEavl = {};
-    _pageId = "#account_selDepartment";
+        commissionJsonEavl = {},
+        _pageId = "#account_selDepartment";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -24,8 +24,6 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         branchName = appUtils.getSStorageInfo("branchName");  // 用户已选营业部名称
         // 初始化页面
         initPage();
-        //查询客户是否与经纪人关联了，如果默认选择经纪人的营业部，否则默认显示自贸区营业部
-        //initBranch();
     }
 
     function bindPageEvent() {
@@ -127,6 +125,14 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         service.queryBranch({}, function (data) {
             var error_no = data.error_no;
             if (error_no == "0" && data.dsName) {
+                // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
+                if (data.clientinfo) {
+                    appUtils.setSStorageInfo("clientinfo", result.clientinfo);
+                }
+                // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
+                if (data.jsessionid) {
+                    appUtils.setSStorageInfo("jsessionid", result.jsessionid);
+                }
                 var branchList = data.branchList;
                 if (branchList) {
                     commsionListEavl(data)//获取所有佣金
@@ -145,10 +151,11 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
                             branchUl.append(dongDaStr);
                         }
                     }
-                    bindBranch();  //点击营业部
-                    //查询客户是否与经纪人关联了，如果默认选择经纪人的营业部，否则默认显示自贸区营业部
-                    initBranch();
+                    //点击营业部
+                    bindBranch();
                 }
+                //查询客户是否与经纪人关联了，如果默认选择经纪人的营业部，否则默认显示自贸区营业部
+                initBranch();
             }
             else {
                 layerUtils.iMsg(-1, "营业部获取失败");  //提示错误信息

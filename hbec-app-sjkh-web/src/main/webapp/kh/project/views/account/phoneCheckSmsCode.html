@@ -10,7 +10,7 @@
         <div class="mobile_form">
             <div class="input_text h44">
                 <span class="textLable">验证码</span>
-                <input type="tel" class="t1 h24 mobileCode" style="line-height: 18px;" maxlength="6" minlength="6" value="" placeholder="请输入验证码">
+                <input type="tel" class="t1 h24 mobileCode" style="line-height: 18px;color:#2F2F2F;" maxlength="6" minlength="6" value="" placeholder="请输入验证码">
                 <a href="javascript:void(0)" class="code_btn on getmsg">发送验证码</a> <!--此标签默认为灰色状态，加class=on为红色可点击状态-->
                 <a href="javascript:void(0)" class="code_btn time" style="display:none">120秒后重发</a>
             </div>
@@ -30,20 +30,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function(){
-        if($(".mobileCode").val()!="请输入验证码"){
-            $(".mobileCode").css({color:"#E3E3E3"});
-        }
-        $(".mobileCode").on("click",function(){
-            if($(this).val()=="请输入手机号码" || $(this).val()==""){
-                $(this).css({color:"#2F2F2F"}).val("");
-            }
-        });
-        $(".mobileCode").on("blur",function(){
-            if($(this).val()==""){
-                $(this).val("请输入验证码").css({color:"#E3E3E3"});
-            }
-        });
-    })
-</script>

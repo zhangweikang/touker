@@ -18,9 +18,9 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
         if (appUtils.getSStorageInfo("mobileNo") == "") {
-            getEvent(".phoneNum").css({color: "#E3E3E3"}).val("请输入手机号码");
+            getEvent(".phoneNum").val("");
         } else {
-            getEvent(".phoneNum").css({color: "#2F2F2F"}).val(appUtils.getSStorageInfo("mobileNo"));
+            getEvent(".phoneNum").val(appUtils.getSStorageInfo("mobileNo"));
         }
 
         console.log("sumTimeRegistered" + appUtils.getSStorageInfo("mobileNo") + "sumTime_unregistered_key get:" + appUtils.getSStorageInfo("sumTimeRegistered" + appUtils.getSStorageInfo("mobileNo")));
@@ -42,13 +42,9 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
         /* 下一步(继续开户) */
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn"), function () {
             var mobileNo = getEvent(".phoneNum").val();
-            if (mobileNo.length == 0) {
-                layerUtils.iMsg(-1, "请输入手机号！");
-                return;
-            }
-            var telReg = !!mobileNo.match(/^(1\d{10})$/);
+            var telReg = /^(1\d{10})$/;
             //如果手机号码不能通过验证
-            if (telReg == false) {
+            if (!telReg.test(mobileNo)) {
                 layerUtils.iMsg(-1, "请输入正确格式的手机号！");
                 return;
             }

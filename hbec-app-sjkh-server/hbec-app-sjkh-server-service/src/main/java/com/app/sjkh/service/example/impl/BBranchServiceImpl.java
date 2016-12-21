@@ -138,7 +138,7 @@ public class BBranchServiceImpl extends HbecBaseService<BBranch, String> impleme
         AcceptedCertInfo updateBean = new AcceptedCertInfo();
         updateBean.setMobileno(mobileNo);
         updateBean.setBranchno(branchNo);
-        updateBean.setCommission(Integer.valueOf(commission));
+        updateBean.setCommission(Double.parseDouble(commission));
         acceptedCertInfoService.updateByMoblieNoSelective(updateBean);
 
         CustomerServiceBranch serviceBranch = new CustomerServiceBranch();

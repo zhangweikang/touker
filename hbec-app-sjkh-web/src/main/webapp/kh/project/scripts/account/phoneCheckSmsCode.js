@@ -23,6 +23,8 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
         //加载样式
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
+        getEvent("#inputPassword").val("");
+        getEvent(".mobileCode").val("");  // 清除验证码
         isToukerRegister = appUtils.getSStorageInfo("isToukerRegister");
         if (isToukerRegister == "false") {
             getEvent("#password").show();
@@ -68,11 +70,9 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
 
         /* 下一步(继续开户) */
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn"), function () {
-            if (getEvent(".mobileCode").val().length == 0) {
-                layerUtils.iMsg(-1, "请输入验证码！");
-                return;
-            }
-            if (isNaN(getEvent(".mobileCode").val())) {
+            var smsCode = getEvent(".mobileCode").val();
+            var reg = /^[0-9]{6}$/;
+            if (!reg.test(smsCode)) {
                 layerUtils.iMsg(-1, "请输入正确的验证码！");
                 return;
             }
@@ -207,11 +207,6 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
     function destroy() {
         if (startCountDown != null) {
             window.clearInterval(startCountDown);
-        }
-        if (backUrl == "account/phoneCodeVerify") {
-            getEvent(" .getmsg").show();  // 显示按钮
-            getEvent(" .time").hide();  // 隐藏倒计时
-            getEvent(" .mobileCode").val("请输入验证码").css({color: "#E3E3E3"});  // 清除验证码
         }
         service.destroy();
     }

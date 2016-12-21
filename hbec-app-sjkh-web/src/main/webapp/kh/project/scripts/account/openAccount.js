@@ -5,6 +5,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
     // 私有业务模块的全局变量 begin
     var appUtils = require("appUtils"),
         global = require("gconfig").global,
+        service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         utils = require("utils"),
         backUrl = "",
         _pageId = "#account_openAccount";
@@ -16,7 +17,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
 
         //钱钱炒股App保留上方返回按钮
-        if (appUtils.getSStorageInfo("toukerOpenChannel") == "qianqian_app") {
+        if (global.openChannel == "1") {
             $(_pageId + " .icon_back").show();
         }
 
@@ -29,11 +30,8 @@ define("project/scripts/account/openAccount", function (require, exports, module
 
     //检查是否是非开户时间
     function checkIfTradeTime() {
-        $.ajax({
-            type: 'post',
-            url: global.serverToukerUrl + "/commons/getTradeDate",
-            cache: false,
-            success: function (data) {
+        service.serviceAjax("/commons/getTradeDate", {},
+            function (data) {
                 var code = data.status;
                 //001035,非交易时间; 001036,交易时间
                 if (code == "001035") {
@@ -41,17 +39,19 @@ define("project/scripts/account/openAccount", function (require, exports, module
                     getEvent(".fix_bot .ct_btn .next").html("下次再来");
                 }
             },
-            error: function () {
+            function () {
                 getEvent(".fix_bot .ct_btn .next").html("下次再来"); 	//显示 我知道了  按钮
             }
-        });
+        );
     }
 
     //绑定事件
     function bindPageEvent() {
         //为返回按钮绑定返回事件,钱钱炒股中,点击返回按钮,关闭手机APP,返回到钱钱
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            utils.closeApp();
+            if (global.openChannel == "1") {
+                utils.closeApp();
+            }
         });
 
 
@@ -59,9 +59,9 @@ define("project/scripts/account/openAccount", function (require, exports, module
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn .next"), function () {
             var text = getEvent(".fix_bot .ct_btn .next").html();
             if ("我知道了" == text) {
-                if (appUtils.getSStorageInfo("toukerOpenChannel") == "qianqian_app") {
+                if (global.openChannel == "1") {
                     //backUrl != null && backUrl != "" && backUrl != "undefined"
-                    if (!backUrl) {
+                    if (backUrl) {
                         appUtils.pageInit("account/openAccount", backUrl);
                     } else {
                         appUtils.pageInit("account/openAccount", "account/selDepartment");
@@ -82,6 +82,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
     }
 
     function destroy() {
+        service.destroy();
     }
 
     //获取当前页面属性对象
