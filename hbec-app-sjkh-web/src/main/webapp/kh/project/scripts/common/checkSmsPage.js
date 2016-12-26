@@ -150,7 +150,7 @@ define(function (require, exports, module) {
 
         if (newPageCode) {
             //开通三方存管或者三方支付标志（1：一定绑定了三方存管，还可能绑定了三方支付  	2：只绑定了三方支付	0：未绑定三方存管和三方支付）
-            console.log("继续开户tpbankFlg=" + tpbankFlg + " currentStep=" + currentStep + " newPageCode=" + newPageCode + " depositoryPageCode=" + depositoryPageCode + " partiesPayPageCode=" + partiesPayPageCode);
+            console.log("继续开户tpbankFlg=" + tpbankFlg + " lastcompleteStep=" + lastcompleteStep + " newPageCode=" + newPageCode + " depositoryPageCode=" + depositoryPageCode + " partiesPayPageCode=" + partiesPayPageCode);
             if (tpbankFlg == '1') { //绑定了三方存管
                 appUtils.pageInit(codePage, depositoryPageCode);
             } else if (tpbankFlg == '2') { //绑定了三方支付
@@ -181,11 +181,44 @@ define(function (require, exports, module) {
             if (acceptedCertInfo.idno) {
                 appUtils.setSStorageInfo("idCardNo", acceptedCertInfo.idno);
             }
+            // 职业保存到session
+            if (acceptedCertInfo.professionCode) {
+                appUtils.setSStorageInfo("professionCode", acceptedCertInfo.professionCode);
+            }
+            // 将营业部Id保存到session
+            if (acceptedCertInfo.branchno) {
+                appUtils.setSStorageInfo("branchCode", acceptedCertInfo.branchno);
+            }
+            // 将营业部佣金保存到session
+            if (acceptedCertInfo.commission) {
+                appUtils.setSStorageInfo("commission", acceptedCertInfo.commission);
+            }
+            // 将银行代码保存到session
+            if (acceptedCertInfo.banktype) {
+                var queryParam = {
+                    "bindtype": "",
+                    "ispwd": "",
+                    "step": "bankInfo",
+                    "bankCode": result.banktype
+                };
+                service.queryBankList(queryParam, function (data) {
+                    var errorNo = data.error_no;
+                    var errorInfo = data.error_info;
+                    if (errorNo == 0 && data.results.length != 0) {
+                        var bankInfo = data.results[0];
+                        appUtils.setSStorageInfo("bankCode", bankInfo.bankcode);
+                        appUtils.setSStorageInfo(bankInfo.bankcode + "isCard", bankInfo.iscard);
+                    } else {
+                        layerUtils.iAlert(errorInfo, -1);
+                    }
+                }, true, true, null);
+
+            }
         }
         if (branchInfo) {
             // 将营业部Id保存到session
             if (branchInfo.branchno) {
-                appUtils.setSStorageInfo("branchNo", branchInfo.branchno);
+                appUtils.setSStorageInfo("branchCode", branchInfo.branchno);
             }
             // 将营业部名称保存到session
             if (branchInfo.branchname) {
@@ -253,27 +286,6 @@ define(function (require, exports, module) {
          if (result.cityname) {
          appUtils.setSStorageInfo("cityname", result.cityname);
          }*/
-        // 将银行代码保存到session
-        if (acceptedCertInfo.banktype) {
-            var queryParam = {
-                "bindtype": "",
-                "ispwd": "",
-                "step": "bankInfo",
-                "bankCode": result.banktype
-            };
-            service.queryBankList(queryParam, function (data) {
-                var errorNo = data.error_no;
-                var errorInfo = data.error_info;
-                if (errorNo == 0 && data.results.length != 0) {
-                    var bankInfo = data.results[0];
-                    appUtils.setSStorageInfo("bankCode", bankInfo.bankcode);
-                    appUtils.setSStorageInfo(bankInfo.bankcode + "isCard", bankInfo.iscard);
-                } else {
-                    layerUtils.iAlert(errorInfo, -1);
-                }
-            }, true, true, null);
-
-        }
         /*appUtils.setSStorageInfo("shaselect", result.shaselect); // 是否选择沪A
          appUtils.setSStorageInfo("szaselect", result.szaselect); // 是否选择深A
          appUtils.setSStorageInfo("hacnselect", result.shaselect); // 是否选择沪开放式基金
@@ -365,11 +377,10 @@ define(function (require, exports, module) {
         }
     }
 
-    var checkSmsPage = {
+    module.exports = {
         "valiDataReject": valiDataReject,
         "pageNextStep": pageNextStep,
         "setSessionStorage": setSessionStorage,
         "valiDataCustomeInfo": valiDataCustomeInfo
-    }
-    module.exports = checkSmsPage;
+    };
 });

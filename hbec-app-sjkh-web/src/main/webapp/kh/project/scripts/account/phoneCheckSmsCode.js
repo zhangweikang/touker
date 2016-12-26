@@ -130,6 +130,22 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
             "ip": appUtils.getSStorageInfo("ip"),
             "mac": appUtils.getSStorageInfo("mac")
         };
+        var paramCheckSms = {
+            "mobile_no" : phoneNum,
+            "mobile_code" : getEvent(".mobileCode").val(),
+            "login_flag" : "0"
+        };
+        service.checkSmsCode(paramCheckSms,function(data){
+            var result = data.results;
+            // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
+            if (result[0].clientinfo) {
+                appUtils.setSStorageInfo("clientinfo", result[0].clientinfo);
+            }
+            // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
+            if (result[0].jsessionid) {
+                appUtils.setSStorageInfo("jsessionid", result[0].jsessionid);
+            }
+        });
 
         checkSmsPage.valiDataCustomeInfo(paramCheck, "account/phoneCheckSmsCode");
     }

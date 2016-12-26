@@ -293,7 +293,7 @@ public class ToukerService {
                 }
                 //获取用户驳回信息
                 List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());
-                if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
+                if (acceptedRejectLogs != null && acceptedRejectLogs.isEmpty()) {
                     Map<String,Object> beanMap = new HashMap<>();
                     for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
                         beanMap.put(acceptedRejectLog.getFieldenname(),acceptedRejectLog);
@@ -329,7 +329,7 @@ public class ToukerService {
         Account data = (Account) resultResponse.getData();
         String customerId = data.getCustomerId();
         logger.debug("投客客户号=" + customerId);
-        if (StringUtils.isEmpty(customerId)) {
+        if (StringUtils.isBlank(customerId)) {
             //将手机号码和投客id关联
             //首先判断数据是否存在关联
             ToukerIdClientIdRelation bean = new ToukerIdClientIdRelation();
@@ -340,7 +340,7 @@ public class ToukerService {
                 Long toukerId = data.getId();
                 bean = new ToukerIdClientIdRelation();
                 String sequence = toukerIdClientIdRelationService.querySequence();
-                if (StringUtils.isEmpty(sequence)) {
+                if (StringUtils.isBlank(sequence)) {
                     logger.info("toukerIdClientIdRelationService获取序列失败");
                     return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
                 }
@@ -384,7 +384,7 @@ public class ToukerService {
         Account data = (Account) resultResponse.getData();
         ToukerIdClientIdRelation bean = new ToukerIdClientIdRelation();
         String sequence = toukerIdClientIdRelationService.querySequence();
-        if (StringUtils.isEmpty(sequence)) {
+        if (StringUtils.isBlank(sequence)) {
             logger.info("toukerIdClientIdRelationService获取序列失败");
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
         }
@@ -484,7 +484,7 @@ public class ToukerService {
 
         String saved_code = "";
 
-        if (!StringUtils.isEmpty(savedCodetime)) {
+        if (!StringUtils.isBlank(savedCodetime)) {
             String[] codetime = savedCodetime.split("_");
             saved_code = codetime[0];
             String sendTime = codetime[1];
@@ -544,7 +544,7 @@ public class ToukerService {
 
         BBusinessLog bBusinessLog = new BBusinessLog();
         String sequence = bBusinessLogService.querySequence();
-        if (StringUtils.isEmpty(sequence)) {
+        if (StringUtils.isBlank(sequence)) {
             logger.info("获取序列失败");
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
         }
@@ -579,7 +579,7 @@ public class ToukerService {
      */
     public ResultResponse queryInfoBank(String customerId) {
         logger.info("【queryInfoBank】customerId=" + customerId);
-        if (!StringUtils.isEmpty(customerId)) {
+        if (!StringUtils.isBlank(customerId)) {
             //查询开通的三方存管信息
             ResultResponse resultResponse = esbApiService.queryBankInfoByDingDian(customerId);
             if (ResultCode.HBEC_001015.getCode().equals(resultResponse.getStatus())) {
@@ -632,7 +632,7 @@ public class ToukerService {
         Map<String, String> resultMap = new HashMap<>();
         String idnoDD;    //顶点客户号对应身份证号
         logger.info("validateCustInfo:mobileno=" + mobileNo + " khh=" + customerId);
-        if (StringUtils.isEmpty(mobileNo)) {
+        if (StringUtils.isBlank(mobileNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
 
@@ -657,7 +657,7 @@ public class ToukerService {
             if (acceptedCustomerInfo != null) {
 
                 String clientId = acceptedCustomerInfo.getClientId();
-                if (StringUtils.isEmpty(clientId)) {
+                if (StringUtils.isBlank(clientId)) {
                     //已开出客户号来  直接提示客户
                     logger.info("手机号" + mobileNo + "已经开出客户号,请您输入新的手机号！");
                     return ResultResponse.build(ResultCode.HBEC_001025.getCode(), ResultCode.HBEC_001025.getMemo(), resultMap);
@@ -685,7 +685,7 @@ public class ToukerService {
                 String idnoSD = acceptedCustomerInfo.getIdno();
 
                 logger.info("手机号=" + mobileNo + "在思迪身份证=" + idnoSD + " 营业部=" + branchno);
-                if (StringUtils.isEmpty(idnoDD) || StringUtils.isEmpty(idnoSD)) {
+                if (StringUtils.isBlank(idnoDD) || StringUtils.isBlank(idnoSD)) {
                     logger.info("思迪系统或者顶点接口返回的的客户身份证号为空");
                     return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo(), resultMap);
                 }
@@ -743,7 +743,7 @@ public class ToukerService {
 
             String idnoSD = certInfo.getIdno();
             logger.info("思迪系统证书表中身份号：" + idnoSD);
-            if (StringUtils.isEmpty(idnoSD)) {    //从未在app上传身份证
+            if (StringUtils.isBlank(idnoSD)) {    //从未在app上传身份证
                 certInfo.setBranchno(yyb);    //重置营业部
                 certInfo.setMobileno(mobileNo);
                 acceptedCertInfoService.updateByMoblieNoSelective(certInfo);
@@ -792,7 +792,7 @@ public class ToukerService {
         //客户信息表不为空	步骤肯定已经在身份证信息确认之后
         if (acceptedCustomerInfo != null) {
             String clientId = acceptedCustomerInfo.getClientId();
-            if (!StringUtils.isEmpty(clientId)) {
+            if (!StringUtils.isBlank(clientId)) {
                 //思迪系统已经开出客户号
                 logger.info("手机号" + mobileNo + "的手机号已经开出客户号,请您输入新的手机号！");
                 return ResultResponse.build(ResultCode.HBEC_001025.getCode(), ResultCode.HBEC_001025.getMemo(), resultMap);
@@ -809,14 +809,6 @@ public class ToukerService {
                 logger.info("手机号" + mobileNo + "的开户资料已提交，处于待审核或者回访状态");
                 return ResultResponse.build(ResultCode.HBEC_001025.getCode(), ResultCode.HBEC_001025.getMemo(), resultMap);
             }
-        }
-        ResultResponse resultResponse = valiUserInfo(mobileNo);
-        Object obj = resultResponse.getData();
-        if (obj != null){
-            resultMap.putAll((HashMap<String, String>)obj);
-        }
-        if (ResultCode.HBEC_001040.getCode().compareTo(resultResponse.getStatus()) == 0){
-            resultMap.put("reject","reject");
         }
         return ResultResponse.ok(resultMap);
     }
@@ -894,7 +886,7 @@ public class ToukerService {
             resultMap.put("edu", data.get("xl"));
 
             String postid = data.get("jtyb");
-            if (StringUtils.isEmpty(postid)) {
+            if (StringUtils.isBlank(postid)) {
                 try {
                     postid = bPostService.queryPostId(data.get("zjdz"));
                 } catch (Exception e) {
@@ -1046,10 +1038,16 @@ public class ToukerService {
 
     public ResultResponse getPhoto(AcceptedMediaUrl bean) throws Exception {
         List<AcceptedMediaUrl> acceptedMediaUrls = acceptedMediaUrlService.queryByWhere(bean);
-        if (acceptedMediaUrls == null || acceptedMediaUrls.isEmpty()) {
+        AcceptedCertInfo queryBean = new AcceptedCertInfo();
+        queryBean.setId(Long.valueOf(bean.getUserid()));
+        AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.queryOneByWhere(queryBean);
+        if (acceptedMediaUrls == null || acceptedMediaUrls.isEmpty() || acceptedCertInfo == null) {
             return ResultResponse.build(ResultCode.HBEC_001006.getCode(), null);
         } else {
-            return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, acceptedMediaUrls);
+            Map<String,Object> result = new HashMap<>();
+            result.put("acceptedMediaUrls",acceptedMediaUrls);
+            result.put("acceptedCertInfo",acceptedCertInfo);
+            return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, result);
         }
     }
 
@@ -1058,10 +1056,14 @@ public class ToukerService {
         AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.queryOneByWhere(bean);
 
         if (acceptedCertInfo == null) {
-            return ResultResponse.build(ResultCode.HBEC_001006.getCode(), null, acceptedCertInfo);
+            return ResultResponse.build(ResultCode.HBEC_001006.getCode(), null, ResultCode.HBEC_001006.getMemo());
         } else {
+            ResultResponse resultResponse = toukerApiService.accountServiceFindByPhone(acceptedCertInfo.getMobileno());
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0){
+                Account account = (Account)resultResponse.getData();
+                acceptedCertInfo.setCertUploadState(account.getCertUploadState().toString());
+            }
             return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, acceptedCertInfo);
         }
-
     }
 }

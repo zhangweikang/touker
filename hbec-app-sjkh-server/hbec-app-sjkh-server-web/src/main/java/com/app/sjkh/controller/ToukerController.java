@@ -274,6 +274,14 @@ public class ToukerController {
                 data.put("tpbankFlg", ResultCode.HBEC_001020.getCode());
                 data.put("tpAddr", "");
             }
+            ResultResponse resultResponse1 = toukerService.valiUserInfo(mobileNo);
+            Object obj = resultResponse1.getData();
+            if (obj != null){
+                data.putAll((HashMap<String, String>)obj);
+            }
+            if (ResultCode.HBEC_001040.getCode().compareTo(resultResponse.getStatus()) == 0){
+                data.put("reject","reject");
+            }
             resultResponse.setData(data);
             return resultResponse;
         } catch (Exception e) {
@@ -370,7 +378,8 @@ public class ToukerController {
     @RequestMapping(value = "getPhoto", method = RequestMethod.POST)
     @ResponseBody
     public ResultResponse getPhoto(HttpServletRequest request) {
-        String id = (String) request.getAttribute("id");
+        String id = request.getParameter("id");
+        //String id = (String) request.getAttribute("id");
 
         if (StringUtils.isBlank(id)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
@@ -389,7 +398,8 @@ public class ToukerController {
     @RequestMapping(value = "getCertInfo", method = RequestMethod.POST)
     @ResponseBody
     public ResultResponse getCertInfo(HttpServletRequest request) {
-        String id = (String) request.getAttribute("id");
+        String id = request.getParameter("id");
+        //String id = (String) request.getAttribute("id");
 
         if (StringUtils.isBlank(id)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());

@@ -125,14 +125,6 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         service.queryBranch({}, function (data) {
             var error_no = data.error_no;
             if (error_no == "0" && data.dsName) {
-                // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
-                if (data.clientinfo) {
-                    appUtils.setSStorageInfo("clientinfo", result.clientinfo);
-                }
-                // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
-                if (data.jsessionid) {
-                    appUtils.setSStorageInfo("jsessionid", result.jsessionid);
-                }
                 var branchList = data.branchList;
                 if (branchList) {
                     commsionListEavl(data)//获取所有佣金
