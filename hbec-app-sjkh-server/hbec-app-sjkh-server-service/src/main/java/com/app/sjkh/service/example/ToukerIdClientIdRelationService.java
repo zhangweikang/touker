@@ -1,30 +1,12 @@
 package com.app.sjkh.service.example;
 
-import com.app.sjkh.mapper.sjdatasource.ToukerIdClientIdRelationMapper;
 import com.app.sjkh.pojo.local.ToukerIdClientIdRelation;
 import com.app.sjkh.service.base.HbecBaseService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
- * Created by zhangweikang on 2016/8/12.
+ * Created by Administrator on 2016/12/26.
  */
-@Service
-public class ToukerIdClientIdRelationService extends HbecBaseService<ToukerIdClientIdRelation,Long> {
+public interface ToukerIdClientIdRelationService extends HbecBaseService<ToukerIdClientIdRelation,Long>{
 
-	private final Log logger = LogFactory.getLog(ToukerIdClientIdRelationService.class);
-
-	@Autowired
-	private ToukerIdClientIdRelationMapper toukerIdClientIdRelationMapper;
-
-	/**
-	 * 获取序列
-	 * @return
-	 */
-	public String querySequence() throws Exception {
-		return toukerIdClientIdRelationMapper.querySequence();
-	}
-
+    String querySequence() throws Exception;
 }

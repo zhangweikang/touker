@@ -2,11 +2,9 @@ package com.app.sjkh.service.example;
 
 import com.app.sjkh.pojo.local.EnumValue;
 import com.app.sjkh.service.base.HbecBaseService;
-import org.springframework.stereotype.Service;
 
 /**
- * Created by zhangweikang on 2016/8/10.
+ * Created by Administrator on 2016/12/26.
  */
-@Service
-public class EnumValueService extends HbecBaseService<EnumValue,String> {
+public interface EnumValueService extends HbecBaseService<EnumValue,String>{
 }

@@ -2,13 +2,14 @@ package com.app.sjkh.service.example;
 
 import com.app.sjkh.commons.vo.ResultResponse;
 import com.app.sjkh.pojo.local.BBranch;
+import com.app.sjkh.service.base.HbecBaseService;
 
 import java.util.LinkedList;
 
 /**
  * Created by Administrator on 2016/12/19.
  */
-public interface BBranchService {
+public interface BBranchService extends HbecBaseService<BBranch, String>{
 
     /**
      * 根据营业部号,获取营业部名称

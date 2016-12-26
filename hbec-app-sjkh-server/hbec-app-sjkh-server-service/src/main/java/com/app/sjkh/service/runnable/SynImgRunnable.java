@@ -7,6 +7,7 @@ import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
 import com.app.sjkh.pojo.local.AcceptedMediaUrl;
 import com.app.sjkh.service.example.AcceptedMediaUrlService;
+import com.app.sjkh.service.example.impl.AcceptedMediaUrlServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,7 +23,7 @@ public class SynImgRunnable implements Runnable {
     private AcceptedMediaUrlService acceptedMediaUrlService;
 
     public SynImgRunnable(String userID, String toukerId, String imgflag,
-                          ToukerApiService toukerApiService, AcceptedMediaUrlService acceptedMediaUrlService) {
+                          ToukerApiService toukerApiService, AcceptedMediaUrlServiceImpl acceptedMediaUrlService) {
         this.userId = userID;
         this.toukerId = toukerId;
         this.imgflag = imgflag;

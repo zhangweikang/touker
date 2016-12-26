@@ -1,13 +1,14 @@
 package com.app.sjkh.service.example;
 
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
+import com.app.sjkh.service.base.HbecBaseService;
 
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/12/19.
  */
-public interface AcceptedCertInfoService {
+public interface AcceptedCertInfoService extends HbecBaseService<AcceptedCertInfo,Long>{
 
     Integer updateByMoblieNoSelective(AcceptedCertInfo bean) throws Exception;
 

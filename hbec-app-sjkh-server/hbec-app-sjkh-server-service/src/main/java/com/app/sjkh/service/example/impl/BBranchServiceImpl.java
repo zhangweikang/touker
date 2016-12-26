@@ -8,7 +8,7 @@ import com.app.sjkh.mapper.sjdatasource.BBranchMapper;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
 import com.app.sjkh.pojo.local.BBranch;
 import com.app.sjkh.pojo.local.CustomerServiceBranch;
-import com.app.sjkh.service.base.HbecBaseService;
+import com.app.sjkh.service.base.HbecBaseServiceImpl;
 import com.app.sjkh.service.example.AcceptedCertInfoService;
 import com.app.sjkh.service.example.BBranchService;
 import com.app.sjkh.service.example.CustomerServiceBranchService;
@@ -24,7 +24,7 @@ import java.util.*;
  * Created by zhangweikang on 2016/8/22.
  */
 @Service
-public class BBranchServiceImpl extends HbecBaseService<BBranch, String> implements BBranchService {
+public class BBranchServiceImpl extends HbecBaseServiceImpl<BBranch, String> implements BBranchService {
 
     private final static Log logger = LogFactory.getLog(BBranchServiceImpl.class);
 

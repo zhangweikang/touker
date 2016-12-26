@@ -1,6 +1,7 @@
 package com.app.sjkh.web.service;
 
 import com.app.sjkh.commons.servier.ApiService;
+import com.app.sjkh.web.service.impl.PromoterService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ import java.util.Map;
  * Created by Administrator on 2016/12/6.
  */
 @Service
-public class PromoterService {
+public class PromoterServiceImpl implements PromoterService {
 
-    private Log logger = LogFactory.getLog(PromoterService.class);
+    private Log logger = LogFactory.getLog(PromoterServiceImpl.class);
 
     @Autowired
     private ApiService apiService;

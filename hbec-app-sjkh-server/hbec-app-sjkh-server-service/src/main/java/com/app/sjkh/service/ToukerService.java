@@ -1,8 +1,5 @@
 package com.app.sjkh.service;
 
-import com.app.sjkh.service.example.impl.AcceptedCertInfoServiceImpl;
-import com.app.sjkh.service.example.impl.BBranchServiceImpl;
-import com.app.sjkh.service.runnable.SynImgRunnable;
 import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.servier.RedisService;
 import com.app.sjkh.commons.servier.ToukerApiService;
@@ -15,7 +12,8 @@ import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
 import com.app.sjkh.pojo.local.*;
 import com.app.sjkh.service.example.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.app.sjkh.service.example.impl.AcceptedMediaUrlServiceImpl;
+import com.app.sjkh.service.runnable.SynImgRunnable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,7 +31,6 @@ public class ToukerService {
 
     private final Log logger = LogFactory.getLog(ToukerService.class);
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Autowired
     private EnumValueService enumValueService;
@@ -54,7 +51,7 @@ public class ToukerService {
     private AcceptedScheduleService acceptedScheduleService;
 
     @Autowired
-    private AcceptedCertInfoServiceImpl acceptedCertInfoService;
+    private AcceptedCertInfoService acceptedCertInfoService;
 
     @Autowired
     private BPostService bPostService;
@@ -66,10 +63,10 @@ public class ToukerService {
     private CustomerServiceBranchService customerServiceBranchService;
 
     @Autowired
-    private BBranchServiceImpl bBranchServiceImpl;
+    private BBranchService bBranchServiceImpl;
 
     @Autowired
-    private AcceptedMediaUrlService acceptedMediaUrlService;
+    private AcceptedMediaUrlServiceImpl acceptedMediaUrlService;
 
     @Autowired
     private AcceptedRejectLogService acceptedRejectLogService;

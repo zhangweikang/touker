@@ -2,7 +2,7 @@ package com.app.sjkh.service.example.impl;
 
 import com.app.sjkh.mapper.sjdatasource.AcceptedCertInfoMapper;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
-import com.app.sjkh.service.base.HbecBaseService;
+import com.app.sjkh.service.base.HbecBaseServiceImpl;
 import com.app.sjkh.service.example.AcceptedCertInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by zhangweikang on 2016/8/5.
  */
 @Service
-public class AcceptedCertInfoServiceImpl extends HbecBaseService<AcceptedCertInfo, Long> implements AcceptedCertInfoService {
+public class AcceptedCertInfoServiceImpl extends HbecBaseServiceImpl<AcceptedCertInfo, Long> implements AcceptedCertInfoService {
 
 	@Autowired
 	private AcceptedCertInfoMapper acceptedCertInfoMapper;

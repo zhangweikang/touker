@@ -10,6 +10,8 @@ import com.app.sjkh.pojo.local.AcceptedSchedule;
 import com.app.sjkh.pojo.local.KhTask;
 import com.app.sjkh.service.example.AcceptedScheduleService;
 import com.app.sjkh.service.example.KhTaskService;
+import com.app.sjkh.service.example.impl.AcceptedScheduleServiceImpl;
+import com.app.sjkh.service.example.impl.KhTaskServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

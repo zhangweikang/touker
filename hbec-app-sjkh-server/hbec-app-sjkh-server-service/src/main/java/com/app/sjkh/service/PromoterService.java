@@ -9,8 +9,8 @@ import com.app.sjkh.pojo.local.CustomerServiceBranch;
 import com.app.sjkh.pojo.local.PromoteCustomer;
 import com.app.sjkh.service.example.CustomerServiceBranchService;
 import com.app.sjkh.service.example.PromoteCustomerService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.app.sjkh.service.example.impl.CustomerServiceBranchServiceImpl;
+import com.app.sjkh.service.example.impl.PromoteCustomerServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhangweikang on 2016/8/22.

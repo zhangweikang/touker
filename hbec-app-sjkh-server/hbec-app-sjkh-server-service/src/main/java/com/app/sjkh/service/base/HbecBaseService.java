@@ -1,168 +1,38 @@
 package com.app.sjkh.service.base;
 
-import com.github.abel533.mapper.Mapper;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * 父Service，主要实现CRUD的封装
+ * Created by Administrator on 2016/12/26.
  */
-public abstract class HbecBaseService<T, ID extends Serializable> {
+public interface HbecBaseService<T, ID extends Serializable>{
 
-    //利用Spring4.X注解注入
-    @Autowired
-    private Mapper<T> mapper;
-    /**
-     * 需要子类实现
-     *
-     * @return
-     */
-    /*public void setMapper(Mapper<T> mapper) {
-		this.mapper = mapper;
-	}
-	public Mapper<T> getMapper() {
-		return mapper;
-	}*/
+    T queryById(ID id);
 
-    /**
-     * 根据主键查询
-     *
-     * @param id
-     * @return
-     */
-    public T queryById(ID id) {
-        return mapper.selectByPrimaryKey(id);
-    }
+    Integer queryCount();
 
-    /**
-     * 查询数据总条数
-     *
-     * @return
-     */
-    public Integer queryCount() {
-        return mapper.selectCount(null);
-    }
+    Integer queryCount(T t);
 
-    /**
-     * 根据条件查询数据条数
-     *
-     * @param t
-     * @return
-     */
-    public Integer queryCount(T t) {
-        return mapper.selectCount(t);
-    }
+    List<T> queryAll();
 
-    /**
-     * 查询所有数据
-     *
-     * @return
-     */
-    public List<T> queryAll() {
-        return mapper.select(null);
-    }
+    List<T> queryByWhere(T t);
 
-    /**
-     * 根据条件查询
-     *
-     * @param t
-     * @return
-     */
-    public List<T> queryByWhere(T t) {
-        return mapper.select(t);
-    }
+    T queryOneByWhere(T t);
 
-    /**
-     * 根据条件查询单条数据
-     *
-     * @param t
-     * @return
-     */
-    public T queryOneByWhere(T t) {
-        List<T> list = this.queryByWhere(t);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
-        return null;
-    }
+    PageInfo<T> queryPageList(Integer page, Integer rows);
 
-    /**
-     * 分页查询
-     *
-     * @param page
-     * @param rows
-     * @return
-     */
-    public PageInfo<T> queryPageList(Integer page, Integer rows) {
-        // 分页参数
-        PageHelper.startPage(page, rows, true);
-        List<T> list = queryAll();
-        return new PageInfo<T>(list);
-    }
+    PageInfo<T> queryPageList(T t, Integer page, Integer rows);
 
-    /**
-     * 根据条件做分页查询
-     *
-     * @param t
-     * @param page
-     * @param rows
-     * @return
-     */
-    public PageInfo<T> queryPageList(T t, Integer page, Integer rows) {
-        // 分页参数
-        PageHelper.startPage(page, rows, true);
-        List<T> list = queryByWhere(t);
-        return new PageInfo<T>(list);
-    }
+    Integer save(T t);
 
-    /**
-     * 新增数据，全部字段保存
-     *
-     * @param t
-     */
-    public Integer save(T t) {
-        return mapper.insert(t);
-    }
+    Integer saveSelective(T t);
 
-    /**
-     * 新增数据，不为null的字段做保存
-     *
-     * @param t
-     */
-    public Integer saveSelective(T t) {
-        return mapper.insertSelective(t);
-    }
+    Integer update(T t);
 
-    /**
-     * 更新，所有字段
-     *
-     * @param t
-     */
-    public Integer update(T t) {
-        return mapper.updateByPrimaryKey(t);
-    }
+    Integer updateSelective(T t);
 
-    /**
-     * 更新，不为null的字段
-     *
-     * @param t
-     */
-    public Integer updateSelective(T t) {
-        return mapper.updateByPrimaryKeySelective(t);
-    }
-
-    /**
-     * 根据主键物理删除数据
-     *
-     * @param id
-     * @return
-     */
-    public Integer deleteById(ID id) {
-        return mapper.deleteByPrimaryKey(id);
-    }
-
+    Integer deleteById(ID id);
 }

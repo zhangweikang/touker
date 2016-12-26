@@ -1,7 +1,8 @@
 package com.app.sjkh.web.controller;
 
 import com.app.sjkh.commons.vo.Constants;
-import com.app.sjkh.web.service.PromoterService;
+import com.app.sjkh.web.service.PromoterServiceImpl;
+import com.app.sjkh.web.service.impl.PromoterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 对外推广页面

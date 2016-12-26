@@ -1,13 +1,7 @@
 package com.app.sjkh.service.example;
 
-import com.app.sjkh.pojo.local.ProcessLog;
-import com.app.sjkh.service.base.HbecBaseService;
-import org.springframework.stereotype.Service;
-
 /**
- * Created by zhangweikang on 2016/8/5.
+ * Created by Administrator on 2016/12/26.
  */
-@Service
-public class ProcessLogService extends HbecBaseService<ProcessLog,String> {
-
+public interface ProcessLogService {
 }

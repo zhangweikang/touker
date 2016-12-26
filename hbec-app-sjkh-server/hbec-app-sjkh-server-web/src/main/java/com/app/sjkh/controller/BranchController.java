@@ -25,7 +25,7 @@ public class BranchController {
     private final static Log logger = LogFactory.getLog(BranchController.class);
 
     @Autowired
-    private BBranchService bBranchServiceImpl;
+    private BBranchService bBranchService;
 
     @RequestMapping(value = "getBranchInfo", method = RequestMethod.POST)
     @ResponseBody
@@ -38,7 +38,7 @@ public class BranchController {
         }
 
         try {
-            return bBranchServiceImpl.getBranchInfoByMobilNo(mobileNo);
+            return bBranchService.getBranchInfoByMobilNo(mobileNo);
         } catch (Exception e) {
             logger.error("获取用户服务营业部失败!", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常.请稍后再试!");
@@ -59,7 +59,7 @@ public class BranchController {
         }
 
         try {
-            return bBranchServiceImpl.bindServiceBranch(mobileNo,branchNo,commission);
+            return bBranchService.bindServiceBranch(mobileNo,branchNo,commission);
         } catch (Exception e) {
             logger.error("获取用户服务营业部失败!", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常.请稍后再试!");
