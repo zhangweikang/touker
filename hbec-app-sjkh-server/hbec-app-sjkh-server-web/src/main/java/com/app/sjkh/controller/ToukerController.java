@@ -299,7 +299,7 @@ public class ToukerController {
     @RequestMapping(value = "clearUnSubmitUserInfo", method = RequestMethod.POST)
     @ResponseBody
     public ResultResponse clearUnSubmitUserInfo(HttpServletRequest request) {
-        String userId = request.getParameter("user_id");
+        String userId = request.getParameter("userId");
         String idno = request.getParameter("idno");
 
 //		String userId = (String)request.getAttribute("user_id");
@@ -309,7 +309,6 @@ public class ToukerController {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
         try {
-            System.out.println("request = [" + request + "]");
             return toukerService.clearUnSubmitUserInfo(idno, userId);
         } catch (Exception e) {
             logger.error("清除用户信息异常", e);

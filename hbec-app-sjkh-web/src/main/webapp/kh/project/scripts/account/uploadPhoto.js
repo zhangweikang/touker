@@ -280,7 +280,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
             fillInformationInParam.natives = obj['native'];  // 证件地址
             fillInformationInParam.addr = obj['native'];  // 联系地址默认为证件地址
             fillInformationInParam.ethnicname = obj.ethnicname;  // 民族
-            appUtils.setSStorageInfo("ethnicname", obj.ethnicname);
+            appUtils.setSStorageInfo("ethnic", obj.ethnicname);
             fillInformationInParam.birthday = obj.birthday;  // 出生日期
             fillInformationInParam.gender = obj.usersex;  // 用户性别
 
@@ -400,15 +400,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
     function displayPhoto() {
         var param = {"id": appUtils.getSStorageInfo('userId')};
 
-        /*if (utils.isAndroid()) {
-         var paramData = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
-         toukerServerPluginCallback(paramData);
-         } else {
-         require("shellPlugin").callShellMethod("toukerServerPlugin", function (rtnparam) {
-         toukerServerPluginCallback(rtnparam);
-         }, function (data) {
-         }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
-         }*/
+        /*param = utils.getParams(param);*/
         toukerServerPluginCallback(param);
         function toukerServerPluginCallback(paramData) {
             layerUtils.iLoading(true);

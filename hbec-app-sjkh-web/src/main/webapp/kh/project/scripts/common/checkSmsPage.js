@@ -151,9 +151,9 @@ define(function (require, exports, module) {
         if (newPageCode) {
             //开通三方存管或者三方支付标志（1：一定绑定了三方存管，还可能绑定了三方支付  	2：只绑定了三方支付	0：未绑定三方存管和三方支付）
             console.log("继续开户tpbankFlg=" + tpbankFlg + " lastcompleteStep=" + lastcompleteStep + " newPageCode=" + newPageCode + " depositoryPageCode=" + depositoryPageCode + " partiesPayPageCode=" + partiesPayPageCode);
-            if (tpbankFlg == '1') { //绑定了三方存管
+            if (tpbankFlg == '001015') { //绑定了三方存管
                 appUtils.pageInit(codePage, depositoryPageCode);
-            } else if (tpbankFlg == '2') { //绑定了三方支付
+            } else if (tpbankFlg == '001017') { //绑定了三方支付
                 appUtils.pageInit(codePage, partiesPayPageCode);
             } else { //未绑定三方存管和三方支付
                 appUtils.pageInit(codePage, newPageCode);
@@ -192,6 +192,10 @@ define(function (require, exports, module) {
             // 将营业部佣金保存到session
             if (acceptedCertInfo.commission) {
                 appUtils.setSStorageInfo("commission", acceptedCertInfo.commission);
+            }
+            // 将名族保存到session
+            if (acceptedCertInfo.ethnic) {
+                appUtils.setSStorageInfo("ethnic", acceptedCertInfo.ethnic);
             }
             // 将银行代码保存到session
             if (acceptedCertInfo.banktype) {
@@ -298,16 +302,9 @@ define(function (require, exports, module) {
      * 按用户流程跳转
      **/
     function valiDataCustomeInfo(param, codePage) {
-
-        /*if (utils.isAndroid()) {
-         var data = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
-         toukerServerPluginCallback(data);
-         } else {
-         require("shellPlugin").callShellMethod("toukerServerPlugin", function (param) {
-         toukerServerPluginCallback(param);
-         }, function (data) {
-         }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
-         }*/
+        /*
+        * param = utils.getParams(param);
+        */
         toukerServerPluginCallback(param);
         function toukerServerPluginCallback(param) {
             service.serviceAjax("/touker/validateCustInfo", param, function (data) {

@@ -72,16 +72,7 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
                 "mobileNo": mobileNo
             };
 
-            /*var returnData = "";
-            if (utils.isAndroid()) {
-                returnData = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
-                toukerServerPluginCallback(returnData);
-            } else {
-                require("shellPlugin").callShellMethod("toukerServerPlugin", function (rtnparam) {
-                    toukerServerPluginCallback(rtnparam);
-                }, function (data) {
-                }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
-            }*/
+            /*param = utils.getParams(param);*/
             toukerServerPluginCallback(param);
             function toukerServerPluginCallback(returnData) {
                 service.serviceAjax("/touker/isToukerUser",returnData,function(data){

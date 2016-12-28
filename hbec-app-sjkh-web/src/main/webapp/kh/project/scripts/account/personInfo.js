@@ -200,56 +200,37 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var idno = getEvent(".idCardNo").val();  // 身份证号
         //先进行预处理（清除之前占用了该身份证号的客户的数据信息）
         var khh = appUtils.getSStorageInfo("khh");
-        var paramCert = {
-            "step": "clearUnSubmitUserInfo",
-            "userId": appUtils.getSStorageInfo("userId"),
-            "idno": idno
-        };
+        var paramCert = {"userId": appUtils.getSStorageInfo("userId"), "idno": idno};
 
         //先提交思迪，判读是否需要删除占用者客户数据信息
-
-        if (utils.isAndroid()) {
-            toukerServerPluginCallback(khmobile.requestUrlParamsEncoding(utils.jsonToParams(paramCert)));
-        } else {
-            require("shellPlugin").callShellMethod("toukerServerPlugin", function (paramCert) {
-                toukerServerPluginCallback(paramCert);
-            }, function (data) {
-            }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(paramCert)});
-        }
+        paramCert = utils.getParams(paramCert);
+        toukerServerPluginCallback(paramCert);
         function toukerServerPluginCallback(returnData) {
-            service.hbAjax(returnData, function (data) {
-                if (data.errorNo == 0) {
-                    var errorMsg = data.errorMsg;
-                    console.log("errorMsg" + errorMsg);
-                    if (errorMsg != null && errorMsg != "") {
-                        layerUtils.iMsg(-1, errorMsg);
-                        return;
-                    }
-
-                    // 开户信息资料提交
-                    var param = setSubmitDataParam();
-                    service.submitUserInfo(param, function (data) {
-                        var error_no = data.error_no;
-                        var error_info = data.error_info;
-                        if (error_no == 0) {
-                            appUtils.setSStorageInfo("idCardNo", getEvent(".idCardNo").val());
-                            appUtils.setSStorageInfo("custname", getEvent(".name").val());
-                            //新开，则走新开流程
-                            if (tpbankFlg == '1' || tpbankFlg == '2') {
-                                // 跳转到验证交易密码
-                                console.log("跳转到密码验证页面");
-                                appUtils.pageInit("account/personInfo", "account/pwdVerify", {"backUrl": "account/personInfo"});
-                            } else {
-                                appUtils.pageInit("account/personInfo", "account/videoNotice", {});
-                            }
-                        } else {
-                            layerUtils.iLoading(false);
-                            layerUtils.iAlert(data.error_info);  // 填写资料失败，弹出提示
-                        }
-                    }, false);
-                } else {
-                    layerUtils.iMsg(-1, "系统异常！");
+            service.serviceAjax("/touker/clearUnSubmitUserInfo", returnData, function (data) {
+                var code = data.status;
+                if (code != "000000") {
+                    layerUtils.iMsg("-1", data.msg);
+                    return;
                 }
+                // 开户信息资料提交
+                var param = setSubmitDataParam();
+                service.submitUserInfo(param, function (data) {
+                    var error_no = data.error_no;
+                    var error_info = data.error_info;
+                    if (error_no == 0) {
+                        //新开，则走新开流程
+                        if (tpbankFlg == '001017' || tpbankFlg == '001015') {
+                            // 跳转到验证交易密码
+                            console.log("跳转到密码验证页面");
+                            appUtils.pageInit("account/personInfo", "account/pwdVerify", {"backUrl": "account/personInfo"});
+                        } else {
+                            appUtils.pageInit("account/personInfo", "account/videoNotice", {});
+                        }
+                    } else {
+                        layerUtils.iLoading(false);
+                        layerUtils.iAlert(error_info);  // 填写资料失败，弹出提示
+                    }
+                }, false);
             });
         }
     }
@@ -280,12 +261,12 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             "infocolect_channel": iBrowser.pc ? 0 : 3, // 信息来源渠道 0：PC  3：手机
             "idtype": "00", // 证件类别，数据字典中定义的是 00
             "idno": idno,  // 身份证号
-            "ethnicname": appUtils.getSStorageInfo("ethnicname"), // 民族
+            "ethnicname": appUtils.getSStorageInfo("ethnic"), // 民族
             "custname": getEvent(".name").val(),
             "birthday": getEvent(".idCardNo").attr("birthday"),  // 身份证修改了，出生日期也要修改
             "idbegindate": getEvent(".idBeginDate").val(),  // 证件开始日期
             "idenddate": getEvent(".idEndDate").val(),  // 证件结束日期
-            "native": getEvent(".idCardAddress").val().replace(/\s+/g, ""),  // 证件地址
+            "natives": getEvent(".idCardAddress").val().replace(/\s+/g, ""),  // 证件地址
             "policeorg": getEvent(".signDepartment").val(),  // 签发机关
             "usersex": sexId,  // 用户性别，男 0 女 1
             "nationality": "156",  // 屏蔽，待解决  // 国籍地区，必须写 156
@@ -294,7 +275,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             "edu": getEvent(".selectDegree").val(),  // 学历代码
             "recommendno": getEvent(".input_form .reference").val(),  //推荐人号码
             "profession_code": getEvent(".selectOccupation").val(),  // 职业代码
-            "branchno": appUtils.getSStorageInfo("branchno"),   // 营业部代码
+            "branchno": appUtils.getSStorageInfo("branchCode"),   // 营业部代码
             "commission": appUtils.getSStorageInfo("commission"),  // 营业部代码佣金代码
             "provinceno": "",  // 省份代码, 屏蔽, 待解决
             "cityno": "",  // 城市代码
@@ -437,35 +418,35 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var zipCode = getEvent(".user_form .zipCode").val();  //邮编
         var selectOccupation = getEvent(".input_form .selectOccupation").text();  //职业
         var selectDegree = getEvent(".input_form .selectDegree").text();  //学历
-        if (name) {
+        if (!name) {
             layerUtils.iMsg(-1, "姓名不能为空");
             return false;
         }
-        if (idCardNo) {
+        if (!idCardNo) {
             layerUtils.iMsg(-1, "身份证不能为空");
             return false;
         }
-        if (signDepartment) {
+        if (!signDepartment) {
             layerUtils.iMsg(-1, "签发机关不能为空");
             return false;
         }
-        if (idCardAddress) {
+        if (!idCardAddress) {
             layerUtils.iMsg(-1, "证件地址不能为空");
             return false;
         }
-        if (address) {
+        if (!address) {
             layerUtils.iMsg(-1, "联系地址不能为空");
             return false;
         }
-        if (idBeginDate) {
+        if (!idBeginDate) {
             layerUtils.iMsg(-1, "身份证起始期限不能为空");
             return false;
         }
-        if (idEndDate) {
+        if (!idEndDate) {
             layerUtils.iMsg(-1, "身份证结束期限不能为空");
             return false;
         }
-        if (zipCode) {
+        if (!zipCode) {
             layerUtils.iMsg(-1, "邮编不能为空");
             return false;
         }
@@ -473,11 +454,11 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             layerUtils.iMsg(-1, "邮编格式不正确,请重新输入");
             return false;
         }
-        if (selectOccupation == "请选择职业") {
+        if (!selectOccupation == "请选择职业") {
             layerUtils.iMsg(-1, "职业不能为空");
             return false;
         }
-        if (selectDegree == "请选择学历") {
+        if (!selectDegree == "请选择学历") {
             layerUtils.iMsg(-1, "学历不能为空");
             return false;
         }
