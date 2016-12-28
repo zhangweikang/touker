@@ -16,7 +16,7 @@
             <bean class="com.app.sjkh.interceptor.RequestParamDecodeInterceptor"></bean>
         </mvc:interceptor>-->
         <mvc:interceptor>
-            <mvc:mapping path="/*"/>
+            <mvc:mapping path="/*/*"/>
             <bean class="com.app.sjkh.interceptor.RequestParamInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
