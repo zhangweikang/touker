@@ -33,6 +33,7 @@
         <bonecp.version>0.8.0.RELEASE</bonecp.version>
         <json.version>1.0.2</json.version>
         <redis.version>2.9.0</redis.version>
+        <c3p0.version>0.9.5.2</c3p0.version>
         <!--<mybatis.paginator.version>1.2.15</mybatis.paginator.version>-->
         <!--<mysql.version>5.1.32</mysql.version>-->
         <!--<joda-time.version>2.5</joda-time.version>-->
@@ -165,6 +166,12 @@
                 <groupId>com.jolbox</groupId>
                 <artifactId>bonecp-spring</artifactId>
                 <version>${bonecp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mchange</groupId>
+                <artifactId>c3p0</artifactId>
+                <version>${c3p0.version}</version>
             </dependency>
 
             <!-- httpclient -->

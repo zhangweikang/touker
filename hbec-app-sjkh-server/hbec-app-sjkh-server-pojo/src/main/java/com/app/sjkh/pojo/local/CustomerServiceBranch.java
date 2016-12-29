@@ -3,7 +3,7 @@ package com.app.sjkh.pojo.local;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "HBEC_APPTOOLS.T_Customer_Service_Branch")
+@Table(name = "T_Customer_Service_Branch")
 public class CustomerServiceBranch {
     @Id
     private String mobileno;

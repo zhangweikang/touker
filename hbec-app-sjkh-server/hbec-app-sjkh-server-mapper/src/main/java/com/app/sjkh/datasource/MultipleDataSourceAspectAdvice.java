@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class MultipleDataSourceAspectAdvice {
 
-	@Around("execution(* com.app.mappers.datasource.*.*(..))")
+	@Around("execution(* com.app.sjkh.mapper.datasource.*.*(..))")
 	public Object doAround(ProceedingJoinPoint jp) throws Throwable {
 		MultipleDataSource.setDataSourceKey("dataSource");
 		return jp.proceed();

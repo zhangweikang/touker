@@ -3,7 +3,7 @@ package com.app.sjkh.pojo.local;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "HBEC_APPTOOLS.T_Promote_Customer")
+@Table(name = "T_Promote_Customer")
 public class PromoteCustomer {
 
     public static final String isOk_0 = "0";
