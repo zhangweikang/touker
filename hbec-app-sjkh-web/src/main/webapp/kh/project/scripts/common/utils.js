@@ -460,6 +460,18 @@ define(function (require, exports, module) {
         return params;
     }
 
+    /**
+     * 创建一个随机生成的10位数
+     * @returns {string}
+     */
+    function randomKey(){
+        var randomKey = "1";
+        for (var i = 0; i < 9; i++) {
+            randomKey += parseInt(Math.random() * 10) + "";
+        }
+        return randomKey;
+    }
+
     module.exports = {
         "installCertificate": installCertificate,
         "layerTwoButton": layerTwoButton,
@@ -475,6 +487,7 @@ define(function (require, exports, module) {
         "isAndroid": isAndroid,
         "closeApp": closeApp,
         "getIp": getIp,
-        "getParams": getParams
+        "getParams": getParams,
+        "randomKey": randomKey
     };
 });

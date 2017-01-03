@@ -126,12 +126,12 @@ define(function (require, exports, module) {
         appUtils.setSStorageInfo("lastcompleteStep", lastcompleteStep);
         if (lastcompleteStep) {
             var index;
-            if (tpbankFlg == "1") {
+            if (tpbankFlg == "001015") {
                 index = depositorySteps.indexOf(lastcompleteStep);
                 if (index < (depositorySteps.length - 1)) {
                     lastcompleteStep = depositorySteps[index + 1];
                 }
-            } else if (tpbankFlg == "2") {
+            } else if (tpbankFlg == "001017") {
                 index = partiesPaySteps.indexOf(lastcompleteStep);
                 if (index < (partiesPaySteps.length - 1)) {
                     lastcompleteStep = partiesPaySteps[index + 1];
@@ -176,6 +176,10 @@ define(function (require, exports, module) {
             // user_id保存到session
             if (acceptedCertInfo.id) {
                 appUtils.setSStorageInfo("userId", acceptedCertInfo.id);
+            }
+            // custname保存到session
+            if (acceptedCertInfo.custname) {
+                appUtils.setSStorageInfo("custName", acceptedCertInfo.custname);
             }
             // 身份证号保存到session
             if (acceptedCertInfo.idno) {
@@ -332,7 +336,7 @@ define(function (require, exports, module) {
                         appUtils.setSStorageInfo("idCardImgExist", true);
                         //用顶点的身份证信息，覆盖思迪的信息（已存在客户号）
                         appUtils.setSStorageInfo("idCardNo", obj.idno);
-                        appUtils.setSStorageInfo("custname", obj.custname);
+                        appUtils.setSStorageInfo("custName", obj.custname);
                         appUtils.setSStorageInfo("policeorg", obj.policeorg);
                         appUtils.setSStorageInfo("native", obj.natives);
                         appUtils.setSStorageInfo("addr", obj.natives);

@@ -21,7 +21,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
         cleanPageElement();  // 清除页面元素
-        window.calendarCallback = calendarCallback;  // 全局调用日期插件方法
 
         //  从上传照片页面进入
         if (appUtils.getSStorageInfo("_prePageCode") == "account/uploadPhoto" || appUtils.getSStorageInfo("_prePageCode") == "account/uploadPhotoChange") {
@@ -57,14 +56,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         } else {
             var encodeParam = {"id": appUtils.getSStorageInfo('userId')};
 
-            /*if (utils.isAndroid()) {
-             encodePluginCallback(khmobile.requestUrlParamsEncoding(utils.jsonToParams(encodeParam)));
-             } else {
-             require("shellPlugin").callShellMethod("toukerServerPlugin", function (rtnparam) {
-             encodePluginCallback(rtnparam);
-             }, function (data) {
-             }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(encodeParam)});
-             }*/
+            /*encodeParam = utils.getParams(encodeParam);*/
             encodePluginCallback(encodeParam);
             function encodePluginCallback(paramData) {
                 service.serviceAjax("/touker/getCertInfo", paramData, function (data) {
@@ -157,11 +149,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             utils.dealIPhoneMaxLength(this, 18);  //处理iphone兼容
         }, "input");
 
-        /* 绑定选择日期的事件 */
-        appUtils.bindEvent(getEvent("input[date-plugin='true']"), function (e) {
-            utils.selectDate(this);  // 通过壳子调用系统的日历插件
-        });
-
         /* 绑定下一步 */
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn"), function () {
             if (verifyInfo())  // 校验数据
@@ -203,7 +190,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var paramCert = {"userId": appUtils.getSStorageInfo("userId"), "idno": idno};
 
         //先提交思迪，判读是否需要删除占用者客户数据信息
-        paramCert = utils.getParams(paramCert);
+        /*paramCert = utils.getParams(paramCert);*/
         toukerServerPluginCallback(paramCert);
         function toukerServerPluginCallback(returnData) {
             service.serviceAjax("/touker/clearUnSubmitUserInfo", returnData, function (data) {
@@ -256,7 +243,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var idno = getEvent(".idCardNo").val().replace(/\s*/g, "");  // 身份证号
         // 判断性别，根据身份证传入男或女，也可以通过身份证号进行判断
         var sexId = checkSexId(idno); // 根据身份证判断性别
-        var param = {
+        return {
             "userId": appUtils.getSStorageInfo("userId"),
             "infocolect_channel": iBrowser.pc ? 0 : 3, // 信息来源渠道 0：PC  3：手机
             "idtype": "00", // 证件类别，数据字典中定义的是 00
@@ -283,7 +270,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             "macaddr": appUtils.getSStorageInfo("mac"),  // mac 地址
             "idcardmodify": idCardModify ? 1 : 0  // 身份证是否被手动修改，被修改传 1 ，否则传 0
         };
-        return param;
     }
 
     /* 获取职业、学历、性别列表*/
@@ -454,11 +440,11 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             layerUtils.iMsg(-1, "邮编格式不正确,请重新输入");
             return false;
         }
-        if (!selectOccupation == "请选择职业") {
+        if (selectOccupation == "请选择职业") {
             layerUtils.iMsg(-1, "职业不能为空");
             return false;
         }
-        if (!selectDegree == "请选择学历") {
+        if (selectDegree == "请选择学历") {
             layerUtils.iMsg(-1, "学历不能为空");
             return false;
         }
@@ -478,13 +464,8 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             }
         }
 
-        // 页面入参的 身份证号 ，身份证号最多只允许修改五位
-        if (appUtils.getPageParam("idno")) {
-            var pageInIdCardNo = appUtils.getPageParam("idno");
-        }
-        else {
-            var pageInIdCardNo = appUtils.getSStorageInfo("idCardNo");
-        }
+        var pageInIdCardNo = appUtils.getPageParam("idno")?appUtils.getPageParam("idno"):appUtils.getSStorageInfo("idCardNo");
+
         var countDiffe = 0;  // 计算身份证修改的位数
         for (var i = 0; i < idCardNo.length; i++) {
             var oneIdNo = idCardNo.charAt(i),
@@ -494,13 +475,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             }
         }
         // 如果被修改的位数不等于 0 ，countDiffe 为 true
-        if (countDiffe != 0) {
-            idCardModify = true;
-        }
-        // 未被修改，idCardModify 为 false
-        else {
-            idCardModify = false;
-        }
+        idCardModify = countDiffe != 0;
         if (countDiffe > 5) {
             utils.layerTwoButton("您好,发现您的证件号码与上传的差异过大，请您确认是否需要更换身份证?", "重新上传身份证", "重新确认身份证", function () {
                 appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
@@ -512,15 +487,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         // 设置出生日期
         getEvent(".idCardNo").attr("birthday", idCardNo.substring(6, 10) + "-" + idCardNo.substring(10, 12) + "-" + idCardNo.substring(12, 14));
         return true;
-    }
-
-    /* 日历的回调函数 */
-    function calendarCallback(data) {
-        // 回调数据中的 data 是字符串，需解析
-        if (typeof(data) == "string") {
-            data = JSON.parse(data);
-        }
-        getEvent("#" + data.selector).val(data.date);
     }
 
     /* 初始化邮编,职业,学历*/

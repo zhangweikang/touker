@@ -6,9 +6,8 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
     var appUtils = require("appUtils"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"),
-        gconfig = require("gconfig"),
         utils = require("utils"),
-        global = gconfig.global,
+        global = require("gconfig").global,
         _pageId = "#account_uploadPhoto",
     // 填写资料的页面入参，属性由 imgState 方法赋值
         fillInformationInParam = {
@@ -105,9 +104,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                 "clientinfo": appUtils.getSStorageInfo("clientinfo"),	 // 从 session 中将 clientinfo 取出
                 "jsessionid": appUtils.getSStorageInfo("jsessionid") // 从 session 中将 jsessionid 取出
             };
-            if (gconfig.platform == 3) {
-                layerUtils.iLoading(true);
-            }
 
             if (utils.isAndroid()) {
                 khmobile.carmeraPhotoUpload(JSON.stringify(phoneConfig));
@@ -135,9 +131,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                 "clientinfo": appUtils.getSStorageInfo("clientinfo"), 	// 从 session 中将 clientinfo 取出
                 "jsessionid": appUtils.getSStorageInfo("jsessionid")	// 从 session 中将 jsessionid 取出
             };
-            if (gconfig.platform == 3) {
-                layerUtils.iLoading(true);
-            }
 
             if (utils.isAndroid()) {
                 khmobile.carmeraPhotoUpload(JSON.stringify(paiConfig));

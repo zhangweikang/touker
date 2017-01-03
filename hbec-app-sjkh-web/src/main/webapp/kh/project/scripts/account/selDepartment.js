@@ -103,7 +103,7 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
     //初始化显示营业部
     function initBranch() {
         var param = {"mobileNo": appUtils.getSStorageInfo("mobileNo")}
-        param = utils.getParams(param);
+        /*param = utils.getParams(param);*/
         service.serviceAjax("/branch/getBranchInfo",param, function (data) {
             var code = data.status;
             if (code == "000000") {

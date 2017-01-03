@@ -5,8 +5,7 @@ define("project/scripts/account/videoNotice",
     function (require, exports, module) {
         /* 私有业务模块的全局变量 begin */
         var appUtils = require("appUtils"),
-            service = require("serviceImp").getInstance(),
-        // 业务层接口，请求数据
+            service = require("serviceImp").getInstance(),// 业务层接口，请求数据
             gconfig = require("gconfig"),
             utils = require("utils"),
             layerUtils = require("layerUtils"),
@@ -87,7 +86,7 @@ define("project/scripts/account/videoNotice",
                 var param = {
                     "url": gconfig.global.serverPath + "?",
                     "user_id": appUtils.getSStorageInfo("userId"),
-                    "user_name": appUtils.getSStorageInfo("custname"),
+                    "user_name": appUtils.getSStorageInfo("custName"),
                     "org_id": appUtils.getSStorageInfo("branchCode"),
                     "jsessionid": appUtils.getSStorageInfo("jsessionid")
                 };
