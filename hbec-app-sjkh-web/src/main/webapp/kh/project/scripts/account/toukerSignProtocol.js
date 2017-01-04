@@ -18,18 +18,23 @@ define("project/scripts/account/toukerSignProtocol",function(require, exports, m
     function bindPageEvent()
     {
         /* 绑定返回事件 */
-        appUtils.bindEvent($(_pageId+" .header .icon_back"),function(){
+        appUtils.bindEvent(getEvent(".header .icon_back"),function(){
             appUtils.pageInit("account/toukerSignProtocol","account/phoneToukerRegister",{});
         });
 
         /* 绑定退出按钮*/
-        appUtils.bindEvent($(_pageId+" .header .icon_close"),function(){
+        appUtils.bindEvent(getEvent(".header .icon_close"),function(){
             utils.layerTwoButton("退出系统？","确认","取消",function(){
                 utils.closeApp();
             },
             function(){return false;});
         });
 
+    }
+
+    //获取当前页面属性对象
+    function getEvent(event) {
+        return $(_pageId + " " + event);
     }
 
     module.exports = {

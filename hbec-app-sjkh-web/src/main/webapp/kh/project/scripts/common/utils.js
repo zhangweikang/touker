@@ -6,92 +6,85 @@ define(function (require, exports, module) {
         validatorUtil = require("validatorUtil"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"),
-        gconfig = require("gconfig");
+        gconfig = require("gconfig"),
+        cert_type = "zd";
 
     /**
      * 下载证书
-     * @param callback 证书下载安装之后回调处理
+     * @param successCallBack 成功回调
+     * @param errorCallBack 失败回调
+     * @param isLoading 是否开启等待层
      */
-    function installCertificate(callback) {
-        // 下载证书，创建10位随机数
-        var createKeyRandom = "1";
-        for (var i = 0; i < 9; i++) {
-            createKeyRandom += parseInt(Math.random() * 10) + "";
-        }
-        // 证书申请串，数据来源于壳子
-        var pkcs10 = "",
-            createKeyParam = {
-                "rodam": createKeyRandom,
-                "userId": appUtils.getSStorageInfo("user_id"),
+    function installCertificate (successCallBack,errorCallBack,isLoading){
+        var createKeyParam = {
+                "rodam": randomKey(),
+                "userId": appUtils.getSStorageInfo("userId"),
                 "key": "stockDelegateTradeSys"
             };
-
         // 调用壳子的方法生成证书申请串
         if (isAndroid()) {
             var data = khmobile.createKey(JSON.stringify(createKeyParam));
-            if ("" == data)
-                handleTimeout(callback);
+            if (!data)
+                handleTimeout(successCallBack,errorCallBack);
             else
                 createKeyPluginCallback(data);
         } else {
             require("shellPlugin").callShellMethod("createKeyPlugin", function (data) {
                 createKeyPluginCallback(data.pkcs10);
             }, function () {
-                handleTimeout(callback);
+                handleTimeout(successCallBack,errorCallBack);
             }, createKeyParam);
         }
         function createKeyPluginCallback(data) {
-            pkcs10 = data;
             var param = {
-                "user_id": appUtils.getSStorageInfo("user_id"),
-                "pkcs10": pkcs10
+                "user_id": appUtils.getSStorageInfo("userId"),
+                "pkcs10": data
             };
             // 新开调用中登证书
-            var cert_type = "zd";
             service.queryCompyCart(param, function (data) {
-                callcert(data, cert_type, callback)
-            }, false, true, function () {
-                handleTimeout(callback)
+                callcert(data, successCallBack,errorCallBack)
+            }, false, isLoading, function () {
+                handleTimeout(successCallBack,errorCallBack)
             });
         }
     }
 
-
-    /* 处理请求超时 */
-    function handleTimeout(callback) {
-        layerUtils.iConfirm("请求超时，是否重新加载？", function () {
-            installCertificate(callback);  // 再次下载证书
-        });
-    }
-
     /**
-     * 安装证书回调方法
-     * @param callback 证书下载安装之后回调处理
+     * 证书下载成功后执行方法
      * @param data
-     * @param cert_type
+     * @param successCallBack
+     * @param errorCallBack
      */
-    function callcert(data, cert_type, callback) {
+    function callcert(data, successCallBack,errorCallBack) {
+        layerUtils.iLoading(false);
         var error_no = data.error_no;
         var error_info = data.error_info;
         if (error_no == "0") {
             // 获取证书的内容
             var certParam = {
                 "content": data.results[0].p7cert,
-                "userId": appUtils.getSStorageInfo("user_id"),
+                "userId": appUtils.getSStorageInfo("userId"),
                 "type": cert_type
             };
             // 壳子读取证书，然后安装证书
             if (isAndroid()) {
                 var data = khmobile.initZs(JSON.stringify(certParam));
                 if (data == "OK") {
-                    callback();
+                    successCallBack();
+                } else {
+                    if (!errorCallBack){
+                        errorCallBack();
+                    }
                 }
             } else {
                 require("shellPlugin").callShellMethod("initZsPlugin", function (data) {
                     if (data == "OK") {
                         try {
-                            callback();
+                            successCallBack();
                         } catch (e) {
+                            if (!errorCallBack){
+                                errorCallBack();
+                            }
                             console.log(e.message);
                         }
                     }
@@ -99,8 +92,52 @@ define(function (require, exports, module) {
             }
         }
         else {
-            layerUtils.iLoading(false);
             layerUtils.iAlert(error_info, -1);
+        }
+    }
+
+    /**
+     * 证书下载请求超时方法
+     * @param successCallBack
+     * @param errorCallBack
+     */
+    function handleTimeout(successCallBack,errorCallBack) {
+        layerUtils.iConfirm("请求超时，是否重新加载？", function () {
+            installCertificate(successCallBack,errorCallBack);  // 再次下载证书
+        });
+    }
+
+    /**
+     * 检验证书是否存在
+     * @param successCallBack 证书存在回调
+     * @param errorCallBack 证书不存在回调
+     * @param isLoading 是否开始等待层
+     */
+    function chechCertificate(successCallBack,errorCallBack,isLoading){
+        var param = {
+            "userId": appUtils.getSStorageInfo("userId"),
+            "mediaid": "certificate",
+            "type": cert_type
+        };
+
+        if (isAndroid()) {
+            var returnData = khmobile.fileIsExists(JSON.stringify(param));
+            layerUtils.iLoading(false);  // 关闭等待层。。。
+            fileIsExistsPluginCallback(returnData);
+        } else {
+            require("shellPlugin").callShellMethod("fileIsExistsPlugin", function (data) {
+                fileIsExistsPluginCallback(data);
+            }, function () {
+                layerUtils.iLoading(false);  // 关闭等待层。。。
+            }, param);
+        }
+        function fileIsExistsPluginCallback(data) {
+            // 如果未检测到本地有证书，就安装证书
+            if (data) {
+                successCallBack();
+            } else {
+                installCertificate(successCallBack,errorCallBack?errorCallBack:null,isLoading?isLoading:true);
+            }
         }
     }
 
@@ -474,6 +511,7 @@ define(function (require, exports, module) {
 
     module.exports = {
         "installCertificate": installCertificate,
+        "chechCertificate": chechCertificate,
         "layerTwoButton": layerTwoButton,
         "selectDate": selectDate,
         "showBigNo": showBigNo,

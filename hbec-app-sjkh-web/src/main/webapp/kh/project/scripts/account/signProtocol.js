@@ -10,7 +10,6 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
         Map = require("map"),
         fristMap = null,  //  存放所有相关协议
         protocolArray = null,  // 存放协议签名值
-        isClose = true,  // 用于控制等待层
         countProtocol = 0, // 计算签署成功的数量
         userId = appUtils.getSStorageInfo("userId"),
         cert_type = "zd",
@@ -18,12 +17,15 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
     /* 私有业务模块的全局变量 end */
 
     function init() {
+        layerUtils.iLoading(true);
         //加载样式
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
-        initPage();  // 初始化页面
-        checkCert();  //检测证书是否存在
-        showUserSignProtocol();//显示用户已经选择开的户
+        clearCssStyle();
+        getEvent(".fix_bot .ct_btn a").html("下一步 >");  // 开户
+
+        utils.chechCertificate(getMarket,null,true);//检测证书是否存在
+        showUserSignProtocol();//显示用户已选择账户
     }
 
     function bindPageEvent() {
@@ -48,48 +50,12 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
         });
     }
 
+    function clearCssStyle(){
+        $("ul").html("");
+    }
+
     function destroy() {
         service.destroy();
-    }
-
-    /* 初始化页面 */
-    function initPage() {
-        layerUtils.iLoading(true);  // 开启等待层。。。
-        isClose = true;
-        getEvent(".fix_bot .ct_btn a").html("下一步 >");  // 开户
-    }
-
-    /* 检测是否安装证书 */
-    function checkCert() {
-        //本页面需要用到证书，如果进入本页面时，证书不存在就下载并安装证书
-        var existsParam = {
-            "userId": appUtils.getSStorageInfo("userId"),
-            "mediaid": "certificate",
-            "type": cert_type
-        };
-
-        var returnData = "";
-        if (utils.isAndroid()) {
-            returnData = khmobile.fileIsExists(JSON.stringify(existsParam));
-            layerUtils.iLoading(false);
-            fileIsExistsPluginCallback(returnData);
-        } else {
-            require("shellPlugin").callShellMethod("fileIsExistsPlugin", function (data) {
-                fileIsExistsPluginCallback(data);
-            }, function () {
-                layerUtils.iLoading(false);  // 关闭等待层。。。
-            }, existsParam);
-        }
-    }
-
-    function fileIsExistsPluginCallback(returnData) {
-        // 如果未检测到本地有证书，就安装证书
-        if (!returnData) {
-            utils.installCertificate(getMarket);  // 下载安装证书，并且显示证券账户和协议
-        }
-        else {
-            getMarket();  // 显示证券账户和协议
-        }
     }
 
     /* 获取市场列表 */
@@ -117,9 +83,8 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                     }
                 }
                 initSelcet();  // 初始化证券账户的选择
-            }
-            else {
-                layerUtils.iLoading(false);  // 关闭等待层。。。
+            } else {
+                layerUtils.iLoading(false);
                 layerUtils.iAlert(data.error_info);
             }
         }, false, true, handleTimeout);
@@ -164,7 +129,7 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                 }
             }
             else {
-                layerUtils.iLoading(false);  // 关闭等待层。。。
+                layerUtils.iLoading(false);
                 layerUtils.iAlert(data.error_info);
             }
         }, true, true, handleTimeout);
@@ -343,7 +308,6 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                 //开立中登股东账号
                 service.queryOpenCompyAccount(openStockParam, function (data) {
                     if (data.error_no == 0) {
-                        cleanPageElement();  // 清理页面元素
                         var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
                         console.log("签署协议页面获取的tpbankFlg=" + tpbankFlg);
                         if (tpbankFlg == '001015') {
@@ -365,12 +329,6 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                 layerUtils.iAlert(error_info, -1);
             }
         }, false);
-    }
-
-    /* 清理界面元素 */
-    function cleanPageElement() {
-        getEvent(".radio_list ul li").remove();  // 清理证券账户
-        getEvent(".rule_list ul li").remove();  // 清理协议
     }
 
     function showUserSignProtocol() {
@@ -407,7 +365,7 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             } else {
                 layerUtils.iMsg(-1, error_info);
             }
-        });
+        },true,true);
     }
 
     //获取当前页面属性对象
