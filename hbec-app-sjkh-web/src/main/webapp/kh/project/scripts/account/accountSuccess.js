@@ -46,7 +46,7 @@ define("project/scripts/account/accountSuccess", function (require, exports, mod
         function bindPageEvent() {
             /* 绑定完成返事件 */
             appUtils.bindEvent(getEvent(".top-info a"), function () {
-                if(appUtils.getSStorageInfo("toukerOpenChannel") == "qianqian_app"){// 返回到钱钱炒股App，三分钟快速开户界面
+                if(openChannel == "1"){// 返回到钱钱炒股App，三分钟快速开户界面
                     utils.closeApp();
                 } else {
                     appUtils.pageInit("account/accountSuccess", "account/openAccount", {backUrl:"account/accountSuccess"});
@@ -143,17 +143,15 @@ define("project/scripts/account/accountSuccess", function (require, exports, mod
             });
         }
 
-        var accountSuccess = {
-            "init": init,
-            "bindPageEvent": bindPageEvent,
-            "destroy": destroy
-        };
-
         function getEvent(event) {
             return $(_pageId + " " + event);
         }
 
         //暴露接口
-        module.exports = accountSuccess;
+        module.exports = {
+            "init": init,
+            "bindPageEvent": bindPageEvent,
+            "destroy": destroy
+        };
     }
 );

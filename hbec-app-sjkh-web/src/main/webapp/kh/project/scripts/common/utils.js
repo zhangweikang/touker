@@ -6,6 +6,7 @@ define(function (require, exports, module) {
         validatorUtil = require("validatorUtil"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"),
+        Map = require("map"),
         gconfig = require("gconfig"),
         cert_type = "zd";
 
@@ -509,6 +510,34 @@ define(function (require, exports, module) {
         return randomKey;
     }
 
+    /**
+     * 获取题目集合Map
+     * @param results 后端查询结果集
+     * @returns {*} map
+     */
+    function getTitle(results){
+        var fristMap = new Map();
+        // 先遍历结果集
+        for (var i = 0; i < results.length; i++) {
+            var oneEle = results[i];
+            var queid = oneEle.que_id;  // que_id	题目编号
+            var type = oneEle.type;  // type	问题类型（0：单选，1：多选）
+            var qname = oneEle.q_name;  // q_name	题目描述
+            var str = type + "-" + queid + "-" + qname;
+            var secondMap = null;
+            if (!fristMap.containsKey(str)) {
+                // 若map中没有对应的问题号，则存入问题号
+                secondMap = new Map();
+                secondMap.put(oneEle.ans_id, oneEle);
+                fristMap.put(str, secondMap);	  // fristMap每一个Key对应一个问题
+            } else {
+                fristMap.get(str).put(oneEle.ans_id, oneEle);
+            }
+        }
+
+        return fristMap;
+    }
+
     module.exports = {
         "installCertificate": installCertificate,
         "chechCertificate": chechCertificate,
@@ -526,6 +555,7 @@ define(function (require, exports, module) {
         "closeApp": closeApp,
         "getIp": getIp,
         "getParams": getParams,
-        "randomKey": randomKey
+        "randomKey": randomKey,
+        "getTitle": getTitle
     };
 });

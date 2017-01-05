@@ -279,6 +279,8 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
 
             if (!fillInformationInParam.idno || !fillInformationInParam.natives || !fillInformationInParam.ethnicname || !fillInformationInParam.birthday || !fillInformationInParam.gender) {
                 layerUtils.iAlert("身份证正面信息识别失败，需重新拍摄，请注意拍摄的角度和光线！", -1);
+                appUtils.setSStorageInfo("idCardNo",fillInformationInParam.idno);
+                appUtils.setSStorageInfo("custName",fillInformationInParam.custname);
                 getEvent(".positive").text("");  // 先将  li 置空
                 getEvent(".positive").attr("uploaded", "false");  // 标识图片未上传
                 getEvent(".positive").append("<dd class='icon01'><h5>正 面</h5><p>点击上传身份证</p></dd>");
@@ -380,9 +382,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                     layerUtils.iLoading(false);
                     fillInformationInParam.backUrl = "account/uploadPhoto";
                     appUtils.pageInit("account/uploadPhoto", "account/personInfo", fillInformationInParam);
-                    appUtils.clearSStorage("personInfo");  // 清除资料提交步骤标记
-                    appUtils.clearSStorage("currentStep");  // 清除用户步骤记录
-                }, false);
+                }, true);
             } else {
                 layerUtils.iMsg("-1", data.error_info);
             }

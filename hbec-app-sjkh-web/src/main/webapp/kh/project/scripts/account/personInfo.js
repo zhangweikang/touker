@@ -243,13 +243,17 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var idno = getEvent(".idCardNo").val().replace(/\s*/g, "");  // 身份证号
         // 判断性别，根据身份证传入男或女，也可以通过身份证号进行判断
         var sexId = checkSexId(idno); // 根据身份证判断性别
+        var custName = getEvent(".name").val();
+
+        appUtils.setSStorageInfo("idCardNo",idno);
+        appUtils.setSStorageInfo("custName",custName);
         return {
             "userId": appUtils.getSStorageInfo("userId"),
             "infocolect_channel": iBrowser.pc ? 0 : 3, // 信息来源渠道 0：PC  3：手机
             "idtype": "00", // 证件类别，数据字典中定义的是 00
             "idno": idno,  // 身份证号
             "ethnicname": appUtils.getSStorageInfo("ethnic"), // 民族
-            "custname": getEvent(".name").val(),
+            "custname": custName,
             "birthday": getEvent(".idCardNo").attr("birthday"),  // 身份证修改了，出生日期也要修改
             "idbegindate": getEvent(".idBeginDate").val(),  // 证件开始日期
             "idenddate": getEvent(".idEndDate").val(),  // 证件结束日期

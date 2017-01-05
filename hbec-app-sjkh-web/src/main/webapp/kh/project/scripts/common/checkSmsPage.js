@@ -171,7 +171,7 @@ define(function (require, exports, module) {
     function setSessionStorage(obj) {
         var acceptedCertInfo = obj.acceptedCertInfo;
         var branchInfo = obj.branchInfo;
-        var acceptedCommission = obj.acceptedCommission;
+        var acceptedCustomerInfo = obj.acceptedCustomerInfo;
         if (acceptedCertInfo) {
             // user_id保存到session
             if (acceptedCertInfo.id) {
@@ -201,13 +201,15 @@ define(function (require, exports, module) {
             if (acceptedCertInfo.ethnic) {
                 appUtils.setSStorageInfo("ethnic", acceptedCertInfo.ethnic);
             }
+        }
+        if(acceptedCustomerInfo){
             // 将银行代码保存到session
-            if (acceptedCertInfo.banktype) {
+            if (acceptedCustomerInfo.banktype) {
                 var queryParam = {
                     "bindtype": "",
                     "ispwd": "",
                     "step": "bankInfo",
-                    "bankCode": result.banktype
+                    "bankCode": acceptedCustomerInfo.banktype
                 };
                 service.queryBankList(queryParam, function (data) {
                     var errorNo = data.error_no;
@@ -219,8 +221,7 @@ define(function (require, exports, module) {
                     } else {
                         layerUtils.iAlert(errorInfo, -1);
                     }
-                }, true, true, null);
-
+                }, true, false);
             }
         }
         if (branchInfo) {
@@ -234,71 +235,9 @@ define(function (require, exports, module) {
             }
             // 将营业部佣金保存到session
             if (acceptedCertInfo && acceptedCertInfo.commission) {
-                appUtils.setSStorageInfo("commission", branchInfo.commission);
+                appUtils.setSStorageInfo("commission", acceptedCertInfo.commission);
             }
         }
-        /*//手机号保存到session
-         if (result.mobileno) {
-         appUtils.setSStorageInfo("mobileNo", result.mobileno);
-         }
-         // 将客户姓名保存到 session 中
-         if (result.custname) {
-         appUtils.setSStorageInfo("custname", result.custname);
-         }
-         // 签发机关保存到session
-         if (result.policeorg) {
-         appUtils.setSStorageInfo("policeorg", result.policeorg);
-         }
-         // 证件地址保存到session
-         if (result.native) {
-         appUtils.setSStorageInfo("native", result.native);
-         }
-         // 联系地址保存到session
-         if (result.addr) {
-         appUtils.setSStorageInfo("addr", result.addr);
-         }
-         // 起始期限保存到session
-         if (result.idbegindate) {
-         appUtils.setSStorageInfo("idbegindate", result.idbegindate);
-         }
-         // 结束期限保存到session
-         if (result.idenddate) {
-         appUtils.setSStorageInfo("idenddate", result.idenddate);
-         }
-         // 邮编保存到session
-         if (result.postid) {
-         appUtils.setSStorageInfo("postid", result.postid);
-         }
-         // 职业保存到session
-         if (result.profession_code) {
-         appUtils.setSStorageInfo("profession_code", result.profession_code);
-         }
-         // 学历保存到session
-         if (result.edu) {
-         appUtils.setSStorageInfo("edu", result.edu);
-         }
-         // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
-         if (result.clientinfo) {
-         appUtils.setSStorageInfo("clientinfo", result.clientinfo);
-         }
-         // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
-         if (result.jsessionid) {
-         appUtils.setSStorageInfo("jsessionid", result.jsessionid);
-         }
-
-         // 将省份保存到session
-         if (result.provincename) {
-         appUtils.setSStorageInfo("provincename", result.provincename);
-         }
-         // 将城市保存到session
-         if (result.cityname) {
-         appUtils.setSStorageInfo("cityname", result.cityname);
-         }*/
-        /*appUtils.setSStorageInfo("shaselect", result.shaselect); // 是否选择沪A
-         appUtils.setSStorageInfo("szaselect", result.szaselect); // 是否选择深A
-         appUtils.setSStorageInfo("hacnselect", result.shaselect); // 是否选择沪开放式基金
-         appUtils.setSStorageInfo("zacnselect", result.szaselect); // 是否选择深开放式基金
-         appUtils.setSStorageInfo("openChannel", "new");*/
     }
 
     /**
@@ -321,6 +260,7 @@ define(function (require, exports, module) {
                     var tpbankFlg = obj.tpbankFlg;
                     var tpAddr = obj.tpAddr;
 
+                    appUtils.setSStorageInfo("smsCodeVail", "true");
                     appUtils.setSStorageInfo("tpbankFlg", tpbankFlg);//用户开户标示
                     appUtils.setSStorageInfo("tpAddr", tpAddr);//重置交易密码地址(投客网或者网厅)
                     appUtils.setSStorageInfo("idnoDD", obj.idnoDD);//顶点保存的客户身份证号
@@ -353,9 +293,6 @@ define(function (require, exports, module) {
                         appUtils.pageInit("account/phoneCodeVerify", "account/uploadPhoto");
                     } else if (code == "001025") {
                         //待审核,开户成功
-                        /*if (valiDataReject(result, codePage)) {
-                         appUtils.pageInit("account/phoneCodeVerify", "account/accountSuccess", {"backUrl": "account/phoneNumberVerify"});
-                         }*/
                         if ("reject" == reject) {
                             valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)
                         } else {
@@ -363,10 +300,6 @@ define(function (require, exports, module) {
                         }
                     } else {
                         //判断是否驳回，若驳回 则走驳回流程
-                        /*if (valiDataReject(result, codePage)) {
-                         //未驳回，则正常走流程
-                         pageNextStep(result, tpbankFlg, codePage);
-                         }*/
                         if ("reject" == reject) {
                             valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)
                         } else {

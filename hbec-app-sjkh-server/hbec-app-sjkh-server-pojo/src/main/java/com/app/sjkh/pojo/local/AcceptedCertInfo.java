@@ -1,6 +1,7 @@
 package com.app.sjkh.pojo.local;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -14,6 +15,7 @@ public class AcceptedCertInfo {
      *
      * @mbggenerated Wed Aug 03 17:58:07 CST 2016
      */
+    @Id
     private Long id;
 
     /**

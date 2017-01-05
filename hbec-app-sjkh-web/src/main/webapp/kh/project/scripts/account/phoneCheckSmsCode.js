@@ -67,6 +67,11 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
             sendSmsCode();
         });
 
+        // 预绑定查看协议的事件
+        appUtils.bindEvent(getEvent(".protocol"),function(){
+            appUtils.pageInit("account/phoneToukerRegister","account/toukerSignProtocol",{});
+        });
+
 
         /* 下一步(继续开户) */
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn"), function () {

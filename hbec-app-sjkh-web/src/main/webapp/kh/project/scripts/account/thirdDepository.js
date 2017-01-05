@@ -29,9 +29,6 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         }
 
         //加载样式
-        getEvent(".input_custom").click(function () {
-            $(this).addClass("active");
-        });
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
 
@@ -44,7 +41,7 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
             appUtils.setSStorageInfo("backThirdDepository", 3);
             var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
-            if (tpbankFlg == "1" || tpbankFlg == "2") {
+            if (tpbankFlg == "000105" || tpbankFlg == "000107") {
                 appUtils.pageInit("account/thirdDepository", "account/signProtocol", {});
             } else {
                 appUtils.pageInit("account/thirdDepository", "account/setPwd", {});
@@ -60,6 +57,10 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         appUtils.bindEvent(getEvent("#selectBank"), function () {
             //跳转银行卡列表页面
             appUtils.pageInit("account/thirdDepository", "account/bankList", {backUrl:"account/thirdDepository"});
+        });
+
+        appUtils.bindEvent(getEvent(".input_custom"),function () {
+            $(this).addClass("active");
         });
 
         /* 点击页面关闭键盘 */
@@ -197,8 +198,8 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         getEvent("#selectBank").attr("bankcode", id);
         getEvent("#selectBank").attr("zzbindtype", zzbindtype);
         getDepositoryAgreement(id);  // 获取银行协议内容
-        if (zzbindtype == 1 || "1" == open_flag)   // 判断一步式
-        {
+        if (zzbindtype == 1 || "1" == open_flag) {
+            // 判断一步式
             if (!zzispwd) {
                 // 不需要输入密码
                 getEvent("#input_text_bankcardPwd").parent().hide();  // 隐藏银行密码输入框
@@ -208,8 +209,8 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
             }
             getEvent(".user_form .input_form:eq(1)").show();  // 显示银行卡、密码输入框
             getEvent("#bindInfo").hide();  // 隐藏预指定提示信息
-        } else if (zzbindtype == 2)  // 判断预指定(二步式)
-        {
+        } else if (zzbindtype == 2) {
+            // 判断预指定(二步式)
             if (!iscard) {
                 // 需要银行卡
                 getEvent(".user_form .input_form:eq(1)").show();  // 显示银行卡
@@ -335,12 +336,12 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         }
 
         //需要输入银行卡
-        if (!iscard && !validateBankCorrect()){
+        if ((!iscard || open_flag == "1") && !validateBankCorrect()){
             return false;
         }
 
         //需要输入密码
-        if (zzispwd == "1" && !validateBankPwd()){
+        if ((zzispwd == "1" || open_flag == "1")&& !validateBankPwd()){
             return false;
         }
         // 验证是否勾选协议
@@ -444,14 +445,12 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
                 };
                 // 调用service绑定存管银行
                 service.bindBank(thirdDepositParam, function (data) {
-                    //alert("银行入参:"+JSON.stringify(thirdDepositParam)+",出参:"+JSON.stringfiy(data));
                     var errorNo = data.error_no;
                     var errorInfo = data.error_info;
-                    if (errorNo == 0)	 // 调用成功,跳转到风险测评页面
-                    {
+                    if (errorNo == 0) {
+                        // 调用成功,跳转到风险测评页面
                         appUtils.pageInit("account/thirdDepository", "account/riskAssessment", {});
-                    }
-                    else {
+                    } else {
                         layerUtils.iLoading(false);
                         layerUtils.iAlert(errorInfo, -1);
                     }
@@ -531,7 +530,6 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
                     getEvent("#protocolName").attr("protocolMd5", protocol.econtract_md5);
                     // 预绑定查看银行协议内容的事件
                     appUtils.preBindEvent(getEvent("#protocolName").parent(), "#protocolName", function () {
-                        appUtils.setSStorageInfo("pagebackthird", "3");
                         appUtils.pageInit("account/thirdDepository", "account/showProtocol", {"protocol_id": getEvent("#protocolName").attr("protocolId")});
                     });
                 }
