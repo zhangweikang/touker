@@ -17,6 +17,9 @@ define("project/scripts/account/accountSuccess", function (require, exports, mod
         //初始加载方法
         function init() {
 
+            $(_pageId).height($(window).height());
+            getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
+
 			bankCode = appUtils.getSStorageInfo("bankCode");
 			isCard = appUtils.getSStorageInfo(bankCode+"isCard");
 

@@ -18,7 +18,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
 
         //钱钱炒股App保留上方返回按钮
         if (global.openChannel == "1") {
-            $(_pageId + " .icon_back").show();
+            getEvent(".icon_back").show();
         }
 
         //页面跳转URL
@@ -60,7 +60,6 @@ define("project/scripts/account/openAccount", function (require, exports, module
             var text = getEvent(".fix_bot .ct_btn .next").html();
             if ("我知道了" == text) {
                 if (global.openChannel == "1") {
-                    //backUrl != null && backUrl != "" && backUrl != "undefined"
                     if (backUrl) {
                         appUtils.pageInit("account/openAccount", backUrl);
                     } else {

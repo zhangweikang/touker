@@ -290,7 +290,7 @@ public class ToukerService {
                 }
                 //获取用户驳回信息
                 List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());
-                if (acceptedRejectLogs != null && acceptedRejectLogs.isEmpty()) {
+                if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
                     Map<String,Object> beanMap = new HashMap<>();
                     for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
                         beanMap.put(acceptedRejectLog.getFieldenname(),acceptedRejectLog);

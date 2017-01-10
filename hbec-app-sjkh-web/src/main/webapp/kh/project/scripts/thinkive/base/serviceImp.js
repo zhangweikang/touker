@@ -1102,30 +1102,11 @@ define(function (require, exports, module) {
                 successCallback(data);
             },
             error: function () {
-                errorCallBack();
-            }
-        });
-    };
-
-    /**
-     * 请求后台服务ajax
-     *
-     * @param url 请求location
-     * @param param 请求参数
-     * @param successCallback 成功回调函数
-     */
-    MobileService.prototype.serviceAjax = function (url, param, successCallback) {
-        console.log("请求url:" + global.serverToukerUrl + url);
-        $.ajax({
-            type: 'post',
-            url: global.serverToukerUrl + url,
-            data: param,
-            cache: false,
-            success: function (data) {
-                successCallback(data);
-            },
-            error: function () {
-                layerUtils.iMsg("-1","系统异常,请稍后再试!");
+                if (errorCallBack){
+                    errorCallBack();
+                } else {
+                    layerUtils.iMsg("-1","系统异常,请稍后再试!");
+                }
             }
         });
     };

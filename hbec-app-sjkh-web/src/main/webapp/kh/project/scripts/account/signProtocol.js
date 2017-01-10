@@ -13,16 +13,18 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
         countProtocol = 0, // 计算签署成功的数量
         userId = appUtils.getSStorageInfo("userId"),
         cert_type = "zd",
+        backAccount = "",
         _pageId = "#account_signProtocol";
     /* 私有业务模块的全局变量 end */
 
     function init() {
         layerUtils.iLoading(true);
+        backAccount = appUtils.getSStorageInfo("backAccount");
         //加载样式
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
+
         clearCssStyle();
-        getEvent(".fix_bot .ct_btn a").html("下一步 >");  // 开户
 
         utils.chechCertificate(getMarket,null,true);//检测证书是否存在
         showUserSignProtocol();//显示用户已选择账户
@@ -31,7 +33,11 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageInit("account/signProtocol", "account/digitalCertificate", {});
+            if (backAccount){
+                appUtils.pageInit("account/signProtocol", "account/openAccount", {backUrl:"account/signProtocol"});
+            } else {
+                appUtils.pageInit("account/signProtocol", "account/digitalCertificate", {});
+            }
         });
 
         /* 隐藏按钮*/
@@ -51,7 +57,17 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
     }
 
     function clearCssStyle(){
-        $("ul").html("");
+        if (backAccount){
+            getEvent(".error_notice").show();
+            getEvent(".step_box.top_step").hide();
+        } else {
+            getEvent(".error_notice").hide();
+            getEvent(".step_box.top_step").show();
+        }
+
+        getEvent("ul").html("");
+
+        getEvent(".fix_bot .ct_btn a").html("下一步 >");  // 开户
     }
 
     function destroy() {
@@ -197,9 +213,8 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             };
             // 获取协议的数字签名值
 
-            var returnData = "";
             if (utils.isAndroid()) {
-                returnData = khmobile.sign(JSON.stringify(signParam));
+                var returnData = khmobile.sign(JSON.stringify(signParam));
                 if (!returnData) {
                     layerUtils.iLoading(false);  // 关闭等待层
                     countProtocol = 0;  // 将签署协议的计数器置为 0
@@ -308,21 +323,25 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                 //开立中登股东账号
                 service.queryOpenCompyAccount(openStockParam, function (data) {
                     if (data.error_no == 0) {
-                        var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
-                        console.log("签署协议页面获取的tpbankFlg=" + tpbankFlg);
-                        if (tpbankFlg == '001015') {
-                            appUtils.pageInit("account/signProtocol", "account/riskAssessment", {});  //跳转到问卷回访页面
-                        } else if (tpbankFlg == '001017') {
-                            appUtils.pageInit("account/signProtocol", "account/thirdDepository", {});  //跳转设置密码页面
+                        if (backAccount){
+                            //驳回补全,跳转成功页面
+                            utils.boHuiRedirect("account","account/signProtocol","backAccount");
                         } else {
-                            appUtils.pageInit("account/signProtocol", "account/setPwd", {});  //跳转设置密码页面
+                            var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
+                            console.log("签署协议页面获取的tpbankFlg=" + tpbankFlg);
+                            if (tpbankFlg == '001015') {
+                                appUtils.pageInit("account/signProtocol", "account/riskAssessment", {});  //跳转到问卷回访页面
+                            } else if (tpbankFlg == '001017') {
+                                appUtils.pageInit("account/signProtocol", "account/thirdDepository", {});  //跳转设置密码页面
+                            } else {
+                                appUtils.pageInit("account/signProtocol", "account/setPwd", {});  //跳转设置密码页面
+                            }
                         }
-                    }
-                    else {
+                    } else {
                         layerUtils.iLoading(false);
                         layerUtils.iAlert(data.error_info, -1);
                     }
-                }, false);
+                }, true);
             }
             else {
                 layerUtils.iLoading(false);

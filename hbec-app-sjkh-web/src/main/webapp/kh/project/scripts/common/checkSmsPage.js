@@ -74,41 +74,50 @@ define(function (require, exports, module) {
     function valiDataReject(acceptedRejectLogs, acceptedCustomerInfo, codePage) {
 
         var photoParam = {"photo_5005": "", "photo_5006": "", "photo_5007": ""};
-        if (acceptedRejectLogs.photo_5005) {
-            photoParam.photo_5005 = acceptedRejectLogs.photo_5005;
-        }
-        if (acceptedRejectLogs.photo_5006) {
-            photoParam.photo_5006 = acceptedRejectLogs.photo_5006;
-        }
-        if (acceptedRejectLogs.photo_5007) {
-            photoParam.photo_5007 = acceptedRejectLogs.photo_5007;
-        }
+        if (acceptedRejectLogs) {
+            if (acceptedRejectLogs.photo_5005) {
+                photoParam.photo_5005 = acceptedRejectLogs.photo_5005;
+            }
+            if (acceptedRejectLogs.photo_5006) {
+                photoParam.photo_5006 = acceptedRejectLogs.photo_5006;
+            }
+            if (acceptedRejectLogs.photo_5007) {
+                photoParam.photo_5007 = acceptedRejectLogs.photo_5007;
+            }
 
-        // 1.驳回:身份证正面、反面、大头像
-        if (acceptedRejectLogs.photo_5005 || acceptedRejectLogs.photo_5006 || acceptedRejectLogs.photo_5007) {
-            appUtils.pageInit(codePage, "account/backUploadPhoto", photoParam);
-            return;
-        }
-        // 2.驳回视频见证
-        if (acceptedRejectLogs.video) {
-            appUtils.pageInit(codePage, "account/videoNotice", {"video": acceptedRejectLogs.video});
-            return;
+            // 1.驳回:身份证正面、反面、大头像
+            if (acceptedRejectLogs.photo_5005 || acceptedRejectLogs.photo_5006 || acceptedRejectLogs.photo_5007) {
+                appUtils.setSStorageInfo("backPhone",JSON.stringify(photoParam));
+                appUtils.pageInit(codePage, "account/backUploadPhoto");
+                return false;
+            }
+            // 2.驳回视频见证
+            if (acceptedRejectLogs.video) {
+                appUtils.setSStorageInfo("backVideo",acceptedRejectLogs.video);
+                appUtils.pageInit(codePage, "account/videoNotice");
+                return false;
+            }
         }
         // 3.驳回密码设置
-        if ((!acceptedCustomerInfo.clientId && acceptedCustomerInfo.fundPwdTrue == "0") || (!acceptedCustomerInfo.clientId && acceptedCustomerInfo.tradePwdTrue == "0")) {
+        if (acceptedCustomerInfo && ((!acceptedCustomerInfo.clientId && acceptedCustomerInfo.fundPwdTrue == "0") || (!acceptedCustomerInfo.clientId && acceptedCustomerInfo.tradePwdTrue == "0"))) {
+            appUtils.setSStorageInfo("backPwd",true);
             appUtils.pageInit(codePage, "account/backSetPwd");
-            return;
+            return false;
         }
         // 4.驳回开立账户
-        if (acceptedRejectLogs.account) {
-            appUtils.pageInit(codePage, "account/backSignProtocol", {"account": acceptedRejectLogs.account});
-            return;
+        if (acceptedRejectLogs && acceptedRejectLogs.account) {
+            appUtils.setSStorageInfo("backAccount",acceptedRejectLogs.account);
+            appUtils.pageInit(codePage, "account/signProtocol");
+            return false;
         }
         // 5.驳回三方存管
-        if (acceptedCustomerInfo.cubsbscopenacctflag == "0") {
-            appUtils.pageInit(codePage, "account/backThirdDepository");
-            return;
+        if (acceptedCustomerInfo && acceptedCustomerInfo.cubsbscopenacctflag == "0") {
+            appUtils.setSStorageInfo("backThird",true);
+            appUtils.pageInit(codePage, "account/thirdDepository");
+            return false;
         }
+
+        return true;
     }
 
     /**
@@ -292,17 +301,12 @@ define(function (require, exports, module) {
                         //需要重新上传证件
                         appUtils.pageInit("account/phoneCodeVerify", "account/uploadPhoto");
                     } else if (code == "001025") {
-                        //待审核,开户成功
-                        if ("reject" == reject) {
-                            valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)
-                        } else {
+                        if(valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)){
                             appUtils.pageInit("account/phoneCodeVerify", "account/accountSuccess", {"backUrl": "account/phoneNumberVerify"});
                         }
                     } else {
                         //判断是否驳回，若驳回 则走驳回流程
-                        if ("reject" == reject) {
-                            valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)
-                        } else {
+                        if(valiDataReject(obj.acceptedRejectLogs, obj.acceptedCustomerInfo, codePage)){
                             pageNextStep(obj.acceptedSchedule, tpbankFlg, codePage);
                         }
                     }

@@ -766,11 +766,11 @@
     </sql>
     <delete id="deleteByMobileNo" parameterType="java.lang.String">
     delete from OSOADATA.T_ACCEPTED_CUSTOMER_INFO
-    where MOBILENO = #{mobileno,jdbcType=VARCHAR}
+    where MOBILENO = #{mobileNo,jdbcType=VARCHAR}
   </delete>
     <delete id="deleteByUserId" parameterType="java.lang.Long">
     delete from OSOADATA.T_ACCEPTED_CUSTOMER_INFO
-    where USERID = #{userid,jdbcType=DECIMAL}
+    where USERID = #{userId,jdbcType=DECIMAL}
   </delete>
     <select id="getTimedOpenAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
     select t3.custname CUSTNAME, t3.idno IDNO, t3.mobileno MOBILENO,t3.client_id CLIENT_ID,

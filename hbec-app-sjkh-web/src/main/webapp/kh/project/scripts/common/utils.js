@@ -538,6 +538,70 @@ define(function (require, exports, module) {
         return fristMap;
     }
 
+    /**
+     * 优化图片数据,返回正确base64
+     * @param imgState
+     * @return
+     */
+    function fmtImgData(imgState) {
+        imgState.replaceAll("\\n", "");
+        imgState.replaceAll("\\u003d", "==");
+        return imgState;
+    }
+
+    /**
+     * 驳回跳转
+     * @param boHuiCode 驳回步骤
+     * @param codePage 当前页面
+     * @param sessionKey session中的Key
+     */
+    function boHuiRedirect(boHuiCode,codePage,sessionKey){
+
+        var notifyParam = {
+            "userid": appUtils.getSStorageInfo("userId"),
+            "fieldname": boHuiCode  // 通知图片已补全
+        };
+        service.rejectStep(notifyParam, function (data) {
+            if (data.error_no == 0) {
+                if (sessionKey) {
+                    appUtils.clearSStorage(sessionKey);
+                }
+                var url = getRedirectUrl();
+                appUtils.pageInit(codePage, url);
+            }
+        });
+    }
+
+    function getRedirectUrl(){
+        var backVideo = appUtils.getSStorageInfo("backVideo");
+        var backAccount = appUtils.getSStorageInfo("backAccount");
+        var backPwd = appUtils.getSStorageInfo("backPwd");
+        var backThird = appUtils.getSStorageInfo("backThird");
+
+        //视频见证驳回跳转
+        if (backVideo){
+            return "account/videoNotice";
+        }
+
+        //交易密码驳回跳转
+        if (backPwd) {
+            return "account/setPwd";
+        }
+
+        //选择开户驳回跳转
+        if (backAccount) {
+            return "account/signProtocol";
+        }
+
+
+        //三方存管驳回跳转
+        if (backThird) {
+            return "account/thirdDepository";
+        }
+
+        return "account/accountSuccess";
+    }
+
     module.exports = {
         "installCertificate": installCertificate,
         "chechCertificate": chechCertificate,
@@ -556,6 +620,9 @@ define(function (require, exports, module) {
         "getIp": getIp,
         "getParams": getParams,
         "randomKey": randomKey,
-        "getTitle": getTitle
+        "getTitle": getTitle,
+        "fmtImgData":fmtImgData,
+        "boHuiRedirect": boHuiRedirect,
+        "getRedirectUrl": getRedirectUrl
     };
 });

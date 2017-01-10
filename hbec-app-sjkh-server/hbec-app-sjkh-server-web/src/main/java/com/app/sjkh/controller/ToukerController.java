@@ -279,9 +279,6 @@ public class ToukerController {
             if (obj != null){
                 data.putAll((HashMap<String, String>)obj);
             }
-            if (ResultCode.HBEC_001040.getCode().compareTo(resultResponse.getStatus()) == 0){
-                data.put("reject","reject");
-            }
             resultResponse.setData(data);
             return resultResponse;
         } catch (Exception e) {

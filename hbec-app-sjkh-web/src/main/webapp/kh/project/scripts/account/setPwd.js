@@ -11,6 +11,7 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
         protocol = null,  //保存协议
         keyTelPanel = require("keyTelPanel"),
         cert_type = "zd",
+        backPwd = "",
         _pageId = "#account_setPwd";
     /* 私有业务模块的全局变量 end */
 
@@ -25,8 +26,11 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.setSStorageInfo("backsignp", "signprotocol")
-            appUtils.pageInit("account/setPwd", "account/signProtocol", {});
+            if (backPwd) {
+                appUtils.pageInit("account/setPwd", "account/accountSuccess",{backUrl:"account/setPwd"});
+            } else {
+                appUtils.pageInit("account/setPwd", "account/signProtocol");
+            }
         });
 
         /* 是否设置资金密码与交易密码一致（隐藏显示）*/
@@ -209,6 +213,17 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
         getEvent(".input_form:eq(1)").hide();
         getEvent(".user_form .mt10").show();
         getEvent(".mt15 .icon_check:eq(0)").addClass("checked"); //默认选中
+
+        backPwd = appUtils.getSStorageInfo("backPwd",backPwd);
+        if (backPwd) {
+            getEvent(".error_notice").show();
+            getEvent(".step_box.top_step").hide();
+            getEvent(".top_title02").hide();
+        } else {
+            getEvent(".error_notice").hide();
+            getEvent(".step_box.top_step").show();
+            getEvent(".top_title02").show();
+        }
 
         for (var i = 1; i <= 4; i++) {
             getEvent("#input_text_pass" + i + "_keyboard").find("em").html("");  // 清空密码
@@ -492,9 +507,14 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
                         service.setAccountPwd(fundPasswordParam, function (data) {
                             if (data.error_no == 0)	//交易密码设置成功，锁定交易密码设置框
                             {
-                                appUtils.pageInit("account/setPwd", "account/thirdDepository", {});
-                            }
-                            else {
+                                if (backPwd) {
+                                    appUtils.clearSStorage("backPwd");
+                                    var url = utils.getRedirectUrl();
+                                    appUtils.pageInit("account/signProtocol", url);
+                                } else {
+                                    appUtils.pageInit("account/setPwd", "account/thirdDepository", {});
+                                }
+                            } else {
                                 layerUtils.iLoading(false);
                                 layerUtils.iAlert(data.error_info);
                             }

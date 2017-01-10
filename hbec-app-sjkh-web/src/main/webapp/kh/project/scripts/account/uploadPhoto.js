@@ -157,10 +157,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
 
     /* 处理点击上传身份证正面、反面效果 */
     function checkedCss(evl, text) {
-        //删除所有被选中颜色
-        getEvent(".upload_box").removeAttr("style");
-        //选中当前被选中
-        evl.attr("style", "border-color:#C50436");
         //获取mediaId
         var mediaId = evl.attr("mediaId");
         getEvent(".upload_btn h5").html(text);
@@ -171,7 +167,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
 
     /* 处理点击上传身份证正面、反面效果 */
     function displayNoneCss() {
-        getEvent(".upload_box").removeAttr("style");
         // 隐藏照片上传按钮
         getEvent(".upload_btn").slideUp("fast");
         // 将按钮的自定义属性 media-id 设为 null
@@ -256,7 +251,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
             return;
         }
         var base64Str = (data.base64).replace(/[\n\r]*/g, "");
-        base64Str = fmtImgData(base64Str);
+        base64Str = utils.fmtImgData(base64Str);
         // 身份证正面信息
         if (getEvent(".upload_main .positive").attr("mediaId") == mediaId) {
             var idnoOCR = obj.idno;
@@ -447,17 +442,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
         fillInformationInParam.idenddate = acceptedCertInfo.idenddate;	// 证件结束日期
         fillInformationInParam.gender = acceptedCertInfo.usersex;	// 用户性别
         fillInformationInParam.postid = acceptedCertInfo.postid;  //邮编
-    }
-
-    /**
-     * 优化图片数据,返回正确base64
-     * @param imgState
-     * @return
-     */
-    function fmtImgData(imgState) {
-        imgState.replaceAll("\\n", "");
-        imgState.replaceAll("\\u003d", "==");
-        return imgState;
     }
 
     //获取当前页面属性对象

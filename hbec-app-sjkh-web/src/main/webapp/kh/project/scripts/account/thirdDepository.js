@@ -4,9 +4,7 @@
 define("project/scripts/account/thirdDepository", function (require, exports, module) {
     /* 私有业务模块的全局变量 begin */
     var appUtils = require("appUtils"),
-        gconfig = require("gconfig"),
-        global = gconfig.global,
-        openChannel = global.openChannel,
+        openChannel = require("gconfig").global.openChannel,
         service = require("serviceImp").getInstance(),  // 业务层接口，请求数据
         layerUtils = require("layerUtils"),
         utils = require("utils"),
@@ -17,16 +15,13 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         protocol = null,  // 协议保存
         cert_type = "zd",
         open_flag = "",
+        backThird = "",
         _pageId = "#account_thirdDepository";
     /* 私有业务模块的全局变量 end */
 
     function init() {
         layerUtils.iLoading(true);  // 开启等待层。。。
-        //修改钱钱炒股或者证券开户部分提示信息内容样式
-        if (openChannel == "1") {
-            getEvent(".user_form p").css("color", "#4883F6");
-            getEvent(".l_link").css("color", "#4883F6");
-        }
+        backThird = appUtils.getSStorageInfo("backThird");
 
         //加载样式
         getEvent(".page").height($(window).height());
@@ -39,12 +34,15 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.setSStorageInfo("backThirdDepository", 3);
-            var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
-            if (tpbankFlg == "000105" || tpbankFlg == "000107") {
-                appUtils.pageInit("account/thirdDepository", "account/signProtocol", {});
+            if (backThird){
+                appUtils.pageInit("account/thirdDepository", "account/openAccount", {backUrl:"account/thirdDepository"});
             } else {
-                appUtils.pageInit("account/thirdDepository", "account/setPwd", {});
+                var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
+                if (tpbankFlg == "000105" || tpbankFlg == "000107") {
+                    appUtils.pageInit("account/thirdDepository", "account/signProtocol", {});
+                } else {
+                    appUtils.pageInit("account/thirdDepository", "account/setPwd", {});
+                }
             }
         });
 
@@ -364,9 +362,8 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         layerUtils.iLoading(true);  // 开启等待层......
         // 获取协议的数字签名值
 
-        var returnData = "";
         if (utils.isAndroid()) {
-            returnData = khmobile.sign(JSON.stringify(signParam));
+            var returnData = khmobile.sign(JSON.stringify(signParam));
             if (!returnData)
                 layerUtils.iLoading(false);
             else
@@ -449,7 +446,13 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
                     var errorInfo = data.error_info;
                     if (errorNo == 0) {
                         // 调用成功,跳转到风险测评页面
-                        appUtils.pageInit("account/thirdDepository", "account/riskAssessment", {});
+                        if(backThird){
+                            appUtils.clearSStorage("backThird");
+                            var url = utils.getRedirectUrl();
+                            appUtils.pageInit("account/thirdDepository", url);
+                        } else {
+                            appUtils.pageInit("account/thirdDepository", "account/riskAssessment", {});
+                        }
                     } else {
                         layerUtils.iLoading(false);
                         layerUtils.iAlert(errorInfo, -1);
@@ -541,6 +544,22 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
     }
 
     function clearCssStyle() {
+        //修改钱钱炒股或者证券开户部分提示信息内容样式
+        if (openChannel == "1") {
+            getEvent(".user_form p").css("color", "#4883F6");
+            getEvent(".l_link").css("color", "#4883F6");
+        }
+        if (backThird){
+            //驳回
+            getEvent(".error_notice").show();
+            getEvent(".step_box.top_step").hide();
+            getEvent(".top_title02").hide();
+        } else {
+            //非驳回
+            getEvent(".error_notice").hide();
+            getEvent(".step_box.top_step").show();
+            getEvent(".top_title02").show();
+        }
         getEvent("#input_text_bankcard_keyboard").find("em").html("");  // 清空银行卡号值
         getEvent("#input_text_bankcardPwd_keyboard").find("em").html("");  // 清空银行卡密码值
         getEvent("#input_text_bankcardPwd").attr("data-password", "");  // 清空密码值
