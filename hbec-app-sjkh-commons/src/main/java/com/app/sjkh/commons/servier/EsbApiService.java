@@ -43,6 +43,11 @@ public class EsbApiService {
 
     private static Long timeOut = 3600000l;
 
+    //业务请求 location
+    private static String SERVER_FILEUPLOAD = "upload";
+    private static String SERVER_SERVICE = "service";
+    private static String SERVER_FILEDOWNLOAD = "download";
+
     @Autowired
     private PropertiesUtils propertiesUtils;
 
@@ -81,7 +86,7 @@ public class EsbApiService {
     public String esbBusinessService(String serviceId, Map<String, String> map) throws IOException {
         String result;
 
-        String serviceUrl = getEsbUrl("service");
+        String serviceUrl = getEsbUrl(SERVER_SERVICE);
         //超时标志
         Boolean timeout = false;
         //登陆超时循环次数
@@ -103,7 +108,7 @@ public class EsbApiService {
     public String esbBusinessUploadFile(String fileName, String filePath, Map<String, String> map) throws IOException {
         String result;
 
-        String serviceUrl = getEsbUrl("upload");
+        String serviceUrl = getEsbUrl(SERVER_FILEUPLOAD);
         //超时标志
         Boolean timeout = false;
         //登陆超时循环次数
@@ -127,7 +132,7 @@ public class EsbApiService {
     public String esbBusinessUploadFile(String fileName, byte[] bytes, Map<String, String> map) throws IOException {
         String result;
 
-        String serviceUrl = getEsbUrl("upload");
+        String serviceUrl = getEsbUrl(SERVER_FILEUPLOAD);
         //超时标志
         Boolean timeout = false;
         //登陆超时循环次数
@@ -149,7 +154,7 @@ public class EsbApiService {
 
     public void esbBusinessDownloadFile(Map<String, String> map) throws IOException, URISyntaxException, KeyStoreException {
 
-        String serviceUrl = getEsbUrl("download");
+        String serviceUrl = getEsbUrl(SERVER_FILEDOWNLOAD);
         //超时标志
         Boolean timeout = false;
         //登陆超时循环次数
@@ -157,15 +162,10 @@ public class EsbApiService {
         do {
             vailLogin();
 
-            map.put("serviceId", "esb.ygt.filedownload");
+            map.put("serviceId", EsbServiceEnum.FILEDOWNLOAD.getServiceId());
             map.put("sessionId", sessionId);
-            String s = JacksonUtil.toJSon(map);
-            map.clear();
-            map.put("p",s);
 
-            String s1 = apiService.doPostDownloadFile(serviceUrl, map);
-
-            System.out.println("s = " + s1);
+            apiService.doPostDownloadFile(serviceUrl, JacksonUtil.toJSon(map));
 
             loginCount++;
         } while (Boolean.TRUE.equals(timeout) && loginCount < 5);

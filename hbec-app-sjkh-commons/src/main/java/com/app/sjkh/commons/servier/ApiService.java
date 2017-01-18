@@ -1,6 +1,7 @@
 package com.app.sjkh.commons.servier;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
@@ -220,26 +221,20 @@ public class ApiService implements BeanFactoryAware {
         return responseResult(url, httpPost);
     }
 
-    public String doPostDownloadFile(String url, Map<String,String> map) throws IOException, URISyntaxException, KeyStoreException {
+    public String doPostDownloadFile(String url, String json) throws IOException, URISyntaxException, KeyStoreException {
 
-
-        URIBuilder builder = new URIBuilder(url);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            builder.addParameter(entry.getKey(), entry.getValue());
-        }
-
-        return doGet(url);
-       /* // 创建http GET请求
+        // 创建http POST请求
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(this.requestConfig);// 设置请求参数
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+        httpPost.setHeader(HttpHeaders.CONTENT_TYPE,"image/jpeg");
         // 设置请求参数
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            builder.addTextBody(entry.getKey(), entry.getValue(),ContentType.APPLICATION_OCTET_STREAM);
+        if (null != json) {
+            StringEntity stringEntity = new StringEntity(json, ContentType.create(
+                    "image/jpeg", "UTF-8"));
+            // 添加到httpPost中
+            httpPost.setEntity(stringEntity);
         }
-        HttpEntity entity = builder.build();
-        httpPost.setEntity(entity);
 
         CloseableHttpResponse response = null;
         try {
@@ -253,7 +248,6 @@ public class ApiService implements BeanFactoryAware {
                 BASE64Encoder encoder = new BASE64Encoder();
                 String encode = encoder.encode(bytes);
 
-
                 return encode;
             }
         } finally {
@@ -261,7 +255,7 @@ public class ApiService implements BeanFactoryAware {
                 response.close();
             }
         }
-        return null;*/
+        return null;
     }
 
     private String responseResult(String url, HttpUriRequest request) throws IOException {
