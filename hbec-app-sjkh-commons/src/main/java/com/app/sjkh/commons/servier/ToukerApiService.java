@@ -383,4 +383,49 @@ public class ToukerApiService {
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
         }
     }
+
+    /**
+     * 根据身份证号到投客查询用户信息
+     *
+     * @param idCardNo
+     * @return 001003:系统异常
+     * 001004:参数异常
+     * 001006:查询结果为空
+     * 000000:查询成功
+     * @throws Exception
+     */
+    public ResultResponse accountServiceFindByIdCardNo(String idCardNo) {
+        try {
+            if (StringUtils.isBlank(idCardNo)) {
+                return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
+            }
+            Account account = new Account();
+            account.setIdcardNo(idCardNo);
+
+            Map<String, String> map = new HashMap<>();
+            map.put("acc", JacksonUtil.toJSon(account));
+            String response = sendApi(propertiesUtils.get("apiUrl") + "accountFacade.findAccount", map);
+
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,idCardNo = " + idCardNo);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            logger.info("【accountServiceFindByIdCardNo-响应】" + response);
+            JsonNode jsonNode = MAPPER.readTree(response).get("result");    //result:	1:成功    		 其他：失败
+            if (!Constants.ApiSuccess.equals(jsonNode.textValue())) {
+                logger.error("Api查询touker用户信息失败,idCardNo = " + idCardNo);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            //调用成功
+            JsonNode data = MAPPER.readTree(response).get("data");
+            if (data.isNull()) {
+                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+            }
+            return ResultResponse.ok(MAPPER.readValue(data.traverse(), Account.class));
+        } catch (IOException e) {
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+        }
+    }
 }

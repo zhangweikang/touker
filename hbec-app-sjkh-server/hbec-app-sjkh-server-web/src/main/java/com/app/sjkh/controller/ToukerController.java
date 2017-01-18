@@ -4,6 +4,7 @@ import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.servier.ToukerApiService;
 import com.app.sjkh.commons.utils.NumberUtils;
 import com.app.sjkh.commons.utils.PropertiesUtils;
+import com.app.sjkh.commons.vo.Account;
 import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
@@ -255,7 +256,7 @@ public class ToukerController {
             }
 
             //校验用户数据
-            ResultResponse resultResponse = toukerService.validateCustInfo(mobileNo, customerId, StringUtils.isBlank(source) ? 0 : Integer.valueOf(source));
+            ResultResponse resultResponse = toukerService.validateCustomerInfo(mobileNo, customerId, StringUtils.isBlank(source) ? 0 : Integer.valueOf(source));
 
             //判断用户绑卡数据
             Map<String, Object> data = (Map<String, Object>) resultResponse.getData();
@@ -274,12 +275,6 @@ public class ToukerController {
                 data.put("tpbankFlg", ResultCode.HBEC_001020.getCode());
                 data.put("tpAddr", "");
             }
-            ResultResponse resultResponse1 = toukerService.valiUserInfo(mobileNo);
-            Object obj = resultResponse1.getData();
-            if (obj != null){
-                data.putAll((HashMap<String, String>)obj);
-            }
-            resultResponse.setData(data);
             return resultResponse;
         } catch (Exception e) {
             logger.error("系统异常", e);
@@ -409,5 +404,29 @@ public class ToukerController {
             logger.error("获取用户上传身份证影像失败", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "获取用户上传身份证影像失败");
         }
+    }
+
+    /**
+     * 校验用户身份证在投客对应的手机号与用户输入的手机号是否一致
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "validateIdno", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultResponse validateIdno(HttpServletRequest request){
+        String mobileNo = request.getParameter("mobileNo");
+        String idCardNo = request.getParameter("idCardNo");
+        //String mobileNo = (String) request.getAttribute("mobileNo");
+        //String idCardNo = (String) request.getAttribute("idCardNo");
+
+        ResultResponse resultResponse = toukerApiService.accountServiceFindByIdCardNo(idCardNo);
+
+        if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0){
+            Account account = (Account)resultResponse.getData();
+            if (!StringUtils.equals(account.getPhone().toString(),mobileNo)){
+                return ResultResponse.build(ResultCode.HBEC_001043.getCode(),ResultCode.HBEC_001043.getMemo(),account);
+            }
+        }
+        return ResultResponse.ok();
     }
 }

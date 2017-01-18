@@ -8,6 +8,10 @@ define("project/scripts/account/openAccount", function (require, exports, module
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         utils = require("utils"),
         backUrl = "",
+        phoneNum = "",
+        source = require("gconfig").platform,
+        layerUtils = require("layerUtils"), // 弹出层对象
+        checkSmsPage = require("checkSmsPage"),
         _pageId = "#account_openAccount";
     // 私有业务模块的全局变量 end
 
@@ -63,7 +67,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
                     if (backUrl) {
                         appUtils.pageInit("account/openAccount", backUrl);
                     } else {
-                        appUtils.pageInit("account/openAccount", "account/selDepartment");
+                        goProcess();
                     }
                 } else {
                     appUtils.pageInit("account/openAccount", "account/phoneNumberVerify", {backUrl: backUrl});
@@ -80,16 +84,89 @@ define("project/scripts/account/openAccount", function (require, exports, module
         });
     }
 
+    function goProcess() {
+        if (utils.isAndroid()) {
+            var data = eval("(" + khmobile.getUserInfo() + ")");
+            getUserInfo(data);
+        } else {
+            require("shellPlugin").callShellMethod("toukerServerPlugin", function (jsonresult) {
+                getUserInfo(jsonresult);
+            }, function (data) {
+            }, {"command": "getUserInfo"});
+        }
+    }
+
+    function getUserInfo(jsonresult) {
+        // 获取移动端参数手机号、userId
+        console.info("jsonresult>>>>" + JSON.stringify(jsonresult));
+        if (jsonresult == null || jsonresult.phonenum == null || jsonresult.phonenum == "") {
+            return;
+        }
+
+        utils.getIp();
+
+        phoneNum = jsonresult.phonenum;
+        //从钱钱炒股跳过来的一定是已注册投客用户，这里主要是获取该客户的客户号
+        var param = {"mobileNo": phoneNum};
+
+        param = utils.getParams(param);
+
+        service.serviceAjax("/touker/isToukerUser", param, function (data) {
+            appUtils.setSStorageInfo("mobileNo", phoneNum);
+            var code = data.status;//001011, 未注册;001012,已注册
+            if (code == "001012") {
+                appUtils.setSStorageInfo("isToukerRegister", "true");
+                var customerId = data.data.customerId;
+                if (customerId) {
+                    appUtils.setSStorageInfo("khh", customerId);//将客户号号加入到缓存中
+                }
+                var paramCheck = {
+                    "mobileNo": phoneNum,
+                    "mobileCode": getEvent(".mobileCode").val(),
+                    "channel": "qianqian_app",
+                    "source": source,
+                    "khh": customerId,
+                    "isToukerRegister": true,
+                    "password": password,
+                    "ip": appUtils.getSStorageInfo("ip"),
+                    "mac": appUtils.getSStorageInfo("mac")
+                };
+                var paramCheckSms = {
+                    "mobile_no": phoneNum,
+                    "mobile_code": "111111",
+                    "login_flag": "0"
+                };
+                service.checkSmsCode(paramCheckSms, function (data) {
+                    var result = data.results;
+                    // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
+                    if (result[0].clientinfo) {
+                        appUtils.setSStorageInfo("clientinfo", result[0].clientinfo);
+                    }
+                    // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
+                    if (result[0].jsessionid) {
+                        appUtils.setSStorageInfo("jsessionid", result[0].jsessionid);
+                    }
+                });
+
+                checkSmsPage.valiDataCustomeInfo(paramCheck, "account/openAccount");
+            } else {
+                console.log("手机号" + jsonresult.phonenum + "未注册投客网");
+                layerUtils.iMsg(-1, data.msg);
+            }
+        });
+    }
+
+
     function destroy() {
         service.destroy();
     }
 
-    //获取当前页面属性对象
+//获取当前页面属性对象
     function getEvent(event) {
         return $(_pageId + " " + event);
     }
 
-    // 暴露对外的接口
+// 暴露对外的接口
     module.exports = {
         "init": init,
         "bindPageEvent": bindPageEvent,

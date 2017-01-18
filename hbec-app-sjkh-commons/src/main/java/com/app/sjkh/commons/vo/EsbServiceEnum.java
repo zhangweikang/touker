@@ -48,7 +48,10 @@ public enum EsbServiceEnum {
     CXRYXX("esb.crm.cxryxx", "查询人员信息"),
 
     //客户考核营业部设置
-    KHKHYYBSZ("esb.crm.khkhyybsz", "客户考核营业部设置");
+    KHKHYYBSZ("esb.crm.khkhyybsz", "客户考核营业部设置"),
+
+    //理财签约信息查询
+    LCQYXXCX("esb.zfpt.lcgl.lcqyxxcx","查询理财签约信息请求");
 
 
     /***********************************************************/

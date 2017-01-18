@@ -23,7 +23,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         cleanPageElement();  // 清除页面元素
 
         //  从上传照片页面进入
-        if (appUtils.getSStorageInfo("_prePageCode") == "account/uploadPhoto" || appUtils.getSStorageInfo("_prePageCode") == "account/uploadPhotoChange") {
+        if (appUtils.getSStorageInfo("_prePageCode") == "account/uploadPhoto") {
             backUrl = appUtils.getPageParam("backUrl");
             // 根据传入的值，填充页面的数据
             getEvent(".name").val(appUtils.getPageParam("custname"));	  // 客户姓名
@@ -57,32 +57,30 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             var encodeParam = {"id": appUtils.getSStorageInfo('userId')};
 
             /*encodeParam = utils.getParams(encodeParam);*/
-            encodePluginCallback(encodeParam);
-            function encodePluginCallback(paramData) {
-                service.serviceAjax("/touker/getCertInfo", paramData, function (data) {
-                    var code = data.status;
-                    var obj = data.data;
-                    if (code == "000000") {
-                        getEvent(".name").val(obj.custname);	  // 客户姓名
-                        getEvent(".idCardNo").val(obj.idno);	 // 身份证号
-                        getEvent(".signDepartment").val(obj.policeorg);	// 签发机关
-                        getEvent(".idCardAddress").val(obj.natives);	// 证件地址
-                        getEvent(".address").val(obj.natives);	 // 联系地址和证件地址设置相同的
-                        if (obj.postid != null && obj.postid != "") {
-                            getEvent(".zipCode").val(obj.postid);  //邮编
-                        }
-                        getEvent(".idBeginDate").val(obj.idbegindate);  // 证件开始日期
-                        getEvent(".idEndDate").val(obj.idenddate);  // 证件结束日期
 
-                        appUtils.setSStorageInfo("edu", obj.edu);//职业
-                        appUtils.setSStorageInfo("professionCode", obj.professionCode);//学历
-
-                        certUploadState = obj.certUploadState;
-                    } else {
-                        layerUtils.iMsg("-1", data.msg);
+            service.serviceAjax("/touker/getCertInfo", encodeParam, function (data) {
+                var code = data.status;
+                var obj = data.data;
+                if (code == "000000") {
+                    getEvent(".name").val(obj.custname);	  // 客户姓名
+                    getEvent(".idCardNo").val(obj.idno);	 // 身份证号
+                    getEvent(".signDepartment").val(obj.policeorg);	// 签发机关
+                    getEvent(".idCardAddress").val(obj.natives);	// 证件地址
+                    getEvent(".address").val(obj.natives);	 // 联系地址和证件地址设置相同的
+                    if (obj.postid != null && obj.postid != "") {
+                        getEvent(".zipCode").val(obj.postid);  //邮编
                     }
-                });
-            }
+                    getEvent(".idBeginDate").val(obj.idbegindate);  // 证件开始日期
+                    getEvent(".idEndDate").val(obj.idenddate);  // 证件结束日期
+
+                    appUtils.setSStorageInfo("edu", obj.edu);//职业
+                    appUtils.setSStorageInfo("professionCode", obj.professionCode);//学历
+
+                    certUploadState = obj.certUploadState;
+                } else {
+                    layerUtils.iMsg("-1", data.msg);
+                }
+            });
         }
         queryDataDict();  // 获取职业和学历列表
     }
@@ -153,7 +151,24 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn"), function () {
             if (verifyInfo())  // 校验数据
             {
-                submitInfo();  //提交用户信息
+                var param = {
+                    "idCardNo" : getEvent(".user_form .idCardNo").val(),
+                    "mobileNo":appUtils.getSStorageInfo('mobileNo')
+                };
+
+               /* param = utils.getParams(param);*/
+
+                service.serviceAjax("/touker/validateIdno",param,function(data){
+                    var code = data.status;
+                    if ("001043" == code){
+                        var toukerPhone = data.data.phone + "";
+                        toukerPhone = toukerPhone.substr(0,3)+"****"+toukerPhone.substr(7,4);
+                        layerUtils.iAlert("身份证件被占用,您可登录"+toukerPhone+"账号或使用其他身份证件进行开户操作!",-1);
+                    } else {
+                        //提交用户信息
+                        submitInfo();
+                    }
+                });
             }
         });
     }
@@ -191,35 +206,33 @@ define("project/scripts/account/personInfo", function (require, exports, module)
 
         //先提交思迪，判读是否需要删除占用者客户数据信息
         /*paramCert = utils.getParams(paramCert);*/
-        toukerServerPluginCallback(paramCert);
-        function toukerServerPluginCallback(returnData) {
-            service.serviceAjax("/touker/clearUnSubmitUserInfo", returnData, function (data) {
-                var code = data.status;
-                if (code != "000000") {
-                    layerUtils.iMsg("-1", data.msg);
-                    return;
-                }
-                // 开户信息资料提交
-                var param = setSubmitDataParam();
-                service.submitUserInfo(param, function (data) {
-                    var error_no = data.error_no;
-                    var error_info = data.error_info;
-                    if (error_no == 0) {
-                        //新开，则走新开流程
-                        if (tpbankFlg == '001017' || tpbankFlg == '001015') {
-                            // 跳转到验证交易密码
-                            console.log("跳转到密码验证页面");
-                            appUtils.pageInit("account/personInfo", "account/pwdVerify", {"backUrl": "account/personInfo"});
-                        } else {
-                            appUtils.pageInit("account/personInfo", "account/videoNotice", {});
-                        }
+
+        service.serviceAjax("/touker/clearUnSubmitUserInfo", paramCert, function (data) {
+            var code = data.status;
+            if (code != "000000") {
+                layerUtils.iMsg("-1", data.msg);
+                return;
+            }
+            // 开户信息资料提交
+            var param = setSubmitDataParam();
+            service.submitUserInfo(param, function (data) {
+                var error_no = data.error_no;
+                var error_info = data.error_info;
+                if (error_no == 0) {
+                    //新开，则走新开流程
+                    if (tpbankFlg == '001017' || tpbankFlg == '001015') {
+                        // 跳转到验证交易密码
+                        console.log("跳转到密码验证页面");
+                        appUtils.pageInit("account/personInfo", "account/pwdVerify", {"backUrl": "account/personInfo"});
                     } else {
-                        layerUtils.iLoading(false);
-                        layerUtils.iAlert(error_info);  // 填写资料失败，弹出提示
+                        appUtils.pageInit("account/personInfo", "account/videoNotice", {});
                     }
-                }, false);
-            });
-        }
+                } else {
+                    layerUtils.iLoading(false);
+                    layerUtils.iAlert(error_info);  // 填写资料失败，弹出提示
+                }
+            }, false);
+        });
     }
 
     /* 根据身份证号进行判断性别: 倒数第二位数字，偶数为女，基数为男 */

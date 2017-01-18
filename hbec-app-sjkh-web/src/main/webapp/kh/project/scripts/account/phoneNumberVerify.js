@@ -68,32 +68,26 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
             utils.getIp();
             appUtils.setSStorageInfo("mobileNo",mobileNo);
 
-            var param = {
-                "mobileNo": mobileNo
-            };
+            var param = {"mobileNo": mobileNo};
 
             /*param = utils.getParams(param);*/
-            toukerServerPluginCallback(param);
-            function toukerServerPluginCallback(returnData) {
-                service.serviceAjax("/touker/isToukerUser",returnData,function(data){
-                    var code = data.status;//001011, 未注册;001012,已注册
-                    if (code == "001011") {
-                        appUtils.setSStorageInfo("isToukerRegister","false");
-                        //appUtils.pageInit("account/phoneNumberVerify", "account/phoneToukerRegister");
-                        appUtils.pageInit("account/phoneNumberVerify", "account/phoneCheckSmsCode");
-                    } else if (code == "001012") {
-                        appUtils.setSStorageInfo("isToukerRegister","true");
-                        var customerId = data.data.customerId;
-                        if (customerId) {
-                            appUtils.setSStorageInfo("khh", customerId);//将客户号号加入到缓存中
-                        }
-                        //appUtils.pageInit("account/phoneNumberVerify", "account/phoneCodeVerify");
-                        appUtils.pageInit("account/phoneNumberVerify", "account/phoneCheckSmsCode");
-                    } else {
-                        layerUtils.iMsg(-1, data.msg);
+
+            service.serviceAjax("/touker/isToukerUser",param,function(data){
+                var code = data.status;//001011, 未注册;001012,已注册
+                if (code == "001011") {
+                    appUtils.setSStorageInfo("isToukerRegister","false");
+                    appUtils.pageInit("account/phoneNumberVerify", "account/phoneCheckSmsCode");
+                } else if (code == "001012") {
+                    appUtils.setSStorageInfo("isToukerRegister","true");
+                    var customerId = data.data.customerId;
+                    if (customerId) {
+                        appUtils.setSStorageInfo("khh", customerId);//将客户号号加入到缓存中
                     }
-                });
-            }
+                    appUtils.pageInit("account/phoneNumberVerify", "account/phoneCheckSmsCode");
+                } else {
+                    layerUtils.iMsg(-1, data.msg);
+                }
+            });
         });
     }
 

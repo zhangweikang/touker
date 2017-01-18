@@ -291,12 +291,12 @@ public class ToukerService {
                 //获取用户驳回信息
                 List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());
                 if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
-                    Map<String,Object> beanMap = new HashMap<>();
+                    Map<String, Object> beanMap = new HashMap<>();
                     for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
-                        beanMap.put(acceptedRejectLog.getFieldenname(),acceptedRejectLog);
+                        beanMap.put(acceptedRejectLog.getFieldenname(), acceptedRejectLog);
                     }
                     resultMap.put("acceptedRejectLogs", beanMap);
-                    return ResultResponse.build(ResultCode.HBEC_001040.getCode(),null,resultMap);
+                    return ResultResponse.build(ResultCode.HBEC_001040.getCode(), null, resultMap);
                 }
             }
         } catch (Exception e) {
@@ -368,6 +368,9 @@ public class ToukerService {
      * @param loginPass
      * @param channel
      * @return
+     * 001003:系统异常
+     * 001013:注册成功
+     * 000000:成功
      * @throws Exception
      */
     public ResultResponse registerTouker(String mobileNo, String loginPass, String channel) throws Exception {
@@ -584,7 +587,7 @@ public class ToukerService {
             }
 
             //查询是否绑定的三方支付信息
-            ResultResponse resultResponse1 = toukerApiService.queryAuthenticationInfoByDingDian(customerId);
+            ResultResponse resultResponse1 = esbApiService.queryQuickBankCard(customerId);
             if (ResultCode.HBEC_001017.getCode().equals(resultResponse1.getStatus())) {
                 return resultResponse1;
             }
@@ -705,8 +708,8 @@ public class ToukerService {
                     //判断是否需要拉取身份证（如果客户已经在投客网上传过身份证则直接拉去过来）
                     ResultResponse imgFromTouker = getImgFromTouker(mobileNo, acceptedCustomerInfo.getUserid().toString(), customerInfo);
                     Object obj = imgFromTouker.getData();
-                    if (obj != null){
-                        resultMap.putAll((HashMap<String, String>)obj);
+                    if (obj != null) {
+                        resultMap.putAll((HashMap<String, String>) obj);
                     }
                     imgFromTouker.setData(resultMap);
                     return imgFromTouker;
@@ -747,8 +750,8 @@ public class ToukerService {
                 //判断是否需要拉去身份证
                 ResultResponse imgFromTouker = getImgFromTouker(mobileNo, certInfo.getId().toString(), customerInfo);
                 Object obj = imgFromTouker.getData();
-                if (obj != null){
-                    resultMap.putAll((HashMap<String, String>)obj);
+                if (obj != null) {
+                    resultMap.putAll((HashMap<String, String>) obj);
                 }
                 imgFromTouker.setData(resultMap);
                 return imgFromTouker;
@@ -771,8 +774,8 @@ public class ToukerService {
                 //判断是否需要拉取身份证
                 ResultResponse imgFromTouker = getImgFromTouker(mobileNo, certInfo.getId().toString(), customerInfo);
                 Object obj = imgFromTouker.getData();
-                if (obj != null){
-                    resultMap.putAll((HashMap<String, String>)obj);
+                if (obj != null) {
+                    resultMap.putAll((HashMap<String, String>) obj);
                 }
                 imgFromTouker.setData(resultMap);
                 return imgFromTouker;
@@ -808,6 +811,131 @@ public class ToukerService {
             }
         }
         return ResultResponse.ok(resultMap);
+    }
+
+    /**
+     * 校验用户数据
+     *
+     * @param mobileNo 手机号码(必传)
+     * @param customerId 客户号(非必传)
+     * @param opway 渠道(传客户号必传)
+     * @return
+     * 001004:参数为空
+     * 001003:系统异常
+     * 001006:查询结果为空
+     * 001041:已走完开户流程
+     * 001042:未走完开户流程
+     * @throws Exception
+     */
+    public ResultResponse validateCustomerInfo(String mobileNo, String customerId, Integer opway) throws Exception {
+
+        Map<String,Object> resultMap = new HashMap<>();
+
+        if (StringUtils.isBlank(mobileNo)) {
+            return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
+        }
+
+        AcceptedCustomerInfo acceptedCustomerInfo = acceptedCustomerInfoService.queryOneByMoblie(mobileNo);
+        resultMap.put("acceptedCustomerInfo",acceptedCustomerInfo);
+
+        AcceptedCertInfo queryCertInfo = new AcceptedCertInfo();
+        queryCertInfo.setMobileno(mobileNo);
+        AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.queryOneByWhere(queryCertInfo);
+        resultMap.put("acceptedCertInfo",acceptedCertInfo);
+
+        //用户输入手机号查询用户信息表,已存在客户号则返回
+        if (acceptedCustomerInfo != null && StringUtils.isNotBlank(acceptedCustomerInfo.getClientId())) {
+            return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(),resultMap);
+        }
+
+        AcceptedSchedule querySchedule = new AcceptedSchedule();
+        querySchedule.setUserId(acceptedCertInfo.getId().toString());
+        AcceptedSchedule acceptedSchedule = acceptedScheduleService.queryOneByWhere(querySchedule);
+        resultMap.put("acceptedSchedule",acceptedSchedule);
+
+        String backStep = acceptedSchedule.getBackStep();
+        //用户处于开户流程已走完或者有驳回记录,直接返回
+        if ("a".equals(backStep) || "e".equals(backStep)) {
+            logger.info("手机号" + mobileNo + "的开户资料已提交，处于待审核或者回访状态");
+            //获取用户驳回信息
+            List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(acceptedCertInfo.getId());
+            if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
+                Map<String, Object> beanMap = new HashMap<>();
+                for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
+                    beanMap.put(acceptedRejectLog.getFieldenname(), acceptedRejectLog);
+                }
+                resultMap.put("acceptedRejectLogs", beanMap);
+            }
+            return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(),resultMap);
+        }
+
+        if (StringUtils.isNotBlank(customerId)) {
+            ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(customerId);
+
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
+                logger.error("顶点查询用户信息异常");
+                return resultResponse;
+            }
+
+            Map<String, String> customrtInfo = (Map<String, String>) resultResponse.getData();
+
+            if (customrtInfo == null || customrtInfo.isEmpty()) {
+                logger.info("查询用户信息为空,顶点:customrtInfo:" + customrtInfo);
+                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+            }
+
+            String zjbh = customrtInfo.get("zjbh");
+            resultMap.put("idnoDD",zjbh);
+            String yyb = customrtInfo.get("yyb");
+
+            if (StringUtils.isBlank(zjbh) || StringUtils.isBlank(yyb)) {
+                logger.info("查询用户信息为空,顶点:customrtInfo:" + customrtInfo);
+                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+            }
+
+            //本地记录身份证号码与顶点记录身份证号码不一致,删除用户信息表数据
+            if (acceptedCustomerInfo != null && StringUtils.isNotBlank(acceptedCustomerInfo.getIdno()) && !StringUtils.equals(acceptedCustomerInfo.getIdno(),zjbh)) {
+                acceptedCustomerInfoService.deleteByMobileNo(mobileNo);
+            }
+
+            //本地记录用户的开户营业部与顶点查询的开户营业部不一致,更新本地开户营业部,和佣金费率
+            if (!StringUtils.equals(acceptedCertInfo.getBranchno(),yyb)) {
+                AcceptedCommission queryAcceptedCommission = new AcceptedCommission();
+                queryAcceptedCommission.setBranchNo(yyb);
+                AcceptedCommission acceptedCommission = acceptedCommissionService.queryOneByWhere(queryAcceptedCommission);
+
+                AcceptedCertInfo updateAcceptedCertInfo = new AcceptedCertInfo();
+                updateAcceptedCertInfo.setBranchno(yyb);
+                updateAcceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
+                updateAcceptedCertInfo.setMobileno(mobileNo);
+                updateAcceptedCertInfo.setOpacctkindFlag(AcceptedCertInfo.State_0);
+                updateAcceptedCertInfo.setAccessChannel(opway);
+                updateAcceptedCertInfo.setState("0");
+                updateAcceptedCertInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+                acceptedCertInfoService.updateByMoblieNoSelective(updateAcceptedCertInfo);
+
+                if (acceptedCustomerInfo != null) {
+                    AcceptedCustomerInfo updateAcceptedCustomerInfo = new AcceptedCustomerInfo();
+                    updateAcceptedCertInfo.setBranchno(yyb);
+                    updateAcceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
+                    updateAcceptedCustomerInfo.setId(acceptedCustomerInfo.getId());
+                    updateAcceptedCustomerInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+                    acceptedCustomerInfoService.updateSelective(updateAcceptedCustomerInfo);
+
+                    acceptedCustomerInfo.setBranchno(yyb);
+                    acceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
+                    resultMap.put("acceptedCustomerInfo",acceptedCustomerInfo);
+                }
+
+                acceptedCertInfo.setBranchno(yyb);
+                acceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
+                resultMap.put("acceptedCertInfo",acceptedCertInfo);
+
+                BBranch branchInfo = bBranchServiceImpl.getBranchInfo(yyb);
+                resultMap.put("branchInfo",branchInfo);
+            }
+        }
+        return ResultResponse.build(ResultCode.HBEC_001042.getCode(), ResultCode.HBEC_001042.getMemo(),resultMap);
     }
 
     /**
@@ -1041,9 +1169,9 @@ public class ToukerService {
         if (acceptedMediaUrls == null || acceptedMediaUrls.isEmpty() || acceptedCertInfo == null) {
             return ResultResponse.build(ResultCode.HBEC_001006.getCode(), null);
         } else {
-            Map<String,Object> result = new HashMap<>();
-            result.put("acceptedMediaUrls",acceptedMediaUrls);
-            result.put("acceptedCertInfo",acceptedCertInfo);
+            Map<String, Object> result = new HashMap<>();
+            result.put("acceptedMediaUrls", acceptedMediaUrls);
+            result.put("acceptedCertInfo", acceptedCertInfo);
             return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, result);
         }
     }
@@ -1056,8 +1184,8 @@ public class ToukerService {
             return ResultResponse.build(ResultCode.HBEC_001006.getCode(), null, ResultCode.HBEC_001006.getMemo());
         } else {
             ResultResponse resultResponse = toukerApiService.accountServiceFindByPhone(acceptedCertInfo.getMobileno());
-            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0){
-                Account account = (Account)resultResponse.getData();
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0) {
+                Account account = (Account) resultResponse.getData();
                 acceptedCertInfo.setCertUploadState(account.getCertUploadState().toString());
             }
             return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, acceptedCertInfo);

@@ -26,15 +26,16 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Encoder;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.security.KeyStoreException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 /**
  * 负责和外部接口对接
@@ -206,6 +207,7 @@ public class ApiService implements BeanFactoryAware {
 
         //创建post链接
         HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(this.requestConfig);// 设置请求参数
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         //添加请求参数
@@ -216,6 +218,50 @@ public class ApiService implements BeanFactoryAware {
         HttpEntity entity = builder.build();
         httpPost.setEntity(entity);
         return responseResult(url, httpPost);
+    }
+
+    public String doPostDownloadFile(String url, Map<String,String> map) throws IOException, URISyntaxException, KeyStoreException {
+
+
+        URIBuilder builder = new URIBuilder(url);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            builder.addParameter(entry.getKey(), entry.getValue());
+        }
+
+        return doGet(url);
+       /* // 创建http GET请求
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(this.requestConfig);// 设置请求参数
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        // 设置请求参数
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            builder.addTextBody(entry.getKey(), entry.getValue(),ContentType.APPLICATION_OCTET_STREAM);
+        }
+        HttpEntity entity = builder.build();
+        httpPost.setEntity(entity);
+
+        CloseableHttpResponse response = null;
+        try {
+            // 执行请求
+            response = getHttpClient().execute(httpPost);
+            // 判断返回状态是否为200
+            if (response.getStatusLine().getStatusCode() == 200) {
+                InputStream inputStream = response.getEntity().getContent();
+
+                byte[] bytes = inputToByte(inputStream);
+                BASE64Encoder encoder = new BASE64Encoder();
+                String encode = encoder.encode(bytes);
+
+
+                return encode;
+            }
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+        return null;*/
     }
 
     private String responseResult(String url, HttpUriRequest request) throws IOException {
@@ -242,5 +288,24 @@ public class ApiService implements BeanFactoryAware {
             }
         }
         return null;
+    }
+
+    /**
+     * 输入流转字节
+     *
+     * @param inStream
+     * @return
+     * @throws IOException
+     */
+    public static final byte[] inputToByte(InputStream inStream)
+            throws IOException {
+        ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        byte[] buff = new byte[1024*1024];
+        int rc = 0;
+        while ((rc = inStream.read(buff, 0, 1024)) > 0) {
+            swapStream.write(buff, 0, rc);
+        }
+        byte[] in2b = swapStream.toByteArray();
+        return in2b;
     }
 }

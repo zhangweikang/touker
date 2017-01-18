@@ -167,21 +167,19 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
         };
 
         /*param = utils.getParams(param);*/
-        toukerServerPluginCallback(param);
-        function toukerServerPluginCallback(returnData) {
-            service.serviceAjax("/touker/sendSMSCode", returnData, function (data) {
-                getEvent(".sendPhoneTip").html("短信已发送至 " + phoneNum);
 
-                var code = data.status;
+        service.serviceAjax("/touker/sendSMSCode", param, function (data) {
+            getEvent(".sendPhoneTip").html("短信已发送至 " + phoneNum);
 
-                if ("000000" == code) {
-                    appUtils.setSStorageInfo(phoneNum + "_start", new Date().getTime());
-                    startHandleCount(120);
-                } else {
-                    layerUtils.iMsg(-1, data.msg);
-                }
-            });
-        }
+            var code = data.status;
+
+            if ("000000" == code) {
+                appUtils.setSStorageInfo(phoneNum + "_start", new Date().getTime());
+                startHandleCount(120);
+            } else {
+                layerUtils.iMsg(-1, data.msg);
+            }
+        });
     }
 
     /**

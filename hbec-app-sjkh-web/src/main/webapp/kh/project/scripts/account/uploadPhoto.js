@@ -386,49 +386,47 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
     }
 
     function displayPhoto() {
+        layerUtils.iLoading(true);
         var param = {"id": appUtils.getSStorageInfo('userId')};
 
         /*param = utils.getParams(param);*/
-        toukerServerPluginCallback(param);
-        function toukerServerPluginCallback(paramData) {
-            layerUtils.iLoading(true);
-            service.serviceAjax("/touker/getPhoto", paramData, function (data) {
-                var code = data.status;
-                var obj = data.data;
-                if ("000000" == code) {
-                    var acceptedMediaUrl1 = obj.acceptedMediaUrls[0];
-                    var acceptedMediaUrl2 = obj.acceptedMediaUrls[1];
-                    var mediaContent_back = "";
-                    var mediaContent_font = "";
-                    if (acceptedMediaUrl1 && acceptedMediaUrl2 && acceptedMediaUrl1.mediaId == "5006") {
-                        mediaContent_back = acceptedMediaUrl1.mediaContent;
-                        mediaContent_font = acceptedMediaUrl2.mediaContent;
-                    } else if (acceptedMediaUrl1 && acceptedMediaUrl2 && acceptedMediaUrl1.mediaId == "5005") {
-                        mediaContent_back = acceptedMediaUrl2.mediaContent;
-                        mediaContent_font = acceptedMediaUrl1.mediaContent;
-                    }
-                    var acceptedCertInfo = obj.acceptedCertInfo;
-                    if (acceptedCertInfo.idno && acceptedCertInfo.addr && mediaContent_back && mediaContent_font) {
-                        mediaContent_back = fmtImgData(mediaContent_back);
-                        mediaContent_font = fmtImgData(mediaContent_font);
 
-                        //正面照
-                        getEvent(".positive").text("");  // 先将  li 置空
-                        getEvent(".positive").attr("uploaded", "true");  // 标识图片已经上传
-                        getEvent(".positive").append("<dd><img src='data:image/jpg;base64," + mediaContent_font + "'/></dd>");  // 回显图片
-
-                        //反面照
-                        getEvent(".negative").text("");  // 先将  li 置空
-                        getEvent(".negative").attr("uploaded", "true");  // 标识图片已上传
-                        getEvent(".negative").append("<dd><img src='data:image/jpg;base64," + mediaContent_back + "'/></dd>");  // 回显图片
-
-                        //为Map设置值
-                        setReturnParams(acceptedCertInfo);
-                    }
+        service.serviceAjax("/touker/getPhoto", param, function (data) {
+            var code = data.status;
+            var obj = data.data;
+            if ("000000" == code) {
+                var acceptedMediaUrl1 = obj.acceptedMediaUrls[0];
+                var acceptedMediaUrl2 = obj.acceptedMediaUrls[1];
+                var mediaContent_back = "";
+                var mediaContent_font = "";
+                if (acceptedMediaUrl1 && acceptedMediaUrl2 && acceptedMediaUrl1.mediaId == "5006") {
+                    mediaContent_back = acceptedMediaUrl1.mediaContent;
+                    mediaContent_font = acceptedMediaUrl2.mediaContent;
+                } else if (acceptedMediaUrl1 && acceptedMediaUrl2 && acceptedMediaUrl1.mediaId == "5005") {
+                    mediaContent_back = acceptedMediaUrl2.mediaContent;
+                    mediaContent_font = acceptedMediaUrl1.mediaContent;
                 }
-                layerUtils.iLoading(false);
-            });
-        }
+                var acceptedCertInfo = obj.acceptedCertInfo;
+                if (acceptedCertInfo.idno && acceptedCertInfo.addr && mediaContent_back && mediaContent_font) {
+                    mediaContent_back = utils.fmtImgData(mediaContent_back);
+                    mediaContent_font = utils.fmtImgData(mediaContent_font);
+
+                    //正面照
+                    getEvent(".positive").text("");  // 先将  li 置空
+                    getEvent(".positive").attr("uploaded", "true");  // 标识图片已经上传
+                    getEvent(".positive").append("<dd><img src='data:image/jpg;base64," + mediaContent_font + "'/></dd>");  // 回显图片
+
+                    //反面照
+                    getEvent(".negative").text("");  // 先将  li 置空
+                    getEvent(".negative").attr("uploaded", "true");  // 标识图片已上传
+                    getEvent(".negative").append("<dd><img src='data:image/jpg;base64," + mediaContent_back + "'/></dd>");  // 回显图片
+
+                    //为Map设置值
+                    setReturnParams(acceptedCertInfo);
+                }
+            }
+            layerUtils.iLoading(false);
+        });
     }
 
     function setReturnParams(acceptedCertInfo) {

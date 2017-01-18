@@ -15,8 +15,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyStoreException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +145,30 @@ public class EsbApiService {
             loginCount++;
         } while (Boolean.TRUE.equals(timeout) && loginCount < 5);
         return result;
+    }
+
+    public void esbBusinessDownloadFile(Map<String, String> map) throws IOException, URISyntaxException, KeyStoreException {
+
+        String serviceUrl = getEsbUrl("download");
+        //超时标志
+        Boolean timeout = false;
+        //登陆超时循环次数
+        int loginCount = 0;
+        do {
+            vailLogin();
+
+            map.put("serviceId", "esb.ygt.filedownload");
+            map.put("sessionId", sessionId);
+            String s = JacksonUtil.toJSon(map);
+            map.clear();
+            map.put("p",s);
+
+            String s1 = apiService.doPostDownloadFile(serviceUrl, map);
+
+            System.out.println("s = " + s1);
+
+            loginCount++;
+        } while (Boolean.TRUE.equals(timeout) && loginCount < 5);
     }
 
     /**
@@ -328,6 +355,41 @@ public class EsbApiService {
             return ResultResponse.ok(referbranchno);
         } catch (Exception e) {
             logger.error("查询经纪人信息失败", e);
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
+        }
+    }
+
+    /**
+     * 查询顶点三方支付绑卡信息
+     * @param customerId
+     * @return
+     * 001018,未绑定三方支付
+     * 001017,已绑定三方支付;obj:List<Map<String, String>>
+     * 001003,系统异常
+     */
+    public ResultResponse queryQuickBankCard (String customerId){
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("pay_channel_id", Constants.CunGuan_ywxt);
+            params.put("pay_sign_status", Constants.QuickBind_bslx);
+            params.put("pay_cust_num", customerId);
+            String s = esbBusinessService(EsbServiceEnum.LCQYXXCX.getServiceId(), params);
+            logger.info("查询三方支付返回：" + s);
+
+            JsonNode jsonNode = MAPPER.readTree(s);
+            if ("0".equals(jsonNode.get("count")) || "-1".equals(jsonNode.get("code"))) {
+                return ResultResponse.build(ResultCode.HBEC_001018.getCode(), ResultCode.HBEC_001018.getMemo());
+            }
+
+            JsonNode records = jsonNode.get("records");
+            if (records.isNull()){
+                return ResultResponse.build(ResultCode.HBEC_001018.getCode(), ResultCode.HBEC_001018.getMemo());
+            }
+            List<Map<String, String>> data = MAPPER.readValue(
+                    jsonNode.get("records").traverse(), MAPPER.getTypeFactory().constructCollectionType(List.class, Map.class));
+            return ResultResponse.build(ResultCode.HBEC_001017.getCode(), ResultCode.HBEC_001017.getMemo(),data);
+        } catch (Exception e) {
+            logger.error("客户号顶点查询用户三方支付绑卡信息失败", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
         }
     }

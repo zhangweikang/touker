@@ -1,5 +1,5 @@
 /**
- * 设置服务营业部
+ * 设置开户营业部
  */
 define("project/scripts/account/selDepartment", function (require, exports, module) {
     /* 私有业务模块的全局变量 begin */
