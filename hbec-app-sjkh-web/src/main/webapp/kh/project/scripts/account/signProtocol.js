@@ -308,17 +308,13 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                         openStockParam.sha_str += getEvent(".radio_list ul li a[value='3']").attr("trdacct");
                     }
                 }
-                // 新开户\转户均有基金
-                if (appUtils.getSStorageInfo("openChannel") == "new") {
-                    // 深基金的开通状况
-                    if (getEvent(".radio_list ul li a[value='5']").hasClass("checked")) {
-                        openStockParam.szfnd_str = "1";
-                    }
-                    // 沪基金的开通状况
-                    if (getEvent(".radio_list ul li a[value='6']").hasClass("checked")) {
-                        openStockParam.shfnd_str = "1";
-                    }
-
+                // 深基金的开通状况
+                if (getEvent(".radio_list ul li a[value='5']").hasClass("checked")) {
+                    openStockParam.szfnd_str = "1";
+                }
+                // 沪基金的开通状况
+                if (getEvent(".radio_list ul li a[value='6']").hasClass("checked")) {
+                    openStockParam.shfnd_str = "1";
                 }
                 //开立中登股东账号
                 service.queryOpenCompyAccount(openStockParam, function (data) {
