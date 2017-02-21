@@ -9,54 +9,6 @@ package com.app.sjkh.commons.vo;
 public class Account{
 
 	private static final long serialVersionUID = 1L;
-
-	/** 昵称最小长度：2 */
-	public static final int NICKNAME_MIN_LENGTH = 2;
-	/** 昵称最大长度：14 */
-	public static final int NICKNAME_MAX_LENGTH = 14;
-	/** 昵称规则：正则表达式 */
-	public static final String NICKNAME_REGEX = "[\u4E00-\u9FFFa-zA-Z0-9_-]{2,14}";
-
-	/** 用户状态：账户正常、交易激活 */
-	public static final Byte STATE_ACTIVE = 2;
-	/** 用户状态：账户正常、交易冻结 */
-	public static final Byte STATE_NORMAL = 1;
-	/** 用户状态：账户锁定 */
-	public static final Byte STATE_LOCKED = 0;
-	/** 用户状态：账户删除 */
-	public static final Byte STATE_DEL = -1;
-
-	/** 用户冻结状态：被冻结 禁止登录及其他操作 */
-	public static final Byte FREEZE_STATE_FROZEN = 1;
-	/** 用户冻结状态：正常账户 */
-	public static final Byte FREEZE_STATE_NORMAL = 0;
-
-	/** 风险承受等级：未设置 */
-	public static final Byte LEVEL_NONE = 0;
-
-	/** 风险承受等级：安益型 */
-	public static final Byte LEVEL_ANYI = 1;
-
-	/** 风险承受等级：保守型 */
-	public static final Byte LEVEL_BAOSHOU = 2;
-
-	/** 风险承受等级：稳健型 */
-	public static final Byte LEVEL_WENJIAN = 3;
-
-	/** 风险承受等级：积极型 */
-	public static final Byte LEVEL_JIJI = 4;
-
-	/** 证件 上传状态 */
-	/** 待上传 */
-	public static final Byte CERT_UPLOAD_STATE_INIT = 0;
-	/** 审核中 */
-	public static final Byte CERT_UPLOAD_STATE_AUDIT = 1;
-	/** 上传成功 */
-	public static final Byte CERT_UPLOAD_STATE_SUCC = 2;
-	/** 审核未通过 */
-	public static final Byte CERT_UPLOAD_STATE_FAIL = 3;
-
-
 	/** id */
 	private Long id;
 	/** 客户号 */
@@ -142,6 +94,34 @@ public class Account{
 
 	private String startDate;
 	private String endDate;
+
+	private String zjjzrq;
+	private Integer age;
+	private String cardValidity;
+
+	public String getCardValidity() {
+		return cardValidity;
+	}
+
+	public void setCardValidity(String cardValidity) {
+		this.cardValidity = cardValidity;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getZjjzrq() {
+		return zjjzrq;
+	}
+
+	public void setZjjzrq(String zjjzrq) {
+		this.zjjzrq = zjjzrq;
+	}
 
 	public String getStartDate() {
 		return startDate;

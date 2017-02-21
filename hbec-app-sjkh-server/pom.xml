@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.app.server</groupId>
+    <groupId>com.app.sjkh.server</groupId>
     <artifactId>hbec-app-sjkh-server</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
