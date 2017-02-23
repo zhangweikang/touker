@@ -238,7 +238,7 @@ public class ToukerController {
 
         try {
             //校验短信
-            ResultResponse resultResponse2 = toukerService.chakeSMSCode(mobileNo, mobileCode, source, ip, mac);
+            ResultResponse resultResponse2 = toukerService.checkSMSCode(mobileNo, mobileCode, source, ip, mac);
             if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse2.getStatus()) != 0){
                 return resultResponse2;
             }

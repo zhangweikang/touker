@@ -37,4 +37,12 @@ public interface AcceptedCustomerInfoMapper extends Mapper<AcceptedCustomerInfo>
 	 * @return
 	 */
 	List<AcceptedCustomerInfo> getTimedOpenAccount(@Param("beginDate") String beginDate, @Param("endDate") String endDate) throws Exception;
+
+	/**
+	 * 获取序列
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	String querySequence() throws Exception;
 }

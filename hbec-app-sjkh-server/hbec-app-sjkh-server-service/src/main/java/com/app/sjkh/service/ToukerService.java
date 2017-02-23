@@ -196,7 +196,7 @@ public class ToukerService {
      * 001039,短信错误
      * 000000,校验成功
      */
-    public ResultResponse chakeSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac) {
+    public ResultResponse checkSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac) {
 
         String redisSmsCode = redisService.get("REDISSMSCODEKEY" + mobileNo);
 
@@ -243,11 +243,11 @@ public class ToukerService {
      * @return
      */
     public ResultResponse valiSmsCheckUserInfo(String mobileNo, String mobileCode, String source, String ip, String mac) {
-        ResultResponse resultResponse = chakeSMSCode(mobileNo, mobileCode, source, ip, mac);
+        ResultResponse resultResponse = checkSMSCode(mobileNo, mobileCode, source, ip, mac);
         if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
             return resultResponse;
         }
-        return valiUserInfo(mobileNo);
+        return valiUserInfo(mobileNo,Integer.valueOf(source));
     }
 
     /**
@@ -257,11 +257,11 @@ public class ToukerService {
      * @return 000000, 正常
      * 001040,有驳回
      */
-    public ResultResponse valiUserInfo(String mobileNo) {
+    public ResultResponse valiUserInfo(String mobileNo,Integer source) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
             //获取用户数据
-            AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo);
+            AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo,source);
             resultMap.put("acceptedCertInfo", certInfo);
             //获取用户流程
             AcceptedSchedule acceptedSchedule = acceptedScheduleService.getSchedule(certInfo.getId().toString());
@@ -840,7 +840,7 @@ public class ToukerService {
 
         AcceptedCertInfo queryCertInfo = new AcceptedCertInfo();
         queryCertInfo.setMobileno(mobileNo);
-        AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.queryOneByWhere(queryCertInfo);
+        AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.getCertInfo(mobileNo, opway);
         resultMap.put("acceptedCertInfo",acceptedCertInfo);
 
         //用户输入手机号查询用户信息表,已存在客户号则返回
@@ -848,9 +848,7 @@ public class ToukerService {
             return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(),resultMap);
         }
 
-        AcceptedSchedule querySchedule = new AcceptedSchedule();
-        querySchedule.setUserId(acceptedCertInfo.getId().toString());
-        AcceptedSchedule acceptedSchedule = acceptedScheduleService.queryOneByWhere(querySchedule);
+        AcceptedSchedule acceptedSchedule = acceptedScheduleService.getSchedule(acceptedCertInfo.getId().toString());
         resultMap.put("acceptedSchedule",acceptedSchedule);
 
         String backStep = acceptedSchedule.getBackStep();

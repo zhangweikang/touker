@@ -389,7 +389,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
         layerUtils.iLoading(true);
         var param = {"id": appUtils.getSStorageInfo('userId')};
 
-        /*param = utils.getParams(param);*/
+        /*param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));*/
 
         service.serviceAjax("/touker/getPhoto", param, function (data) {
             var code = data.status;

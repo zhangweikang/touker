@@ -109,7 +109,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
         //从钱钱炒股跳过来的一定是已注册投客用户，这里主要是获取该客户的客户号
         var param = {"mobileNo": phoneNum};
 
-        param = utils.getParams(param);
+        //param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
 
         service.serviceAjax("/touker/isToukerUser", param, function (data) {
             appUtils.setSStorageInfo("mobileNo", phoneNum);
@@ -131,23 +131,6 @@ define("project/scripts/account/openAccount", function (require, exports, module
                     "ip": appUtils.getSStorageInfo("ip"),
                     "mac": appUtils.getSStorageInfo("mac")
                 };
-                var paramCheckSms = {
-                    "mobile_no": phoneNum,
-                    "mobile_code": "111111",
-                    "login_flag": "0"
-                };
-                service.checkSmsCode(paramCheckSms, function (data) {
-                    var result = data.results;
-                    // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
-                    if (result[0].clientinfo) {
-                        appUtils.setSStorageInfo("clientinfo", result[0].clientinfo);
-                    }
-                    // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
-                    if (result[0].jsessionid) {
-                        appUtils.setSStorageInfo("jsessionid", result[0].jsessionid);
-                    }
-                });
-
                 checkSmsPage.valiDataCustomeInfo(paramCheck, "account/openAccount");
             } else {
                 console.log("手机号" + jsonresult.phonenum + "未注册投客网");

@@ -1,12 +1,15 @@
 package com.app.sjkh.service.example.impl;
 
+import com.app.sjkh.commons.utils.DateUtils;
 import com.app.sjkh.mapper.sjdatasource.AcceptedCertInfoMapper;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
 import com.app.sjkh.service.base.HbecBaseServiceImpl;
 import com.app.sjkh.service.example.AcceptedCertInfoService;
+import com.app.sjkh.service.example.AcceptedCustomerInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +20,8 @@ public class AcceptedCertInfoServiceImpl extends HbecBaseServiceImpl<AcceptedCer
 
 	@Autowired
 	private AcceptedCertInfoMapper acceptedCertInfoMapper;
+	@Autowired
+	private AcceptedCustomerInfoService acceptedCustomerInfoService;
 
 	public Integer updateByMoblieNoSelective(AcceptedCertInfo bean) throws Exception {
 		return acceptedCertInfoMapper.updateByMoblieNoSelective(bean);
@@ -31,13 +36,17 @@ public class AcceptedCertInfoServiceImpl extends HbecBaseServiceImpl<AcceptedCer
 	 * @param mobileNo
 	 * @return
      */
-	public AcceptedCertInfo getCertInfo(String mobileNo) throws Exception {
+	public AcceptedCertInfo getCertInfo(String mobileNo,Integer opway) throws Exception {
 		AcceptedCertInfo queryBean = new AcceptedCertInfo();
 		queryBean.setMobileno(mobileNo);
 		AcceptedCertInfo acceptedCertInfo = super.queryOneByWhere(queryBean);
 
 		if (acceptedCertInfo == null) {
-			queryBean.setId(Long.valueOf(querySequence()));
+			queryBean.setId(Long.valueOf(acceptedCustomerInfoService.querySequence()));
+			queryBean.setOpacctkindFlag("0");
+			queryBean.setAccessChannel(opway);
+			queryBean.setState("0");
+			queryBean.setCreatedate(DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date()));
 			super.saveSelective(queryBean);
 			return queryBean;
 		}

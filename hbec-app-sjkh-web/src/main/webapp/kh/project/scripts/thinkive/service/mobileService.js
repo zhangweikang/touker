@@ -966,6 +966,26 @@ define(function(require,exports,module){
 		reqParamVo.setTimeOutFunc(timeOutFunc);
 		this.service.invoke(reqParamVo,callback);
     };
+
+	/**
+	 * 登陆获取用户简单信息[500000]
+	 *
+	 * @param param  参数
+	 * @param callback 回调函数
+	 */
+	MobileService.prototype.loginInfo = function(param,callback,isLastReq,isShowWait,timeOutFunc)
+	{
+		var paraMap = {};
+		paraMap["funcNo"] = "500000";
+		paraMap["moblie_no"] = param.mobileNo;
+		var reqParamVo = $.getReqParamVo();
+		reqParamVo.setUrl(global.serverPath);
+		reqParamVo.setReqParam(paraMap);
+		reqParamVo.setIsLastReq((typeof(isLastReq)=="undefined"||isLastReq==="")?true:isLastReq);
+		reqParamVo.setIsShowWait((typeof(isShowWait)=="undefined"||isShowWait==="")?true:isShowWait);
+		reqParamVo.setTimeOutFunc(timeOutFunc);
+		this.service.invoke(reqParamVo,callback);
+	};
 	/***应用接口......................................................结束*/
 	
 	/* 释放操作*/

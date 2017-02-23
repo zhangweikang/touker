@@ -70,7 +70,7 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
 
             var param = {"mobileNo": mobileNo};
 
-            /*param = utils.getParams(param);*/
+            /*param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));*/
 
             service.serviceAjax("/touker/isToukerUser",param,function(data){
                 var code = data.status;//001011, 未注册;001012,已注册

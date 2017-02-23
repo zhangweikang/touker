@@ -17,4 +17,6 @@ public interface AcceptedCustomerInfoService extends HbecBaseService<AcceptedCus
     Integer deleteByuserId(Long userId) throws Exception;
 
     List<AcceptedCustomerInfo> getTimedOpenAccount(String beginDate, String endDate) throws Exception;
+
+    String querySequence() throws Exception;
 }

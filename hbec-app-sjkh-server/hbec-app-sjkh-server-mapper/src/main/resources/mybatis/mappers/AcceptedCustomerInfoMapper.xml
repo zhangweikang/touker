@@ -791,4 +791,8 @@
            on t3.mobileno=p.cust_phone
       order by t3.updateTime
   </select>
+
+  <select id="querySequence" resultType="java.lang.String">
+      SELECT SEQ_ACCEPTED_CUSTOMER_INFO.nextval FROM DUAL
+  </select>
 </mapper>

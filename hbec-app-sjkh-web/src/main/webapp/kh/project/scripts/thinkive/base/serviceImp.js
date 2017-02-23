@@ -1060,22 +1060,22 @@ define(function (require, exports, module) {
 
 
     /**
-     * 获取视频见证时间的标识[501500]
-     * 返回istradetime  为1  就是在这个时间内  0 就不再这个时间内
+     * 登陆获取用户简单信息[500000]
+     *
      * @param param  参数
      * @param callback 回调函数
      */
-    MobileService.prototype.getIstradetime = function (param, callback, isLastReq, isShowWait, timeOutFunc) {
+    MobileService.prototype.loginInfo = function (param, callback, isLastReq, isShowWait, timeOutFunc) {
         var service = this.serviceMap[mobileService];
         if (service) {
-            service.getIstradetime(param, callback, isLastReq, isShowWait, timeOutFunc);
+            service.loginInfo(param, callback, isLastReq, isShowWait, timeOutFunc);
         } else {
             var This = this;
             require.async(mobileService, function (module) {
                 if (module) {
                     service = module.getInstance();
                     This.serviceMap[mobileService] = service;
-                    service.getIstradetime(param, callback, isLastReq, isShowWait, timeOutFunc);
+                    service.loginInfo(param, callback, isLastReq, isShowWait, timeOutFunc);
                 } else {
                     alert("服务层，js模块类[" + mobileService + "]不存在!");
                 }

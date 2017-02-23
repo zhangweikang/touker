@@ -14,7 +14,7 @@ public interface AcceptedCertInfoService extends HbecBaseService<AcceptedCertInf
 
     List<AcceptedCertInfo> getCertInfoAcceptedSchedule(String idno, String userId) throws Exception;
 
-    AcceptedCertInfo getCertInfo(String mobileNo) throws Exception;
+    AcceptedCertInfo getCertInfo(String mobileNo,Integer opway) throws Exception;
 
     String querySequence() throws Exception;
 }

@@ -56,7 +56,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         } else {
             var encodeParam = {"id": appUtils.getSStorageInfo('userId')};
 
-            /*encodeParam = utils.getParams(encodeParam);*/
+            /*encodeParam = khmobile.requestUrlParamsEncoding(utils.jsonToParams(encodeParam))*/
 
             service.serviceAjax("/touker/getCertInfo", encodeParam, function (data) {
                 var code = data.status;
@@ -156,7 +156,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
                     "mobileNo":appUtils.getSStorageInfo('mobileNo')
                 };
 
-               /* param = utils.getParams(param);*/
+               /* param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));*/
 
                 service.serviceAjax("/touker/validateIdno",param,function(data){
                     var code = data.status;
@@ -205,7 +205,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var paramCert = {"userId": appUtils.getSStorageInfo("userId"), "idno": idno};
 
         //先提交思迪，判读是否需要删除占用者客户数据信息
-        /*paramCert = utils.getParams(paramCert);*/
+        /*paramCert = khmobile.requestUrlParamsEncoding(utils.jsonToParams(paramCert));*/
 
         service.serviceAjax("/touker/clearUnSubmitUserInfo", paramCert, function (data) {
             var code = data.status;

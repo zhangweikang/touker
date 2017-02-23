@@ -194,28 +194,39 @@ define(function (require, exports, module) {
             if (acceptedCertInfo.ethnic) {
                 appUtils.setSStorageInfo("ethnic", acceptedCertInfo.ethnic);
             }
-        }
-        if (acceptedCustomerInfo) {
-            // 将银行代码保存到session
-            if (acceptedCustomerInfo.banktype) {
-                var queryParam = {
-                    "bindtype": "",
-                    "ispwd": "",
-                    "step": "bankInfo",
-                    "bankCode": acceptedCustomerInfo.banktype
-                };
-                service.queryBankList(queryParam, function (data) {
-                    var errorNo = data.error_no;
-                    var errorInfo = data.error_info;
-                    if (errorNo == 0 && data.results.length != 0) {
-                        var bankInfo = data.results[0];
-                        appUtils.setSStorageInfo("bankCode", bankInfo.bankcode);
-                        appUtils.setSStorageInfo(bankInfo.bankcode + "isCard", bankInfo.iscard);
-                    } else {
-                        layerUtils.iAlert(errorInfo, -1);
-                    }
-                }, true, false);
-            }
+            var paramCheckSms = {
+                "mobileNo" : appUtils.getSStorageInfo("mobileNo")
+            };
+            service.loginInfo(paramCheckSms,function(data){
+                var result = data.results;
+                // 将 clientinfo 保存到 session 中，用于解决壳子上传照片的权限问题
+                if (result[0].clientinfo) {
+                    appUtils.setSStorageInfo("clientinfo", result[0].clientinfo);
+                }
+                // 将 jsessionid 保存到 session 中，用于解决壳子上传照片的权限问题
+                if (result[0].jsessionid) {
+                    appUtils.setSStorageInfo("jsessionid", result[0].jsessionid);
+                }
+                if (acceptedCustomerInfo && acceptedCustomerInfo.banktype) {
+                    var queryParam = {
+                        "bindtype": "",
+                        "ispwd": "",
+                        "step": "bankInfo",
+                        "bankCode": acceptedCustomerInfo.banktype
+                    };
+                    service.queryBankList(queryParam, function (data) {
+                        var errorNo = data.error_no;
+                        var errorInfo = data.error_info;
+                        if (errorNo == 0 && data.results.length != 0) {
+                            var bankInfo = data.results[0];
+                            appUtils.setSStorageInfo("bankCode", bankInfo.bankcode);
+                            appUtils.setSStorageInfo(bankInfo.bankcode + "isCard", bankInfo.iscard);
+                        } else {
+                            layerUtils.iAlert(errorInfo, -1);
+                        }
+                    }, true, false);
+                }
+            },false,false);
         }
         if (branchInfo) {
             // 将营业部Id保存到session
@@ -239,7 +250,7 @@ define(function (require, exports, module) {
      **/
     function valiDataCustomeInfo(param, codePage) {
         /*
-         * param = utils.getParams(param);
+         * param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
          */
         service.serviceAjax("/touker/validateCustInfo", param, function (data) {
             var code = data.status;

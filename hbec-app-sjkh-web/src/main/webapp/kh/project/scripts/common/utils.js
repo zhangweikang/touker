@@ -449,7 +449,7 @@ define(function (require, exports, module) {
             khmobile.closeApp();
         }
         //ios
-        if (/\((iPhone|iPad|iPod)/i.test(navigator.userAgent)) {
+        if (/\((iPhone|iPad|iPod)/i.test(navigator.userAgent) && '1'==global.openChannel) {
             window.location.href = "backClientSide";
         }
     }
@@ -459,9 +459,6 @@ define(function (require, exports, module) {
      */
     function getIp() {
         var stateTime = new Date().getTime();
-        /*var param = { "step": "getIp" };
-         param = getParams(param);
-         */
         service.serviceAjax("/commons/getIp", null, function (data) {
             var endTime = new Date().getTime();
             console.log("获取IP,Mac耗时:" + (endTime - stateTime) + "毫秒");

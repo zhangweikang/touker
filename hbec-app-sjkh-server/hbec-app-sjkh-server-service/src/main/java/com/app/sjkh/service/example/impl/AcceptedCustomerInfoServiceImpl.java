@@ -42,4 +42,12 @@ public class AcceptedCustomerInfoServiceImpl extends HbecBaseServiceImpl<Accepte
 	public List<AcceptedCustomerInfo> getTimedOpenAccount(String beginDate , String endDate) throws Exception {
 		return acceptedCustomerInfoMapper.getTimedOpenAccount(beginDate, endDate);
 	}
+
+	/**
+	 * 获取序列
+	 * @return
+	 */
+	public String querySequence() throws Exception {
+		return acceptedCustomerInfoMapper.querySequence();
+	}
 }
