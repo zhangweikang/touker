@@ -6,6 +6,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
     var appUtils = require("appUtils"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"),
+        global = require("gconfig").global,
         utils = require("utils"),
         manId = "",
         womenId = "",
@@ -13,7 +14,8 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         idCardModify = false,  // 身份证是否被手工修改
         backUrl = "",
         certUploadState = "",
-        _pageId = "#account_personInfo";
+        _pageId = "#account_personInfo",
+        _pageLocation = "account/personInfo";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -21,10 +23,9 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
         cleanPageElement();  // 清除页面元素
-
+        backUrl = appUtils.getPageParam("backUrl");
         //  从上传照片页面进入
         if (appUtils.getSStorageInfo("_prePageCode") == "account/uploadPhoto") {
-            backUrl = appUtils.getPageParam("backUrl");
             // 根据传入的值，填充页面的数据
             getEvent(".name").val(appUtils.getPageParam("custname"));	  // 客户姓名
             getEvent(".idCardNo").val(appUtils.getPageParam("idno"));	 // 身份证号
@@ -89,21 +90,21 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         /* 绑定返回 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
             var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
-            if (backUrl != "") {
-                appUtils.pageInit("account/personInfo", backUrl);
+            if (backUrl) {
+                appUtils.pageInit(_pageLocation, backUrl);
             } else {
-                if ((tpbankFlg == "1" || tpbankFlg == "2")) {
+                if ((tpbankFlg == "001015" || tpbankFlg == "001017")) {
                     if ("2" == certUploadState) {
                         //已开通三方存管或者三方支付,并且在钱钱中打开回到第一个页面
-                        if (appUtils.getSStorageInfo("toukerOpenChannel") == "qianqian_app")
-                            appUtils.pageInit("account/personInfo", "account/openAccount", {backUrl: "account/personInfo"});
+                        if (global.openChannel == "1")
+                            appUtils.pageInit(_pageLocation, "account/openAccount", {backUrl: _pageLocation});
                         else
-                            appUtils.pageInit("account/personInfo", "account/phoneNumberVerify", {backUrl: "account/personInfo"});
+                            appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl: _pageLocation});
                     } else {
-                        appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
+                        appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
                     }
                 } else {
-                    appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
+                    appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
                 }
             }
         });
@@ -183,14 +184,14 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         if (appUtils.getSStorageInfo("personInfo") == "exist" || currentStep == "uploadimg") {
             appUtils.setSStorageInfo("currentStep", "uploadimg");
             appUtils.setSStorageInfo("idInfo", "exist");  // 标记用户完成照片上传
-            appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
+            appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
         } else {// 正常开户处理返回按钮
             var message = appUtils.getSStorageInfo("message");
             if (message == '4') {		//如果是已经在投客网上传过身份证
                 appUtils.setSStorageInfo("currentStep", "uploadimg");
                 appUtils.setSStorageInfo("idInfo", "");  //
             }
-            appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
+            appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
         }
     }
 
@@ -226,9 +227,9 @@ define("project/scripts/account/personInfo", function (require, exports, module)
                     if (tpbankFlg == '001017' || tpbankFlg == '001015') {
                         // 跳转到验证交易密码
                         console.log("跳转到密码验证页面");
-                        appUtils.pageInit("account/personInfo", "account/pwdVerify", {"backUrl": "account/personInfo"});
+                        appUtils.pageInit(_pageLocation, "account/pwdVerify", {"backUrl": _pageLocation});
                     } else {
-                        appUtils.pageInit("account/personInfo", "account/videoNotice", {});
+                        appUtils.pageInit(_pageLocation, "account/videoNotice", {});
                     }
                 } else {
                     layerUtils.iLoading(false);
@@ -499,7 +500,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         if (countDiffe > 5) {
             utils.layerTwoButton("您好,发现您的证件号码与上传的差异过大，请您确认是否需要更换身份证?", "重新上传身份证", "重新确认身份证",
                 function () {
-                appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
+                appUtils.pageInit(_pageLocation, "account/uploadPhoto");
                 }, function () {
                 return false;
                 });

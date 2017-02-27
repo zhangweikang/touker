@@ -9,6 +9,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
         utils = require("utils"),
         global = require("gconfig").global,
         _pageId = "#account_uploadPhoto",
+        _pageLocation = "account/uploadPhoto";
     // 填写资料的页面入参，属性由 imgState 方法赋值
         fillInformationInParam = {
             "idno": "",	// 身份证号
@@ -65,14 +66,14 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
             //钱钱炒股在上传身份页面返回   关闭证券开户  回到钱钱炒股
             var khh = appUtils.getSStorageInfo("khh");//如果客户号不为空，则一定已经选择了营业部，这里不能再让客户返回到选择营业部页面重新选择
-            if (null != khh && khh != '') {
+            if (khh) {
                 if (global.openChannel == "1") {
-                    appUtils.pageInit("account/personInfo", "account/openAccount", {backUrl: "account/uploadPhoto"});
+                    appUtils.pageInit("account/personInfo", "account/openAccount", {backUrl: _pageLocation});
                 } else {
-                    appUtils.pageInit("account/uploadPhoto", "account/phoneNumberVerify", {backUrl: "account/uploadPhoto"});
+                    appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl: _pageLocation});
                 }
             } else {
-                appUtils.pageInit("account/uploadPhoto", "account/selDepartment", {});
+                appUtils.pageInit(_pageLocation, "account/selDepartment", {});
             }
         });
 
@@ -317,12 +318,12 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                 // 预绑定查看协议的事件
                 appUtils.preBindEvent(getEvent("#icon_Check"), "#protocol00", function (e) {
                     e.stopPropagation();  // 阻止冒泡
-                    appUtils.pageInit("account/uploadPhoto", "account/showDigitalProtocol", {"protocolId": data.results[0].econtract_no});
+                    appUtils.pageInit(_pageLocation, "account/showDigitalProtocol", {"protocolId": data.results[0].econtract_no});
                 });
                 // 预绑定查看协议的事件
                 appUtils.preBindEvent(getEvent("#icon_Check"), "#protocol01", function (e) {
                     e.stopPropagation();  // 阻止冒泡
-                    appUtils.pageInit("account/uploadPhoto", "account/showDigitalProtocol", {"protocolId": data.results[1].econtract_no});
+                    appUtils.pageInit(_pageLocation, "account/showDigitalProtocol", {"protocolId": data.results[1].econtract_no});
                 });
             }
         }, true, true, handleTimeout);
@@ -367,8 +368,8 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                     // 将数据保存到 session 中
                     appUtils.setSStorageInfo("photosInfo", JSON.stringify(photosInfo));
                     layerUtils.iLoading(false);
-                    fillInformationInParam.backUrl = "account/uploadPhoto";
-                    appUtils.pageInit("account/uploadPhoto", "account/personInfo", fillInformationInParam);
+                    fillInformationInParam.backUrl = _pageLocation;
+                    appUtils.pageInit(_pageLocation, "account/personInfo", fillInformationInParam);
                 }, true);
             } else {
                 layerUtils.iMsg("-1", data.error_info);

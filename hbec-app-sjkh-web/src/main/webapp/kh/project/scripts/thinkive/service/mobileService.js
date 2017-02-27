@@ -984,6 +984,7 @@ define(function(require,exports,module){
 		reqParamVo.setIsLastReq((typeof(isLastReq)=="undefined"||isLastReq==="")?true:isLastReq);
 		reqParamVo.setIsShowWait((typeof(isShowWait)=="undefined"||isShowWait==="")?true:isShowWait);
 		reqParamVo.setTimeOutFunc(timeOutFunc);
+		reqParamVo.setIsAsync(false);
 		this.service.invoke(reqParamVo,callback);
 	};
 	/***应用接口......................................................结束*/

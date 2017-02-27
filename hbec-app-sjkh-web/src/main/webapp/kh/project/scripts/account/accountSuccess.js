@@ -60,7 +60,6 @@ define("project/scripts/account/accountSuccess", function (require, exports, mod
             appUtils.bindEvent(getEvent(".download-btn"), function () {
                 if (navigator.userAgent.indexOf("Android") > 0) {
                     var url = "http://s.touker.com/fs/files/mgtFshbecportal/qqcg_tk.apk";
-                    //navigator.app.loadUrl(encodeURI(url), { openExternal:true});
                     window.location.href = url;
                 }
                 if (/\((iPhone|iPad|iPod)/i.test(navigator.userAgent)) {

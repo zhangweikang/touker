@@ -19,7 +19,7 @@ define("project/scripts/account/toukerSignProtocol",function(require, exports, m
     {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"),function(){
-            appUtils.pageInit("account/toukerSignProtocol","account/phoneCheckSmsCode",{});
+            utils.backPage();
         });
 
         /* 绑定退出按钮*/

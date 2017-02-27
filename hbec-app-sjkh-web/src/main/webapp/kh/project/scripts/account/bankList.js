@@ -8,6 +8,7 @@ define("project/scripts/account/bankList", function (require, exports, module) {
     var appUtils = require("appUtils"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"),
+        utils = require("utils"),
         _pageId = "#account_bankList",
         banklist = getEvent(".bank-list"),
         backUrl = "";
@@ -25,7 +26,7 @@ define("project/scripts/account/bankList", function (require, exports, module) {
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".top-info .i-back"), function () {
-            appUtils.pageInit("account/bankList", backUrl, {});
+            utils.backPage();
         });
     }
 

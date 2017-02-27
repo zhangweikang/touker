@@ -26,6 +26,10 @@ define("project/scripts/account/backUploadPhoto", function (require, exports, mo
     }
 
     function bindPageEvent() {
+        /* 绑定返回事件*/
+        appUtils.bindEvent(getEvent(".header .icon_back"), function () {
+            appUtils.pageInit("account/backUploadPhoto","account/openAccount",{backUrl:"account/backUploadPhoto"});
+        });
         /* 点击页面隐藏按钮 */
         appUtils.bindEvent($(_pageId), function () {
             displayNoneCss();

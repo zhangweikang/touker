@@ -5,7 +5,8 @@ define("project/scripts/account/pwdVerify", function (require, exports, module) 
         gconfig = require("gconfig"),
         layerUtils = require("layerUtils"),
         utils = require("utils"),
-        _pageId = "#account_pwdVerify";
+        _pageId = "#account_pwdVerify",
+        _pageLocation = "account/pwdVerify";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -114,7 +115,7 @@ define("project/scripts/account/pwdVerify", function (require, exports, module) 
                         service.setAccountPwd(fundPasswordParam, function (data) {
                             if (data.error_no == 0)	//交易密码设置成功，锁定交易密码设置框
                             {
-                                appUtils.pageInit("account/pwdVerify", "account/videoNotice", {});
+                                appUtils.pageInit(_pageLocation, "account/videoNotice", {});
                             }
                             else {
                                 layerUtils.iLoading(false);
@@ -149,7 +150,7 @@ define("project/scripts/account/pwdVerify", function (require, exports, module) 
         // 从短信登陆进入(当前完成步骤为：已提交资料)，处理返回按钮
         console.log("pwdVerify currentStep=" + currentStep);
         appUtils.setSStorageInfo("personInfo", "exist"); // 标记完成资料填写步骤
-        appUtils.pageInit("account/pwdVerify", "account/personInfo", {});
+        appUtils.pageInit(_pageLocation, "account/personInfo", {});
     }
 
     //获取当前页面属性对象

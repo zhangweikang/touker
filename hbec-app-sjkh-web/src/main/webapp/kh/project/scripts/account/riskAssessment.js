@@ -8,7 +8,8 @@ define("project/scripts/account/riskAssessment", function (require, exports, mod
         layerUtils = require("layerUtils"),
         utils = require("utils"),
         fristMap = "",
-        _pageId = "#account_riskAssessment";
+        _pageId = "#account_riskAssessment",
+        _pageLocation = "account/riskAssessment";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -25,9 +26,9 @@ define("project/scripts/account/riskAssessment", function (require, exports, mod
             var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
             if (tpbankFlg == '1') {
                 appUtils.setSStorageInfo("backsignp", "signprotocol");
-                appUtils.pageInit("account/riskAssessment", "account/signProtocol", {});
+                appUtils.pageInit(_pageLocation, "account/signProtocol", {});
             } else {
-                appUtils.pageInit("account/riskAssessment", "account/thirdDepository", {});
+                appUtils.pageInit(_pageLocation, "account/thirdDepository", {});
             }
         });
 
@@ -150,7 +151,7 @@ define("project/scripts/account/riskAssessment", function (require, exports, mod
             {
                 var remark = data.results[0].remark;
                 var riskdesc = data.results[0].riskdesc;
-                appUtils.pageInit("account/riskAssessment", "account/riskAssessmentResult", {
+                appUtils.pageInit(_pageLocation, "account/riskAssessmentResult", {
                     "remark": remark,
                     "riskdesc": riskdesc
                 });

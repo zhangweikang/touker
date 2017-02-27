@@ -12,7 +12,8 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
         keyTelPanel = require("keyTelPanel"),
         cert_type = "zd",
         backPwd = "",
-        _pageId = "#account_setPwd";
+        _pageId = "#account_setPwd",
+        _pageLocation = "account/setPwd";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -27,9 +28,9 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
             if (backPwd) {
-                appUtils.pageInit("account/setPwd", "account/accountSuccess",{backUrl:"account/setPwd"});
+                appUtils.pageInit(_pageLocation, "account/accountSuccess",{backUrl:_pageLocation});
             } else {
-                appUtils.pageInit("account/setPwd", "account/signProtocol");
+                appUtils.pageInit(_pageLocation, "account/signProtocol");
             }
         });
 
@@ -58,7 +59,7 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
 
         /* 查看协议内容的事件 */
         appUtils.bindEvent(getEvent("#protocolName"), function () {
-            appUtils.pageInit("account/setPwd", "account/showProtocol", {"protocol_id": $(this).attr("protocolId")});
+            appUtils.pageInit(_pageLocation, "account/showProtocol", {"protocol_id": $(this).attr("protocolId")});
         });
 
         appUtils.bindEvent(getEvent(".input_custom"), function () {
@@ -503,7 +504,7 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
                                     var url = utils.getRedirectUrl();
                                     appUtils.pageInit("account/signProtocol", url);
                                 } else {
-                                    appUtils.pageInit("account/setPwd", "account/thirdDepository", {});
+                                    appUtils.pageInit(_pageLocation, "account/thirdDepository", {});
                                 }
                             } else {
                                 layerUtils.iLoading(false);

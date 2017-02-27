@@ -5,7 +5,8 @@ define("project/scripts/account/riskAssessmentResult", function (require, export
     var appUtils = require("appUtils"),
         global = require("gconfig").global,
         utils = require("utils"),
-        _pageId = "#account_riskAssessmentResult";
+        _pageId = "#account_riskAssessmentResult",
+        _pageLocation = "account/riskAssessmentResult";
 
     function init() {
         //加载样式
@@ -27,12 +28,12 @@ define("project/scripts/account/riskAssessmentResult", function (require, export
     function bindPageEvent() {
         //绑定返回事件
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageInit("account/riskAssessmentResult", "account/riskAssessment", {});
+            appUtils.pageInit(_pageLocation, "account/riskAssessment", {});
         });
 
         // 重新测评绑定事件
         appUtils.bindEvent(getEvent(".ct_btn02"), function () {
-            appUtils.pageInit("account/riskAssessmentResult", "account/riskAssessment", {});
+            appUtils.pageInit(_pageLocation, "account/riskAssessment", {});
         });
 
         /**
@@ -41,9 +42,9 @@ define("project/scripts/account/riskAssessmentResult", function (require, export
          */
         appUtils.bindEvent(getEvent(".ct_btn"), function () {
             if (global.needConfirm) {
-                appUtils.pageInit("account/riskAssessmentResult", "account/openConfirm", {});
+                appUtils.pageInit(_pageLocation, "account/openConfirm", {});
             } else {
-                appUtils.pageInit("account/riskAssessmentResult", "account/accountSuccess", {});
+                appUtils.pageInit(_pageLocation, "account/accountSuccess", {});
             }
         });
     }

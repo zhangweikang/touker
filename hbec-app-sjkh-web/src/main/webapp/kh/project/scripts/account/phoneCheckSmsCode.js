@@ -17,30 +17,21 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
         mac = "",
         phoneNum = "",
         isToukerRegister = "true",
-        _pageId = "#account_phoneCheckSmsCode";
+        _pageId = "#account_phoneCheckSmsCode",
+        _pageLocation = "account/phoneCheckSmsCode";
     /* 私有业务模块的全局变量 end */
     function init() {
         //加载样式
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
-        getEvent("#inputPassword").val("");
-        getEvent(".mobileCode").val("");  // 清除验证码
+
         isToukerRegister = appUtils.getSStorageInfo("isToukerRegister");
-        if (isToukerRegister == "false") {
-            getEvent("#password").show();
-            getEvent("#protocol").show();
-            getEvent(".fix_bot .top_title").show();
-        } else {
-            getEvent("#password").hide();
-            getEvent("#protocol").hide();
-            getEvent(".fix_bot .top_title").hide();
-        }
+        cleanPageElement();
 
         phoneNum = appUtils.getSStorageInfo("mobileNo");
         backUrl = appUtils.getPageParam("backUrl");
         ip = appUtils.getSStorageInfo("ip");
         mac = appUtils.getSStorageInfo("mac");
-        console.log("backUrl=" + backUrl);
 
         //短信发送时间
         var sendTime = appUtils.getSStorageInfo(phoneNum + "_start");
@@ -59,7 +50,7 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageInit("account/phoneCodeVerify", "account/phoneNumberVerify");
+            appUtils.pageInit(_pageLocation, "account/phoneNumberVerify");
         });
 
         /* 绑定获取短信验证码事件 */
@@ -69,7 +60,7 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
 
         // 预绑定查看协议的事件
         appUtils.bindEvent(getEvent(".protocol"),function(){
-            appUtils.pageInit("account/phoneToukerRegister","account/toukerSignProtocol",{});
+            appUtils.pageInit(_pageLocation,"account/toukerSignProtocol");
         });
 
 
@@ -108,6 +99,7 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
     function sendSmsCode() {
         // 首先验证手机号
         if (validatorUtil.isMobile(phoneNum)) {
+
             sendmsg(phoneNum, mac, ip); // 发送验证码
         } else {
             // 手机号没通过前端校验，弹出提示，并终止发送验证码的过程
@@ -136,7 +128,7 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
             "mac": appUtils.getSStorageInfo("mac")
         };
 
-        checkSmsPage.valiDataCustomeInfo(paramCheck, "account/phoneCheckSmsCode");
+        checkSmsPage.valiDataCustomeInfo(paramCheck, _pageLocation);
     }
 
 
@@ -191,6 +183,23 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
         startCountDown = window.setInterval(function () {
             handleCount();
         }, 1000);
+    }
+
+    function cleanPageElement(){
+        getEvent("#inputPassword").val("");
+        getEvent(".mobileCode").val("");  // 清除验证码
+        getEvent(".getmsg").show();
+        getEvent(".time").hide();
+
+        if (isToukerRegister == "false") {
+            getEvent("#password").show();
+            getEvent("#protocol").show();
+            getEvent(".fix_bot .top_title").show();
+        } else {
+            getEvent("#password").hide();
+            getEvent("#protocol").hide();
+            getEvent(".fix_bot .top_title").hide();
+        }
     }
 
     //获取当前页面属性对象

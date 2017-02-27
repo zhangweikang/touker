@@ -14,7 +14,8 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
         userId = appUtils.getSStorageInfo("userId"),
         cert_type = "zd",
         backAccount = "",
-        _pageId = "#account_signProtocol";
+        _pageId = "#account_signProtocol",
+        _pageLocation = "account/signProtocol";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -34,9 +35,9 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
             if (backAccount){
-                appUtils.pageInit("account/signProtocol", "account/openAccount", {backUrl:"account/signProtocol"});
+                appUtils.pageInit(_pageLocation, "account/openAccount", {backUrl:_pageLocation});
             } else {
-                appUtils.pageInit("account/signProtocol", "account/digitalCertificate", {});
+                appUtils.pageInit(_pageLocation, "account/digitalCertificate", {});
             }
         });
 
@@ -129,7 +130,7 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                     ul.append(li);
                     // 预绑定查看协议的事件
                     appUtils.preBindEvent(ul, "#protocol0" + i, function (e) {
-                        appUtils.pageInit("account/signProtocol", "account/showProtocol", {"protocol_id": $(this).attr("protocol-id")});
+                        appUtils.pageInit(_pageLocation, "account/showProtocol", {"protocol_id": $(this).attr("protocol-id")});
                         e.stopPropagation();
                     });
                     fristMap.put(i, protocolMap);
@@ -300,16 +301,16 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                     if (data.error_no == 0) {
                         if (backAccount){
                             //驳回补全,跳转成功页面
-                            utils.boHuiRedirect("account","account/signProtocol","backAccount");
+                            utils.boHuiRedirect("account",_pageLocation,"backAccount");
                         } else {
                             var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
                             console.log("签署协议页面获取的tpbankFlg=" + tpbankFlg);
                             if (tpbankFlg == '001015') {
-                                appUtils.pageInit("account/signProtocol", "account/riskAssessment", {});  //跳转到问卷回访页面
+                                appUtils.pageInit(_pageLocation, "account/riskAssessment", {});  //跳转到问卷回访页面
                             } else if (tpbankFlg == '001017') {
-                                appUtils.pageInit("account/signProtocol", "account/thirdDepository", {});  //跳转设置密码页面
+                                appUtils.pageInit(_pageLocation, "account/thirdDepository", {});  //跳转设置密码页面
                             } else {
-                                appUtils.pageInit("account/signProtocol", "account/setPwd", {});  //跳转设置密码页面
+                                appUtils.pageInit(_pageLocation, "account/setPwd", {});  //跳转设置密码页面
                             }
                         }
                     } else {

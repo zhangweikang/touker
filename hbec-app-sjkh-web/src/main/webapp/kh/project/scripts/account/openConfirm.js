@@ -8,7 +8,8 @@ define("project/scripts/account/openConfirm", function (require, exports, module
         layerUtils = require("layerUtils"),
         utils = require("utils"),
         fristMap = "",
-        _pageId = "#account_openConfirm";
+        _pageId = "#account_openConfirm",
+        _pageLocation = "account/openConfirm";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -22,7 +23,7 @@ define("project/scripts/account/openConfirm", function (require, exports, module
     function bindPageEvent() {
         /* 绑定返回事件*/
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageInit("account/openConfirm", "account/riskAssessmentResult", {});
+            appUtils.pageInit(_pageLocation, "account/riskAssessmentResult", {});
         });
 
         /* 问题卷选项绑定提示事件 */
@@ -115,7 +116,7 @@ define("project/scripts/account/openConfirm", function (require, exports, module
             var errorInfo = data.error_info;
             if (errorNo == 0)	 // 调用成功,跳转到风险测评页面
             {
-                appUtils.pageInit("account/openConfirm", "account/accountSuccess", {});  // 直接跳到结果页
+                appUtils.pageInit(_pageLocation, "account/accountSuccess");  // 直接跳到结果页
             }
             else {
                 layerUtils.iAlert(errorInfo, -1);

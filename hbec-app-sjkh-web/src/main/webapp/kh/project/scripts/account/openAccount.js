@@ -12,7 +12,8 @@ define("project/scripts/account/openAccount", function (require, exports, module
         source = require("gconfig").platform,
         layerUtils = require("layerUtils"), // 弹出层对象
         checkSmsPage = require("checkSmsPage"),
-        _pageId = "#account_openAccount";
+        _pageId = "#account_openAccount",
+        _pageLocation = "account/openAccount";
     // 私有业务模块的全局变量 end
 
     function init() {
@@ -65,12 +66,12 @@ define("project/scripts/account/openAccount", function (require, exports, module
             if ("我知道了" == text) {
                 if (global.openChannel == "1") {
                     if (backUrl) {
-                        appUtils.pageInit("account/openAccount", backUrl);
+                        appUtils.pageInit(_pageLocation, backUrl);
                     } else {
                         getUserInfo();
                     }
                 } else {
-                    appUtils.pageInit("account/openAccount", "account/phoneNumberVerify", {backUrl: backUrl});
+                    appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl: backUrl});
                 }
             } else {
                 utils.closeApp();
@@ -120,7 +121,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
                     "ip": appUtils.getSStorageInfo("ip"),
                     "mac": appUtils.getSStorageInfo("mac")
                 };
-                checkSmsPage.valiDataCustomeInfo(paramCheck, "account/openAccount");
+                checkSmsPage.valiDataCustomeInfo(paramCheck, _pageLocation);
             } else {
                 console.log("手机号" + jsonresult.phonenum + "未注册投客网");
                 layerUtils.iMsg(-1, data.msg);

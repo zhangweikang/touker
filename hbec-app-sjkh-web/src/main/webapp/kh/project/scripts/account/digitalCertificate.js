@@ -8,7 +8,8 @@ define("project/scripts/account/digitalCertificate", function (require, exports,
         layerUtils = require("layerUtils"),
         global = require("gconfig").global,
         utils = require("utils"),
-        _pageId = "#account_digitalCertificate";
+        _pageId = "#account_digitalCertificate",
+        _pageLocation = "account/digitalCertificate";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -33,7 +34,7 @@ define("project/scripts/account/digitalCertificate", function (require, exports,
             if (global.openChannel == "1") {
                 utils.closeApp();
             } else {
-                appUtils.pageInit("account/digitalCertificate", "account/phoneNumberVerify", {"backUrl": "account/digitalCertificate"});
+                appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {"backUrl": _pageLocation});
             }
             e.stopPropagation();
         });
@@ -74,7 +75,7 @@ define("project/scripts/account/digitalCertificate", function (require, exports,
         getEvent("#next_btn a").html("继续开户");  // 开户
         // 为按钮绑定事件
         appUtils.bindEvent(getEvent("#next_btn a"), function () {
-            appUtils.pageInit("account/digitalCertificate", "account/signProtocol", {});
+            appUtils.pageInit(_pageLocation, "account/signProtocol");
         });
     }
 

@@ -154,9 +154,9 @@ define(function (require, exports, module) {
 
         var backUrl = "";
         if (openChannel == "1"){
-            backUrl = "account/phoneNumberVerify";
-        } else {
             backUrl = "account/openAccount";
+        } else {
+            backUrl = "account/phoneNumberVerify";
         }
         appUtils.pageInit(codePage, pageCode, {"backUrl": backUrl});
     }

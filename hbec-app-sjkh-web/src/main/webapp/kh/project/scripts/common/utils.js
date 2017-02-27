@@ -550,6 +550,15 @@ define(function (require, exports, module) {
         return "account/accountSuccess";
     }
 
+    function backpage(backUrl) {
+        //当前页面id
+        var curPageCode = appUtils.getSStorageInfo("_curPageCode");
+        //前一个页面的id
+        var prePageCode = appUtils.getSStorageInfo("_prePageCode");
+
+        appUtils.pageInit(curPageCode,prePageCode,{backUrl:backUrl});
+    }
+
     module.exports = {
         "installCertificate": installCertificate,
         "chechCertificate": chechCertificate,
@@ -571,6 +580,7 @@ define(function (require, exports, module) {
         "getTitle": getTitle,
         "fmtImgData":fmtImgData,
         "boHuiRedirect": boHuiRedirect,
-        "getRedirectUrl": getRedirectUrl
+        "getRedirectUrl": getRedirectUrl,
+        "backPage": backpage
     };
 });

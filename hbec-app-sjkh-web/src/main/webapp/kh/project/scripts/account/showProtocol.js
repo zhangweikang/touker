@@ -36,12 +36,12 @@ define("project/scripts/account/showProtocol", function (require, exports, modul
     function bindPageEvent() {
         // 绑定返回
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageBack();
+            utils.backPage();
         });
 
         // 绑定继续开户
         appUtils.bindEvent(getEvent(".ct_btn a"), function () {
-            appUtils.pageBack();
+            utils.backPage();
         });
     }
 

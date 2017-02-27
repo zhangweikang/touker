@@ -16,7 +16,8 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         cert_type = "zd",
         open_flag = "",
         backThird = "",
-        _pageId = "#account_thirdDepository";
+        _pageId = "#account_thirdDepository",
+        _pageLocation = "account/thirdDepository";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -35,13 +36,13 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
             if (backThird){
-                appUtils.pageInit("account/thirdDepository", "account/openAccount", {backUrl:"account/thirdDepository"});
+                appUtils.pageInit(_pageLocation, "account/openAccount", {backUrl:_pageLocation});
             } else {
                 var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
                 if (tpbankFlg == "000105" || tpbankFlg == "000107") {
-                    appUtils.pageInit("account/thirdDepository", "account/signProtocol", {});
+                    appUtils.pageInit(_pageLocation, "account/signProtocol", {});
                 } else {
-                    appUtils.pageInit("account/thirdDepository", "account/setPwd", {});
+                    appUtils.pageInit(_pageLocation, "account/setPwd", {});
                 }
             }
         });
@@ -54,7 +55,7 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         /* 选择银行绑定下拉框按钮事件  */
         appUtils.bindEvent(getEvent("#selectBank"), function () {
             //跳转银行卡列表页面
-            appUtils.pageInit("account/thirdDepository", "account/bankList", {backUrl:"account/thirdDepository"});
+            appUtils.pageInit(_pageLocation, "account/bankList", {backUrl:_pageLocation});
         });
 
         appUtils.bindEvent(getEvent(".input_custom"),function () {
@@ -440,9 +441,9 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
                         if(backThird){
                             appUtils.clearSStorage("backThird");
                             var url = utils.getRedirectUrl();
-                            appUtils.pageInit("account/thirdDepository", url);
+                            appUtils.pageInit(_pageLocation, url);
                         } else {
-                            appUtils.pageInit("account/thirdDepository", "account/riskAssessment", {});
+                            appUtils.pageInit(_pageLocation, "account/riskAssessment", {});
                         }
                     } else {
                         layerUtils.iLoading(false);
@@ -524,7 +525,7 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
                     getEvent("#protocolName").attr("protocolMd5", protocol.econtract_md5);
                     // 预绑定查看银行协议内容的事件
                     appUtils.preBindEvent(getEvent("#protocolName").parent(), "#protocolName", function () {
-                        appUtils.pageInit("account/thirdDepository", "account/showProtocol", {"protocol_id": getEvent("#protocolName").attr("protocolId")});
+                        appUtils.pageInit(_pageLocation, "account/showProtocol", {"protocol_id": getEvent("#protocolName").attr("protocolId")});
                     });
                 }
             }

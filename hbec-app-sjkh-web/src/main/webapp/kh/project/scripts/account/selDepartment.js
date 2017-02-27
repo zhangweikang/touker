@@ -12,7 +12,9 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
         branchNo = "",
         branchName = "",
         commissionJsonEavl = {},
-        _pageId = "#account_selDepartment";
+        _pageId = "#account_selDepartment",
+        backUrl = "",
+        _pageLocation = "account/selDepartment";
     /* 私有业务模块的全局变量 end */
 
     function init() {
@@ -22,6 +24,7 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
 
         branchNo = appUtils.getSStorageInfo("branchNo"); // 用户已选营业部id
         branchName = appUtils.getSStorageInfo("branchName");  // 用户已选营业部名称
+        backUrl = appUtils.getPageParam("backUrl");
         // 初始化页面
         initPage();
     }
@@ -29,13 +32,12 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            var backUrl = appUtils.getPageParam("backUrl");
             if (backUrl) {
-                appUtils.pageInit("account/selDepartment", appUtils.getPageParam("backUrl"), {"backUrl": "account/selDepartment"});
-            } else if (appUtils.getSStorageInfo("toukerOpenChannel") == "qianqian_app") {// 返回到钱钱炒股App，三分钟快速开户界面
+                appUtils.pageInit(_pageLocation, backUrl, {"backUrl": _pageLocation});
+            } else if (global.openChannel == "1") {// 返回到钱钱炒股App，三分钟快速开户界面
                 utils.closeApp();
             } else {
-                appUtils.pageInit("account/selDepartment", "account/phoneNumberVerify", {});
+                appUtils.pageInit(_pageLocation, "account/phoneNumberVerify");
             }
         });
 
@@ -72,7 +74,7 @@ define("project/scripts/account/selDepartment", function (require, exports, modu
             }, function (data) {
                 var code = data.status;
                 if (code == "000000") {
-                    appUtils.pageInit("account/selDepartment", "account/uploadPhoto");
+                    appUtils.pageInit(_pageLocation, "account/uploadPhoto");
                 } else {
                     layerUtils.iMsg(-1, data.msg);
                 }

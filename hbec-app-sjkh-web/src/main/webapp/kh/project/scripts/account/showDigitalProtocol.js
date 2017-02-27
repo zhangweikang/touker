@@ -23,12 +23,12 @@ define("project/scripts/account/showDigitalProtocol", function (require, exports
     function bindPageEvent() {
         /* 绑定返回 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageBack();
+            utils.backPage();
         });
 
         /* 绑定下一步 */
         appUtils.bindEvent(getEvent(".fix_bot .ct_btn"), function () {
-            appUtils.pageBack();
+            utils.backPage();
         });
     }
 

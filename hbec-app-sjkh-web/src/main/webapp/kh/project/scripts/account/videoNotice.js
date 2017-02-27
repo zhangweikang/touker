@@ -10,7 +10,8 @@ define("project/scripts/account/videoNotice",
             utils = require("utils"),
             layerUtils = require("layerUtils"),
             needVideo = "",
-            _pageId = "#account_videoNotice";
+            _pageId = "#account_videoNotice",
+            _pageLocation = "account/videoNotice";
         /* 私有业务模块的全局变量 end */
 
         function init() {
@@ -46,7 +47,7 @@ define("project/scripts/account/videoNotice",
                             var error_info = data.error_info;
                             if (error_no == 0) {
                                 appUtils.setSStorageInfo("idInfo", "exist");
-                                appUtils.pageInit("account/videoNotice", "account/uploadPhoto", {});
+                                appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
                             } else {
                                 layerUtils.iLoading(false);
                                 layerUtils.iMsg(-1, error_info);
@@ -71,7 +72,7 @@ define("project/scripts/account/videoNotice",
                             if (error_no == 0) {
                                 //pageBack();
                                 //返回至用户信息确认页面
-                                appUtils.pageInit("account/videoNotice", "account/personInfo");
+                                appUtils.pageInit(_pageLocation, "account/personInfo");
                             } else {
                                 layerUtils.iLoading(false);
                                 layerUtils.iMsg(-1, error_info);
@@ -129,12 +130,12 @@ define("project/scripts/account/videoNotice",
             // 从短信登陆进入(当前完成步骤为：已校验设置交易密码)，处理返回按钮
             if ((_prePageCode == "account/pwdVerify") || ((tpbankFlg == '001017' || tpbankFlg == '001015') && currentStep == "setpwd")) {
                 appUtils.setSStorageInfo("personInfo", "exist"); // 标记完成资料填写步骤
-                appUtils.pageInit("account/videoNotice", "account/pwdVerify");
+                appUtils.pageInit(_pageLocation, "account/pwdVerify");
                 return;
             }
 
             //返回至用户信息确认页面
-            appUtils.pageInit("account/videoNotice", "account/personInfo");
+            appUtils.pageInit(_pageLocation, "account/personInfo");
         }
 
         /* 初始化页面 */
@@ -189,7 +190,7 @@ define("project/scripts/account/videoNotice",
                         if (witnessFlag == 1) {
                             layerUtils.iAlert("您的视频审核已通过，接下来即将为您安装数字证书...", 0,
                                 function () {
-                                    appUtils.pageInit("account/videoNotice", "account/digitalCertificate", {});
+                                    appUtils.pageInit(_pageLocation, "account/digitalCertificate", {});
                                 });
                         } else if (witnessFlag == 2) {
                             layerUtils.iAlert("您的预约信息已经提交，我们的客服将尽快联系您！", 0);
