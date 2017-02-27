@@ -65,7 +65,7 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             getEvent(".step_box.top_step").show();
         }
 
-        getEvent("ul").html("");
+        getEvent(".rule_list ul").html("");
 
         getEvent(".fix_bot .ct_btn a").html("下一步 >");  // 开户
     }

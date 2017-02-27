@@ -1,5 +1,6 @@
 package com.app.sjkh.commons.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -43,10 +44,22 @@ public class PropertiesUtils {
     }
 
     /**
+     *
+     * @param propertiesKey 获取key
      * @return
      */
     public String get(String propertiesKey) {
         return propertiesMap.get(propertiesKey);
+    }
+
+    /**
+     *
+     * @param propertiesKey 获取key
+     * @param defaultValue 默认值
+     * @return
+     */
+    public String get(String propertiesKey,String defaultValue) {
+        return StringUtils.isNotBlank(propertiesMap.get(propertiesKey)) ? propertiesMap.get(propertiesKey) : defaultValue;
     }
 
     /**

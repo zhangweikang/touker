@@ -1079,12 +1079,16 @@ public class ToukerService {
             cal.setTime(date);
             if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 //非法定节假日   周末  双休日的可用时间为:9：00-17:00
-                if (hour < 9 || hour >= 17) {
+                Integer noTradeStartTime = Integer.valueOf(propertiesUtils.get("noTradeStartTime","9"));
+                Integer noTradeEndTime = Integer.valueOf(propertiesUtils.get("noTradeEndTime","20"));
+                if (hour < noTradeStartTime || hour >= noTradeEndTime) {
                     return ResultResponse.build(ResultCode.HBEC_001035.getCode(), ResultCode.HBEC_001035.getMemo());
                 }
             } else {
+                Integer tradeStartTime = Integer.valueOf(propertiesUtils.get("tradeStartTime","9"));
+                Integer tradeEndTime = Integer.valueOf(propertiesUtils.get("tradeEndTime","17"));
                 //非法定节假日   非周末	    交易日的可用时间为： 9:00-20:00
-                if (hour < 9 || hour >= 20) {
+                if (hour < tradeStartTime || hour >= tradeEndTime) {
                     return ResultResponse.build(ResultCode.HBEC_001035.getCode(), ResultCode.HBEC_001035.getMemo());
                 }
             }
