@@ -165,6 +165,10 @@ define(function (require, exports, module) {
         var acceptedCertInfo = obj.acceptedCertInfo;
         var branchInfo = obj.branchInfo;
         var acceptedCustomerInfo = obj.acceptedCustomerInfo;
+        // 顶点身份证号保存到session
+        if (obj.idnoDD) {
+            appUtils.setSStorageInfo("idnoDD", obj.idnoDD);
+        }
         if (acceptedCertInfo) {
             // user_id保存到session
             if (acceptedCertInfo.id) {
@@ -207,26 +211,27 @@ define(function (require, exports, module) {
                 if (result[0].jsessionid) {
                     appUtils.setSStorageInfo("jsessionid", result[0].jsessionid);
                 }
-                if (acceptedCustomerInfo && acceptedCustomerInfo.banktype) {
-                    var queryParam = {
-                        "bindtype": "",
-                        "ispwd": "",
-                        "step": "bankInfo",
-                        "bankCode": acceptedCustomerInfo.banktype
-                    };
-                    service.queryBankList(queryParam, function (data) {
-                        var errorNo = data.error_no;
-                        var errorInfo = data.error_info;
-                        if (errorNo == 0 && data.results.length != 0) {
-                            var bankInfo = data.results[0];
-                            appUtils.setSStorageInfo("bankCode", bankInfo.bankcode);
-                            appUtils.setSStorageInfo(bankInfo.bankcode + "isCard", bankInfo.iscard);
-                        } else {
-                            layerUtils.iAlert(errorInfo, -1);
-                        }
-                    }, true, false);
-                }
-            },false,false);
+            },true,false);
+
+            if (acceptedCustomerInfo && acceptedCustomerInfo.banktype) {
+                var queryParam = {
+                    "bindtype": "",
+                    "ispwd": "",
+                    "step": "bankInfo",
+                    "bankCode": acceptedCustomerInfo.banktype
+                };
+                service.queryBankList(queryParam, function (data) {
+                    var errorNo = data.error_no;
+                    var errorInfo = data.error_info;
+                    if (errorNo == 0 && data.results.length != 0) {
+                        var bankInfo = data.results[0];
+                        appUtils.setSStorageInfo("bankCode", bankInfo.bankcode);
+                        appUtils.setSStorageInfo(bankInfo.bankcode + "isCard", bankInfo.iscard);
+                    } else {
+                        layerUtils.iAlert(errorInfo, -1);
+                    }
+                }, true, false);
+            }
         }
         if (branchInfo) {
             // 将营业部Id保存到session

@@ -362,23 +362,14 @@ define("project/scripts/account/thirdDepository", function (require, exports, mo
         layerUtils.iLoading(true);  // 开启等待层......
         // 获取协议的数字签名值
 
-        if (utils.isAndroid()) {
-            var returnData = khmobile.sign(JSON.stringify(signParam));
-            if (!returnData)
-                layerUtils.iLoading(false);
-            else
-                signPluginCallback(returnData);
-        } else {
-            require("shellPlugin").callShellMethod("signPlugin", function (data) {
-                signPluginCallback(data.ciphertext);
-            }, function () {
-                layerUtils.iLoading(false);
-            }, signParam);
-        }
-        function signPluginCallback(data) {
+        var signParam = khmobile.sign(JSON.stringify(signParam));
+
+        signParam ? signPluginCallback(signParam) : layerUtils.iLoading(false);
+
+        function signPluginCallback(signParam) {
             var protocolParam = {
                 "protocol_id": protocolid,
-                "protocol_dcsign": data,
+                "protocol_dcsign": signParam,
                 "summary": summary
             };
             protocolArray.push(protocolParam);   // 添加值到数组中

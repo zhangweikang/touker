@@ -105,11 +105,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                 "jsessionid": appUtils.getSStorageInfo("jsessionid") // 从 session 中将 jsessionid 取出
             };
 
-            if (utils.isAndroid()) {
-                khmobile.carmeraPhotoUpload(JSON.stringify(phoneConfig));
-            } else {
-                require("shellPlugin").callShellMethod("carmeraPlugin", null, null, phoneConfig);
-            }
+            khmobile.carmeraPhotoUpload(JSON.stringify(phoneConfig));
 
             displayNoneCss();
             e.stopPropagation();  // 阻止冒泡
@@ -132,11 +128,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
                 "jsessionid": appUtils.getSStorageInfo("jsessionid")	// 从 session 中将 jsessionid 取出
             };
 
-            if (utils.isAndroid()) {
-                khmobile.carmeraPhotoUpload(JSON.stringify(paiConfig));
-            } else {
-                require("shellPlugin").callShellMethod("carmeraPlugin", null, null, paiConfig);
-            }
+            khmobile.carmeraPhotoUpload(JSON.stringify(paiConfig));
 
             displayNoneCss();
             e.stopPropagation();  // 阻止冒泡
@@ -255,7 +247,7 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
         // 身份证正面信息
         if (getEvent(".upload_main .positive").attr("mediaId") == mediaId) {
             var idnoOCR = obj.idno;
-            var idnoDD = appUtils.getSStorageInfo("idCardNo");	//顶点系统记录的身份证号
+            var idnoDD = appUtils.getSStorageInfo("idnoDD");	//顶点系统记录的身份证号
             console.log("uploadPhoto idnoDD=" + idnoDD + "*idnoOCR=" + idnoOCR + "*");
             console.log("idnoOCR != idnoDD:" + idnoOCR != idnoDD);
 

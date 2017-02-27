@@ -71,11 +71,9 @@ define("project/scripts/account/backUploadPhoto", function (require, exports, mo
                 "clientinfo": appUtils.getSStorageInfo("clientinfo"),	// 从 session 中将 clientinfo 取出
                 "jsessionid": appUtils.getSStorageInfo("jsessionid")	// 从 session 中将 jsessionid 取出
             };
-            if (utils.isAndroid()) {
-                khmobile.carmeraPhotoUpload(JSON.stringify(phoneConfig));
-            } else {
-                require("shellPlugin").callShellMethod("carmeraPlugin", null, null, phoneConfig);
-            }
+
+            khmobile.carmeraPhotoUpload(JSON.stringify(phoneConfig));
+
             displayNoneCss();
             e.stopPropagation();
         });
@@ -96,11 +94,9 @@ define("project/scripts/account/backUploadPhoto", function (require, exports, mo
                 "clientinfo": appUtils.getSStorageInfo("clientinfo"),	// 从 session 中将 clientinfo 取出
                 "jsessionid": appUtils.getSStorageInfo("jsessionid")	// 从 session 中将 jsessionid 取出
             };
-            if (utils.isAndroid()) {
-                khmobile.carmeraPhotoUpload(JSON.stringify(paiConfig));
-            } else {
-                require("shellPlugin").callShellMethod("carmeraPlugin", null, null, paiConfig);
-            }
+
+            khmobile.carmeraPhotoUpload(JSON.stringify(paiConfig));
+
             displayNoneCss();
             e.stopPropagation();
         });

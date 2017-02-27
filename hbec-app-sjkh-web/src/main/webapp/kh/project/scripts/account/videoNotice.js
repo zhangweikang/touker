@@ -90,11 +90,9 @@ define("project/scripts/account/videoNotice",
                     "org_id": appUtils.getSStorageInfo("branchCode"),
                     "jsessionid": appUtils.getSStorageInfo("jsessionid")
                 };
-                if (utils.isAndroid()) {
-                    khmobile.videoWitness(JSON.stringify(param));
-                } else {
-                    require("shellPlugin").callShellMethod("videoWitnessPlugin", null, null, param);
-                }
+
+                khmobile.videoWitness(JSON.stringify(param));
+
             });
 
             /* 继续开户 */

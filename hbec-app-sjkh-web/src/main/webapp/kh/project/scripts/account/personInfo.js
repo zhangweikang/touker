@@ -152,21 +152,24 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             if (verifyInfo())  // 校验数据
             {
                 var param = {
-                    "idCardNo" : getEvent(".user_form .idCardNo").val(),
-                    "mobileNo":appUtils.getSStorageInfo('mobileNo')
+                    "idCardNo": getEvent(".user_form .idCardNo").val(),
+                    "mobileNo": appUtils.getSStorageInfo('mobileNo')
                 };
 
-               /* param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));*/
+                /* param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));*/
 
-                service.serviceAjax("/touker/validateIdno",param,function(data){
+                service.serviceAjax("/touker/validateIdno", param, function (data) {
                     var code = data.status;
-                    if ("001043" == code){
-                        var toukerPhone = data.data.phone + "";
-                        toukerPhone = toukerPhone.substr(0,3)+"****"+toukerPhone.substr(7,4);
-                        layerUtils.iAlert("身份证件被占用,您可登录"+toukerPhone+"账号或使用其他身份证件进行开户操作!",-1);
-                    } else {
+                    var msg = data.msg;
+                    if ("000000" == code) {
                         //提交用户信息
                         submitInfo();
+                    } else if ("001043" == code) {
+                        var toukerPhone = data.data.phone + "";
+                        toukerPhone = toukerPhone.substr(0, 3) + "****" + toukerPhone.substr(7, 4);
+                        layerUtils.iAlert("身份证件被占用,您可登录" + toukerPhone + "账号或使用其他身份证件进行开户操作!", -1);
+                    } else {
+                        layerUtils.iAlert(msg, -1);
                     }
                 });
             }
@@ -258,8 +261,8 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         var sexId = checkSexId(idno); // 根据身份证判断性别
         var custName = getEvent(".name").val();
 
-        appUtils.setSStorageInfo("idCardNo",idno);
-        appUtils.setSStorageInfo("custName",custName);
+        appUtils.setSStorageInfo("idCardNo", idno);
+        appUtils.setSStorageInfo("custName", custName);
         return {
             "userId": appUtils.getSStorageInfo("userId"),
             "infocolect_channel": iBrowser.pc ? 0 : 3, // 信息来源渠道 0：PC  3：手机
@@ -481,7 +484,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             }
         }
 
-        var pageInIdCardNo = appUtils.getPageParam("idno")?appUtils.getPageParam("idno"):appUtils.getSStorageInfo("idCardNo");
+        var pageInIdCardNo = appUtils.getPageParam("idno") ? appUtils.getPageParam("idno") : appUtils.getSStorageInfo("idCardNo");
 
         var countDiffe = 0;  // 计算身份证修改的位数
         for (var i = 0; i < idCardNo.length; i++) {
@@ -494,11 +497,12 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         // 如果被修改的位数不等于 0 ，countDiffe 为 true
         idCardModify = countDiffe != 0;
         if (countDiffe > 5) {
-            utils.layerTwoButton("您好,发现您的证件号码与上传的差异过大，请您确认是否需要更换身份证?", "重新上传身份证", "重新确认身份证", function () {
+            utils.layerTwoButton("您好,发现您的证件号码与上传的差异过大，请您确认是否需要更换身份证?", "重新上传身份证", "重新确认身份证",
+                function () {
                 appUtils.pageInit("account/personInfo", "account/uploadPhoto", {});
-            }, function () {
+                }, function () {
                 return false;
-            });
+                });
             return false;
         }
         // 设置出生日期

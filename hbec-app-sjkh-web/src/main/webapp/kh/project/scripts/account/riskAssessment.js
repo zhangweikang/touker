@@ -12,10 +12,10 @@ define("project/scripts/account/riskAssessment", function (require, exports, mod
     /* 私有业务模块的全局变量 end */
 
     function init() {
-        document.documentElement.scrollTop = document.body.scrollTop = 0;
         //加载样式
         getEvent(".page").height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
+        $("body").scrollTop(0);
         getRiskAssessQuestions();  // 获取问卷答题
     }
 

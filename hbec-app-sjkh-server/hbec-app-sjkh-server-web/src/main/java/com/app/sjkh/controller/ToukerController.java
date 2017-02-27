@@ -9,7 +9,9 @@ import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
 import com.app.sjkh.pojo.local.AcceptedMediaUrl;
+import com.app.sjkh.pojo.local.BBlackList;
 import com.app.sjkh.service.ToukerService;
+import com.app.sjkh.service.example.BBlackListServer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +46,9 @@ public class ToukerController {
 
     @Autowired
     private EsbApiService esbApiService;
+
+    @Autowired
+    private BBlackListServer bBlackListServer;
 
     /**
      * 判断手机号是否注册投客网
@@ -419,6 +424,10 @@ public class ToukerController {
         //String mobileNo = (String) request.getAttribute("mobileNo");
         //String idCardNo = (String) request.getAttribute("idCardNo");
 
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(idCardNo)){
+            return ResultResponse.build(ResultCode.HBEC_001004.getCode(),ResultCode.HBEC_001004.getMemo());
+        }
+
         ResultResponse resultResponse = toukerApiService.accountServiceFindByIdCardNo(idCardNo);
 
         if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0){
@@ -426,6 +435,13 @@ public class ToukerController {
             if (!StringUtils.equals(account.getPhone().toString(),mobileNo)){
                 return ResultResponse.build(ResultCode.HBEC_001043.getCode(),ResultCode.HBEC_001043.getMemo(),account);
             }
+        }
+
+        BBlackList queryBlackList = new BBlackList();
+        queryBlackList.setIdNo(idCardNo);
+        BBlackList bBlackList = bBlackListServer.queryOneByWhere(queryBlackList);
+        if (bBlackList == null){
+            return ResultResponse.build(ResultCode.HBEC_001044.getCode(),ResultCode.HBEC_001044.getMemo());
         }
         return ResultResponse.ok();
     }

@@ -67,7 +67,7 @@ define("project/scripts/account/openAccount", function (require, exports, module
                     if (backUrl) {
                         appUtils.pageInit("account/openAccount", backUrl);
                     } else {
-                        goProcess();
+                        getUserInfo();
                     }
                 } else {
                     appUtils.pageInit("account/openAccount", "account/phoneNumberVerify", {backUrl: backUrl});
@@ -84,19 +84,8 @@ define("project/scripts/account/openAccount", function (require, exports, module
         });
     }
 
-    function goProcess() {
-        if (utils.isAndroid()) {
-            var data = eval("(" + khmobile.getUserInfo() + ")");
-            getUserInfo(data);
-        } else {
-            require("shellPlugin").callShellMethod("toukerServerPlugin", function (jsonresult) {
-                getUserInfo(jsonresult);
-            }, function (data) {
-            }, {"command": "getUserInfo"});
-        }
-    }
-
-    function getUserInfo(jsonresult) {
+    function getUserInfo() {
+        var jsonresult = eval("(" + khmobile.getUserInfo() + ")");
         // 获取移动端参数手机号、userId
         console.info("jsonresult>>>>" + JSON.stringify(jsonresult));
         if (jsonresult == null || jsonresult.phonenum == null || jsonresult.phonenum == "") {

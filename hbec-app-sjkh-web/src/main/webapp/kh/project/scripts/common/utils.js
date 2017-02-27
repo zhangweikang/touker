@@ -23,19 +23,10 @@ define(function (require, exports, module) {
                 "key": "stockDelegateTradeSys"
             };
         // 调用壳子的方法生成证书申请串
-        if (isAndroid()) {
-            var data = khmobile.createKey(JSON.stringify(createKeyParam));
-            if (!data)
-                handleTimeout(successCallBack,errorCallBack);
-            else
-                createKeyPluginCallback(data);
-        } else {
-            require("shellPlugin").callShellMethod("createKeyPlugin", function (data) {
-                createKeyPluginCallback(data.pkcs10);
-            }, function () {
-                handleTimeout(successCallBack,errorCallBack);
-            }, createKeyParam);
-        }
+        var createKeyParam = khmobile.createKey(JSON.stringify(createKeyParam));
+
+        createKeyParam ? createKeyPluginCallback(createKeyParam) : handleTimeout(successCallBack,errorCallBack);
+
         function createKeyPluginCallback(data) {
             var param = {
                 "user_id": appUtils.getSStorageInfo("userId"),
@@ -68,28 +59,13 @@ define(function (require, exports, module) {
                 "type": cert_type
             };
             // 壳子读取证书，然后安装证书
-            if (isAndroid()) {
-                var data = khmobile.initZs(JSON.stringify(certParam));
-                if (data == "OK") {
-                    successCallBack();
-                } else {
-                    if (!errorCallBack){
-                        errorCallBack();
-                    }
-                }
+            var data = khmobile.initZs(JSON.stringify(certParam));
+            if (data == "OK") {
+                successCallBack();
             } else {
-                require("shellPlugin").callShellMethod("initZsPlugin", function (data) {
-                    if (data == "OK") {
-                        try {
-                            successCallBack();
-                        } catch (e) {
-                            if (!errorCallBack){
-                                errorCallBack();
-                            }
-                            console.log(e.message);
-                        }
-                    }
-                }, null, certParam);
+                if (!errorCallBack){
+                    errorCallBack();
+                }
             }
         }
         else {
@@ -121,25 +97,10 @@ define(function (require, exports, module) {
             "type": cert_type
         };
 
-        if (isAndroid()) {
-            var returnData = khmobile.fileIsExists(JSON.stringify(param));
-            layerUtils.iLoading(false);  // 关闭等待层。。。
-            fileIsExistsPluginCallback(returnData);
-        } else {
-            require("shellPlugin").callShellMethod("fileIsExistsPlugin", function (data) {
-                fileIsExistsPluginCallback(data);
-            }, function () {
-                layerUtils.iLoading(false);  // 关闭等待层。。。
-            }, param);
-        }
-        function fileIsExistsPluginCallback(data) {
-            // 如果未检测到本地有证书，就安装证书
-            if (data) {
-                successCallBack();
-            } else {
-                installCertificate(successCallBack,errorCallBack?errorCallBack:null,isLoading?isLoading:true);
-            }
-        }
+        var returnData = khmobile.fileIsExists(JSON.stringify(param));
+        layerUtils.iLoading(false);  // 关闭等待层。。。
+        // 如果未检测到本地有证书，就安装证书
+        returnData ? successCallBack() : installCertificate(successCallBack,errorCallBack?errorCallBack:null,isLoading?isLoading:true);
     }
 
     /**
@@ -357,28 +318,18 @@ define(function (require, exports, module) {
      * elements 输入框名称
      */
     function getPhoneNo(elements) {
-        if (isAndroid()) {
-            var returnData = khmobile.getPhoneNo();
-            getPhoneNoPluginCallback(returnData);
-        } else {
-            require("shellPlugin").callShellMethod("getPhoneNoPlugin", function (data) {
-                getPhoneNoPluginCallback(data);
-            }, null, {});
+        var returnData = khmobile.getPhoneNo();
+        var phoneReg = /^[1-9]\d{10}$/;
+        // 返回的数据是 +86手机号时，截取
+        if (returnData == 14) {
+            returnData = returnData.substring(3);
+        } else if (!phoneReg.test(returnData)) {
+            $(elements).val("");
+            return;
         }
-        function getPhoneNoPluginCallback(returnData) {
-            var phoneReg = /^[1-9]\d{10}$/;
-            // 返回的数据是 +86手机号时，截取
-            if (returnData == 14) {
-                returnData = returnData.substring(3);
-            }
-            else if (!phoneReg.test(returnData)) {
-                $(elements).val("");
-                return;
-            }
-            $(elements).val(returnData);
-            // 将光标移到输入框末尾
-            setCursorPosition(elements);
-        }
+        $(elements).val(returnData);
+        // 将光标移到输入框末尾
+        setCursorPosition(elements);
     }
 
 

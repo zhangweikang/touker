@@ -65,7 +65,7 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             getEvent(".step_box.top_step").show();
         }
 
-        getEvent(".rule_list ul").html("");
+        getEvent(".user_form.pt0 ul").html("");
 
         getEvent(".fix_bot .ct_btn a").html("下一步 >");  // 开户
     }
@@ -84,18 +84,10 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                 for (var i = 0; i < openAccountEnum.length; i++) {
                     var itemValue = openAccountEnum[i].item_value;
                     var itemName = openAccountEnum[i].item_name;
-                    if (itemName == "深A") {
-                        var SA = $("<li><a href='javascript:;' class='icon_radio checked' id='selectAccount0" + i + "' value='" + itemValue + "'>" + itemName + "</a></li>");
-                        ul.append(SA);
-                    } else if (openAccountEnum[i].item_name == "沪A") {
-                        var HA = $("<li><a href='javascript:;' class='icon_radio checked' id='selectAccount0" + i + "' value='" + itemValue + "'>" + itemName + "</a></li>");
-                        ul.append(HA);
-                    } else {
-                        //深B,沪B,不显示
-                        if (itemValue != "2" && itemValue != "4") {
-                            var other = $("<li><a href='javascript:;' class='icon_radio' id='selectAccount0" + i + "' value='" + itemValue + "'>" + itemName + "</a></li>");
-                            ul.append(other);
-                        }
+                    //深B,沪B,不显示
+                    if (itemValue != "2" && itemValue != "4") {
+                        var other = $("<li><a href='javascript:;' class='icon_radio' id='selectAccount0" + i + "' value='" + itemValue + "'>" + itemName + "</a></li>");
+                        ul.append(other);
                     }
                 }
                 initSelcet();  // 初始化证券账户的选择
@@ -113,7 +105,6 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             confrimOpenAccount($(this));
             e.stopPropagation();
         });
-        // 新开户默认深A,沪A
         getAgreement();  // 获取协议
     }
 
@@ -213,28 +204,16 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             };
             // 获取协议的数字签名值
 
-            if (utils.isAndroid()) {
-                var returnData = khmobile.sign(JSON.stringify(signParam));
-                if (!returnData) {
-                    layerUtils.iLoading(false);  // 关闭等待层
-                    countProtocol = 0;  // 将签署协议的计数器置为 0
-                } else
-                    signPluginCallback(returnData);
-            } else {
-                require("shellPlugin").callShellMethod("signPlugin", function (data) {
-                    signPluginCallback(data.ciphertext);
-                }, function () {
-                    layerUtils.iLoading(false);  // 关闭等待层
-                    countProtocol = 0;  // 将签署协议的计数器置为 0
-                }, signParam);
-            }
+            var signParam = khmobile.sign(JSON.stringify(signParam));
 
-            function signPluginCallback(returnData) {
+            signParam ? signPluginCallback(signParam) : layerUtils.iLoading(false);countProtocol = 0;
+
+            function signPluginCallback(signParam) {
                 protocolArray = new Array();
                 // 添加值到数组中
                 var protocol = {
                     "protocol_id": protocolid,
-                    "protocol_dcsign": returnData,
+                    "protocol_dcsign": signParam,
                     "summary": summary
                 };
                 protocolArray.push(protocol);
@@ -361,6 +340,10 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                 if (shaselect != "" || szaselect != "" || hacnselect != "" || zacnselect != "") {
                     getEvent(".radio_list ul li a").removeClass("checked");
                 }
+
+                getEvent(".radio_list ul li a[value='3']").addClass("checked");
+                getEvent(".radio_list ul li a[value='1']").addClass("checked");
+
                 if ("2" == shaselect) {
                     getEvent(".radio_list ul li a[value='3']").addClass("checked");
                     getEvent(".radio_list ul li a[value='6']").removeClass("checked");

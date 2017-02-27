@@ -15,6 +15,7 @@ define("project/scripts/account/openConfirm", function (require, exports, module
         //加载样式
         $(_pageId).height($(window).height());
         getEvent(".over_scroll").height($(window).height() - 45).css({overflow: "auto"});
+        $("body").scrollTop(0);
         getOpenConfirmData(); //获取问卷回访问题
     }
 

@@ -55,27 +55,17 @@ define("project/scripts/account/pwdVerify", function (require, exports, module) 
             };
             //验证交易密码是否正确
 
-            var returnData = "";
-            if (utils.isAndroid()) {
-                returnData = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
-                toukerServerPluginCallback(returnData);
-            } else {
-                require("shellPlugin").callShellMethod("toukerServerPlugin", function (param) {
-                    toukerServerPluginCallback(param);
-                }, function (data) {
-                }, {"command": "requestUrlParamsEncoding", "params": utils.jsonToParams(param)});
-            }
-            function toukerServerPluginCallback(returnData) {
-                service.hbAjax(returnData, function (data) {
-                    if (data.errorNo == 0) {
-                        //将密码存入思迪数据库
-                        postPassword();
-                    } else {
-                        layerUtils.iMsg(-1, "交易密码错误！");
-                        getEvent(".password").val("");  //清空密码控件
-                    }
-                });
-            }
+            //var param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));
+
+            service.hbAjax(param, function (data) {
+                if (data.errorNo == 0) {
+                    //将密码存入思迪数据库
+                    postPassword();
+                } else {
+                    layerUtils.iMsg(-1, "交易密码错误！");
+                    getEvent(".password").val("");  //清空密码控件
+                }
+            });
         });
     }
 

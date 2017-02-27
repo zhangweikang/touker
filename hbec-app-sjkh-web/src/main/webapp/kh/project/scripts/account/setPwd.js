@@ -430,19 +430,10 @@ define("project/scripts/account/setPwd", function (require, exports, module) {
         // 开启等待层。。。
         layerUtils.iLoading(true);
         // 获取协议的数字签名值
-        if (utils.isAndroid()) {
-            var returnData = khmobile.sign(JSON.stringify(signParam));
-            if (!returnData)
-                layerUtils.iLoading(false);
-            else
-                signPluginCallback(returnData);
-        } else {
-            require("shellPlugin").callShellMethod("signPlugin", function (data) {
-                signPluginCallback(data.ciphertext);
-            }, function () {
-                layerUtils.iLoading(false);
-            }, signParam);
-        }
+        var returnData = khmobile.sign(JSON.stringify(signParam));
+
+        returnData ? signPluginCallback(returnData) : layerUtils.iLoading(false);
+
         function signPluginCallback(data) {
             // 数字签名值
             var protocol = {
