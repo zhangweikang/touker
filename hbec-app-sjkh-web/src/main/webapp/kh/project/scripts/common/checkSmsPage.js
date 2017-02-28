@@ -153,7 +153,7 @@ define(function (require, exports, module) {
 
     function setSessionStorage(obj) {
         var acceptedCertInfo = obj.acceptedCertInfo;
-        var branchInfo = obj.branchInfo;
+        //var branchInfo = obj.branchInfo;
         var acceptedCustomerInfo = obj.acceptedCustomerInfo;
         if (acceptedCertInfo) {
             // user_id保存到session
@@ -199,7 +199,7 @@ define(function (require, exports, module) {
                 }
             },true,false);
         }
-        if (branchInfo) {
+        /*if (branchInfo) {
             // 将营业部Id保存到session
             if (branchInfo.branchno) {
                 appUtils.setSStorageInfo("branchCode", branchInfo.branchno);
@@ -212,7 +212,7 @@ define(function (require, exports, module) {
             if (acceptedCertInfo && acceptedCertInfo.commission) {
                 appUtils.setSStorageInfo("commission", acceptedCertInfo.commission);
             }
-        }
+        }*/
 
         if (acceptedCustomerInfo) {
             if (acceptedCustomerInfo.banktype){

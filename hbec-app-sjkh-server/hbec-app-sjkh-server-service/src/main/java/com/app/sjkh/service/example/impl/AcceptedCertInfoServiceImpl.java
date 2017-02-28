@@ -43,7 +43,7 @@ public class AcceptedCertInfoServiceImpl extends HbecBaseServiceImpl<AcceptedCer
 
 		if (acceptedCertInfo == null) {
 			queryBean.setId(Long.valueOf(acceptedCustomerInfoService.querySequence()));
-			queryBean.setOpacctkindFlag("0");
+			queryBean.setOpacctkindFlag(AcceptedCertInfo.State_0);
 			queryBean.setAccessChannel(opway);
 			queryBean.setState("0");
 			queryBean.setCreatedate(DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date()));

@@ -269,7 +269,9 @@ public class EsbApiService {
     }
 
     /**
-     * @param customerId
+     *
+     * @param bslx 查询标示
+     * @param srbs 标示值
      * @return 000000, 成功;data,用户信息
      * 001003,系统异常
      * {"clzt":8,"code":1,"count":1,"duration":"10.75ms","note":"查询成功","records":[{"csrq":"19881001","cz":"","dh":"110","dwdh":"",
@@ -278,12 +280,12 @@ public class EsbApiService {
      * "wtfs":"1;4;6;7;10","xb":"1","xl":"3","ymth":"","yyb":"100","yybbm":"0100","yybmc":"上海营业部","yzbm":"200000","zjbh":"888888888888888888","zjdz":"地球－中国",
      * "zjdzyb":"","zjfzjg":"","zjjzrq":"30001231","zjlb":"0","zjqsrq":"20150615","zydm":"99"}]}
      */
-    public ResultResponse queryCustomerInfoByDingDian(String customerId) {
+    public ResultResponse queryCustomerInfoByDingDian(String bslx,String srbs) {
         try {
             Map<String, String> params = new HashMap<>();
-            params.put("bslx", Constants.QuickBind_bslx);
+            params.put("bslx", bslx);
             params.put("fqqd", Constants.QuickBind_fqqd);
-            params.put("srbs", customerId);
+            params.put("srbs", srbs);
             String json = esbBusinessService(EsbServiceEnum.CXKHXX.getServiceId(), params);
             logger.info("CXKHXX返回" + json);
             JsonNode jsonNode = MAPPER.readTree(json);

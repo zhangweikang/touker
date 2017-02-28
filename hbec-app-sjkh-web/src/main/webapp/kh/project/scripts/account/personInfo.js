@@ -143,6 +143,24 @@ define("project/scripts/account/personInfo", function (require, exports, module)
                     var code = data.status;
                     var msg = data.msg;
                     if ("000000" == code) {
+                        var obj = data.data;
+                        var branchInfo = obj.branchInfo;
+                        var acceptedCommission = obj.acceptedCommission;
+                        //营业部信息
+                        if (branchInfo){
+                            // 将营业部Id保存到session
+                            if (branchInfo.branchno) {
+                                appUtils.setSStorageInfo("branchCode", branchInfo.branchno);
+                            }
+                            // 将营业部名称保存到session
+                            if (branchInfo.branchname) {
+                                appUtils.setSStorageInfo("branchName", branchInfo.branchname);
+                            }
+                        }
+                        //佣金
+                        if (acceptedCommission){
+                            appUtils.setSStorageInfo("commission", acceptedCommission.commission);
+                        }
                         //提交用户信息
                         submitInfo();
                     } else if ("001043" == code) {

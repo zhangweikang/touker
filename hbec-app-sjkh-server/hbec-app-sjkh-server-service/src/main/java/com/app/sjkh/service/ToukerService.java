@@ -645,7 +645,7 @@ public class ToukerService {
         if (StringUtils.isNotBlank(customerId)) {
             //顶点系统已经存在客户号的流程
 
-            ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(customerId);//获取顶点用户信息
+            ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(Constants.BSLX_KHH,customerId);//获取顶点用户信息
             if (!ResultCode.HBEC_000000.getCode().equals(resultResponse.getStatus())) {
                 logger.info("根据用户客户号查询用户信息失败");
                 return resultResponse;
@@ -870,12 +870,12 @@ public class ToukerService {
         }
 
         //当用户客户号和营业部都为空时,给用户设置默认营业部
-        if (StringUtils.isBlank(acceptedCertInfo.getBranchno()) && StringUtils.isBlank(customerId)) {
+        /*if (StringUtils.isBlank(acceptedCertInfo.getBranchno()) && StringUtils.isBlank(customerId)) {
             resultMap.putAll(updateBranchNo(acceptedCertInfo, acceptedCustomerInfo, propertiesUtils.get("branchNo"), mobileNo, opway));
-        }
+        }*/
 
         if (StringUtils.isNotBlank(customerId)) {
-            ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(customerId);
+            ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(Constants.BSLX_KHH,customerId);
 
             if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
                 logger.error("顶点查询用户信息异常");
@@ -904,9 +904,9 @@ public class ToukerService {
             }
 
             //本地记录用户的开户营业部与顶点查询的开户营业部不一致,更新本地开户营业部,和佣金费率
-            if (!StringUtils.equals(acceptedCertInfo.getBranchno(), yyb)) {
+            /*if (!StringUtils.equals(acceptedCertInfo.getBranchno(), yyb)) {
                 resultMap.putAll(updateBranchNo(acceptedCertInfo, acceptedCustomerInfo, yyb, mobileNo, opway));
-            }
+            }*/
         }
 
         return ResultResponse.build(ResultCode.HBEC_001042.getCode(), ResultCode.HBEC_001042.getMemo(), resultMap);
@@ -1256,5 +1256,70 @@ public class ToukerService {
         resultMap.put("branchInfo", branchInfo);
 
         return resultMap;
+    }
+
+    /**
+     * 设置用户开户营业部
+     *
+     * @param userId
+     * @param idcardNo
+     * @param mobileNo
+     * @return
+     * @throws Exception
+     */
+    public ResultResponse updateOpenAccBranchNo(Long userId,String idcardNo,String mobileNo) throws Exception {
+
+        Map<String,Object> resultMap = new HashMap<>();
+
+        ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(Constants.BSLX_ZJBH,idcardNo);
+        if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
+            logger.error("顶点查询用户信息异常");
+            return resultResponse;
+        }
+        Map<String, String> customrtInfo = (Map<String, String>) resultResponse.getData();
+        if (customrtInfo == null || customrtInfo.isEmpty()) {
+            logger.info("查询用户信息为空,顶点:customrtInfo:" + customrtInfo);
+            return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+        }
+
+        AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.queryById(userId);
+        AcceptedCustomerInfo acceptedCustomerInfo = acceptedCustomerInfoService.queryOneByMoblie(mobileNo);
+
+        String yybDD = customrtInfo.get("yyb");
+        String yybLocal = acceptedCertInfo.getBranchno();
+        String yyb = propertiesUtils.get("branchNo");
+
+        if (StringUtils.isNotBlank(yybLocal) && yybLocal.equals(yybDD)){
+            return resultResponse;
+        }
+        if (StringUtils.isNotBlank(yybDD) && !yybDD.equals(yybLocal)){
+            yyb = yybDD;
+        }
+
+        AcceptedCommission queryAcceptedCommission = new AcceptedCommission();
+        queryAcceptedCommission.setBranchNo(yyb);
+        AcceptedCommission acceptedCommission = acceptedCommissionService.queryOneByWhere(queryAcceptedCommission);
+        resultMap.put("acceptedCommission",acceptedCommission);
+        BBranch branchInfo = bBranchServiceImpl.getBranchInfo(yyb);
+        resultMap.put("branchInfo",branchInfo);
+
+        AcceptedCertInfo updateAcceptedCertInfo = new AcceptedCertInfo();
+        updateAcceptedCertInfo.setBranchno(yyb);
+        updateAcceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
+        updateAcceptedCertInfo.setMobileno(mobileNo);
+        updateAcceptedCertInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+        acceptedCertInfoService.updateByMoblieNoSelective(updateAcceptedCertInfo);
+
+        if (acceptedCustomerInfo != null) {
+            AcceptedCustomerInfo updateAcceptedCustomerInfo = new AcceptedCustomerInfo();
+            updateAcceptedCertInfo.setBranchno(yyb);
+            updateAcceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
+            updateAcceptedCustomerInfo.setId(acceptedCustomerInfo.getId());
+            updateAcceptedCustomerInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+            acceptedCustomerInfoService.updateSelective(updateAcceptedCustomerInfo);
+        }
+
+        resultResponse.setData(resultMap);
+        return resultResponse;
     }
 }

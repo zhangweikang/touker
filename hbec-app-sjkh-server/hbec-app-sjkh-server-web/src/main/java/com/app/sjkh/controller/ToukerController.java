@@ -447,7 +447,12 @@ public class ToukerController {
         }
         //查看本地身份证是否已被占用,流程未走完则删除用户信息
         try {
-            return toukerService.clearUnSubmitUserInfo(idCardNo,userId);
+            ResultResponse resultResponse1 = toukerService.clearUnSubmitUserInfo(idCardNo, userId);
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse1.getStatus()) != 0){
+                return resultResponse1;
+            }
+
+            return toukerService.updateOpenAccBranchNo(Long.valueOf(userId),idCardNo,mobileNo);
         } catch (Exception e) {
             logger.error("清除用户信息异常", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());

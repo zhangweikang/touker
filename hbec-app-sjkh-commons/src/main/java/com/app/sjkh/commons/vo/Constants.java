@@ -96,4 +96,25 @@ public class Constants {
 
 	/** crm营业部同步标示 */
 	public static final String NO_NEED_SYNC_SERVICE_BRANCH_FLAG = "2";
+
+	/** 标识类型:0|客户号 */
+	public static final String BSLX_KHH="0";
+
+	/** 标识类型:1|客户卡号 */
+	public static final String BSLX_CUSTOMER_KHKH="1";
+
+	/** 标识类型:2|股东账号 */
+	public static final String BSLX_GDH="2";
+
+	/** 标识类型:3|资金账号 */
+	public static final String BSLX_ZJZH="3";
+
+	/** 标识类型:4|证件编号 */
+	public static final String BSLX_ZJBH="4";
+
+	/** 标识类型:5|银行账号 */
+	public static final String BSLX_YHZH="5";
+
+	/** 标识类型:6|基金账号 */
+	public static final String BSLX_JJZH="6";
 }
