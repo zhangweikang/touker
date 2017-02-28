@@ -4,6 +4,7 @@ import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.servier.RedisService;
 import com.app.sjkh.commons.servier.ToukerApiService;
 import com.app.sjkh.commons.utils.DateUtils;
+import com.app.sjkh.commons.utils.JacksonUtil;
 import com.app.sjkh.commons.utils.NumberUtils;
 import com.app.sjkh.commons.utils.PropertiesUtils;
 import com.app.sjkh.commons.vo.Account;
@@ -85,6 +86,9 @@ public class ToukerService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private PromoterService promoterService;
 
     private final static String REDISSMSCODEKEY = "logincode_";
 
@@ -247,7 +251,7 @@ public class ToukerService {
         if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
             return resultResponse;
         }
-        return valiUserInfo(mobileNo,Integer.valueOf(source));
+        return valiUserInfo(mobileNo, Integer.valueOf(source));
     }
 
     /**
@@ -257,11 +261,11 @@ public class ToukerService {
      * @return 000000, 正常
      * 001040,有驳回
      */
-    public ResultResponse valiUserInfo(String mobileNo,Integer source) {
+    public ResultResponse valiUserInfo(String mobileNo, Integer source) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
             //获取用户数据
-            AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo,source);
+            AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo, source);
             resultMap.put("acceptedCertInfo", certInfo);
             //获取用户流程
             AcceptedSchedule acceptedSchedule = acceptedScheduleService.getSchedule(certInfo.getId().toString());
@@ -367,8 +371,7 @@ public class ToukerService {
      * @param mobileNo
      * @param loginPass
      * @param channel
-     * @return
-     * 001003:系统异常
+     * @return 001003:系统异常
      * 001013:注册成功
      * 000000:成功
      * @throws Exception
@@ -587,10 +590,10 @@ public class ToukerService {
             }
 
             //查询是否绑定的三方支付信息
-            ResultResponse resultResponse1 = esbApiService.queryQuickBankCard(customerId);
+            /*ResultResponse resultResponse1 = esbApiService.queryQuickBankCard(customerId);
             if (ResultCode.HBEC_001017.getCode().equals(resultResponse1.getStatus())) {
                 return resultResponse1;
-            }
+            }*/
         }
         return ResultResponse.build(ResultCode.HBEC_001020.getCode(), ResultCode.HBEC_001020.getMemo());
     }
@@ -816,11 +819,10 @@ public class ToukerService {
     /**
      * 校验用户数据
      *
-     * @param mobileNo 手机号码(必传)
+     * @param mobileNo   手机号码(必传)
      * @param customerId 客户号(非必传)
-     * @param opway 渠道(传客户号必传)
-     * @return
-     * 001004:参数为空
+     * @param opway      渠道(传客户号必传)
+     * @return 001004:参数为空
      * 001003:系统异常
      * 001006:查询结果为空
      * 001041:已走完开户流程
@@ -829,27 +831,27 @@ public class ToukerService {
      */
     public ResultResponse validateCustomerInfo(String mobileNo, String customerId, Integer opway) throws Exception {
 
-        Map<String,Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
 
         if (StringUtils.isBlank(mobileNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
         }
 
         AcceptedCustomerInfo acceptedCustomerInfo = acceptedCustomerInfoService.queryOneByMoblie(mobileNo);
-        resultMap.put("acceptedCustomerInfo",acceptedCustomerInfo);
+        resultMap.put("acceptedCustomerInfo", acceptedCustomerInfo);
 
         AcceptedCertInfo queryCertInfo = new AcceptedCertInfo();
         queryCertInfo.setMobileno(mobileNo);
         AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.getCertInfo(mobileNo, opway);
-        resultMap.put("acceptedCertInfo",acceptedCertInfo);
+        resultMap.put("acceptedCertInfo", acceptedCertInfo);
 
         //用户输入手机号查询用户信息表,已存在客户号则返回
         if (acceptedCustomerInfo != null && StringUtils.isNotBlank(acceptedCustomerInfo.getClientId())) {
-            return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(),resultMap);
+            return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(), resultMap);
         }
 
         AcceptedSchedule acceptedSchedule = acceptedScheduleService.getSchedule(acceptedCertInfo.getId().toString());
-        resultMap.put("acceptedSchedule",acceptedSchedule);
+        resultMap.put("acceptedSchedule", acceptedSchedule);
 
         String backStep = acceptedSchedule.getBackStep();
         //用户处于开户流程已走完或者有驳回记录,直接返回
@@ -864,7 +866,12 @@ public class ToukerService {
                 }
                 resultMap.put("acceptedRejectLogs", beanMap);
             }
-            return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(),resultMap);
+            return ResultResponse.build(ResultCode.HBEC_001041.getCode(), ResultCode.HBEC_001041.getMemo(), resultMap);
+        }
+
+        //当用户客户号和营业部都为空时,给用户设置默认营业部
+        if (StringUtils.isBlank(acceptedCertInfo.getBranchno()) && StringUtils.isBlank(customerId)) {
+            resultMap.putAll(updateBranchNo(acceptedCertInfo, acceptedCustomerInfo, propertiesUtils.get("branchNo"), mobileNo, opway));
         }
 
         if (StringUtils.isNotBlank(customerId)) {
@@ -883,7 +890,7 @@ public class ToukerService {
             }
 
             String zjbh = customrtInfo.get("zjbh");
-            resultMap.put("idnoDD",zjbh);
+            resultMap.put("idnoDD", zjbh);
             String yyb = customrtInfo.get("yyb");
 
             if (StringUtils.isBlank(zjbh) || StringUtils.isBlank(yyb)) {
@@ -892,48 +899,17 @@ public class ToukerService {
             }
 
             //本地记录身份证号码与顶点记录身份证号码不一致,删除用户信息表数据
-            if (acceptedCustomerInfo != null && StringUtils.isNotBlank(acceptedCustomerInfo.getIdno()) && !StringUtils.equals(acceptedCustomerInfo.getIdno(),zjbh)) {
+            if (acceptedCustomerInfo != null && StringUtils.isNotBlank(acceptedCustomerInfo.getIdno()) && !StringUtils.equals(acceptedCustomerInfo.getIdno(), zjbh)) {
                 acceptedCustomerInfoService.deleteByMobileNo(mobileNo);
             }
 
             //本地记录用户的开户营业部与顶点查询的开户营业部不一致,更新本地开户营业部,和佣金费率
-            if (!StringUtils.equals(acceptedCertInfo.getBranchno(),yyb)) {
-                AcceptedCommission queryAcceptedCommission = new AcceptedCommission();
-                queryAcceptedCommission.setBranchNo(yyb);
-                AcceptedCommission acceptedCommission = acceptedCommissionService.queryOneByWhere(queryAcceptedCommission);
-
-                AcceptedCertInfo updateAcceptedCertInfo = new AcceptedCertInfo();
-                updateAcceptedCertInfo.setBranchno(yyb);
-                updateAcceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
-                updateAcceptedCertInfo.setMobileno(mobileNo);
-                updateAcceptedCertInfo.setOpacctkindFlag(AcceptedCertInfo.State_0);
-                updateAcceptedCertInfo.setAccessChannel(opway);
-                updateAcceptedCertInfo.setState("0");
-                updateAcceptedCertInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
-                acceptedCertInfoService.updateByMoblieNoSelective(updateAcceptedCertInfo);
-
-                if (acceptedCustomerInfo != null) {
-                    AcceptedCustomerInfo updateAcceptedCustomerInfo = new AcceptedCustomerInfo();
-                    updateAcceptedCertInfo.setBranchno(yyb);
-                    updateAcceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
-                    updateAcceptedCustomerInfo.setId(acceptedCustomerInfo.getId());
-                    updateAcceptedCustomerInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
-                    acceptedCustomerInfoService.updateSelective(updateAcceptedCustomerInfo);
-
-                    acceptedCustomerInfo.setBranchno(yyb);
-                    acceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
-                    resultMap.put("acceptedCustomerInfo",acceptedCustomerInfo);
-                }
-
-                acceptedCertInfo.setBranchno(yyb);
-                acceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
-                resultMap.put("acceptedCertInfo",acceptedCertInfo);
-
-                BBranch branchInfo = bBranchServiceImpl.getBranchInfo(yyb);
-                resultMap.put("branchInfo",branchInfo);
+            if (!StringUtils.equals(acceptedCertInfo.getBranchno(), yyb)) {
+                resultMap.putAll(updateBranchNo(acceptedCertInfo, acceptedCustomerInfo, yyb, mobileNo, opway));
             }
         }
-        return ResultResponse.build(ResultCode.HBEC_001042.getCode(), ResultCode.HBEC_001042.getMemo(),resultMap);
+
+        return ResultResponse.build(ResultCode.HBEC_001042.getCode(), ResultCode.HBEC_001042.getMemo(), resultMap);
     }
 
     /**
@@ -1079,14 +1055,14 @@ public class ToukerService {
             cal.setTime(date);
             if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 //非法定节假日   周末  双休日的可用时间为:9：00-17:00
-                Integer noTradeStartTime = Integer.valueOf(propertiesUtils.get("noTradeStartTime","9"));
-                Integer noTradeEndTime = Integer.valueOf(propertiesUtils.get("noTradeEndTime","20"));
+                Integer noTradeStartTime = Integer.valueOf(propertiesUtils.get("noTradeStartTime", "9"));
+                Integer noTradeEndTime = Integer.valueOf(propertiesUtils.get("noTradeEndTime", "20"));
                 if (hour < noTradeStartTime || hour >= noTradeEndTime) {
                     return ResultResponse.build(ResultCode.HBEC_001035.getCode(), ResultCode.HBEC_001035.getMemo());
                 }
             } else {
-                Integer tradeStartTime = Integer.valueOf(propertiesUtils.get("tradeStartTime","9"));
-                Integer tradeEndTime = Integer.valueOf(propertiesUtils.get("tradeEndTime","17"));
+                Integer tradeStartTime = Integer.valueOf(propertiesUtils.get("tradeStartTime", "9"));
+                Integer tradeEndTime = Integer.valueOf(propertiesUtils.get("tradeEndTime", "17"));
                 //非法定节假日   非周末	    交易日的可用时间为： 9:00-20:00
                 if (hour < tradeStartTime || hour >= tradeEndTime) {
                     return ResultResponse.build(ResultCode.HBEC_001035.getCode(), ResultCode.HBEC_001035.getMemo());
@@ -1192,5 +1168,94 @@ public class ToukerService {
             }
             return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, acceptedCertInfo);
         }
+    }
+
+    public void getAgentByPhone(String phone) {
+
+        ResultResponse resultResponse = toukerApiService.stockReferralFacadeFindByPhone(phone);
+
+        if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
+            logger.info("获取touker用户推荐经纪人信息异常,code:" + resultResponse.getStatus() + ";msg:" + resultResponse.getMsg());
+            return;
+        }
+
+        Map<String, String> map = (Map<String, String>) resultResponse.getData();
+
+        String agentId = map.get("refAgentId");//推荐经纪人ID
+        String refYyb = map.get("refYyb");//推荐营业部
+
+        if (StringUtils.isBlank(agentId) && StringUtils.isBlank(refYyb)) {
+            logger.info("查询touker用户推荐经纪人信息为空,agentId:" + agentId + ";refYyb:" + refYyb);
+            return;
+        }
+
+        Map<String, String> recommendBranchList = propertiesUtils.getMap("recommendBranchList");
+
+        if (recommendBranchList.containsKey(refYyb)) {
+            String yyb = recommendBranchList.get("refYyb");
+            logger.info("touker用户推荐经纪人营业部,phone:" + phone + ";refYyb:" + refYyb + ",yyb:" + yyb);
+            if (StringUtils.isNotBlank(yyb)){
+                CustomerServiceBranch bean = new CustomerServiceBranch();
+                bean.setMobileno(phone);
+                bean.setBranchno(yyb);
+                bean.setRecommendbranchno(yyb);
+                customerServiceBranchService.saveSelective(bean);
+            }
+        } else {
+            promoterService.addPromoteCust(phone,agentId,null);
+            promoterService.addCustServiceBranch(phone,agentId);
+        }
+    }
+
+    /**
+     * 修改用户营业部信息
+     *
+     * @param acceptedCertInfo     证书表用户信息
+     * @param acceptedCustomerInfo 开户表用户信息
+     * @param yyb                  营业部
+     * @param mobileNo             手机号
+     * @param opway                渠道
+     * @return
+     * @throws Exception
+     */
+    private Map<String, Object> updateBranchNo(AcceptedCertInfo acceptedCertInfo, AcceptedCustomerInfo acceptedCustomerInfo, String yyb, String mobileNo, Integer opway) throws Exception {
+
+        Map<String, Object> resultMap = new HashMap<>();
+
+        AcceptedCommission queryAcceptedCommission = new AcceptedCommission();
+        queryAcceptedCommission.setBranchNo(yyb);
+        AcceptedCommission acceptedCommission = acceptedCommissionService.queryOneByWhere(queryAcceptedCommission);
+
+        AcceptedCertInfo updateAcceptedCertInfo = new AcceptedCertInfo();
+        updateAcceptedCertInfo.setBranchno(yyb);
+        updateAcceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
+        updateAcceptedCertInfo.setMobileno(mobileNo);
+        updateAcceptedCertInfo.setOpacctkindFlag(AcceptedCertInfo.State_0);
+        updateAcceptedCertInfo.setAccessChannel(opway);
+        updateAcceptedCertInfo.setState("0");
+        updateAcceptedCertInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+        acceptedCertInfoService.updateByMoblieNoSelective(updateAcceptedCertInfo);
+
+        if (acceptedCustomerInfo != null) {
+            AcceptedCustomerInfo updateAcceptedCustomerInfo = new AcceptedCustomerInfo();
+            updateAcceptedCertInfo.setBranchno(yyb);
+            updateAcceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
+            updateAcceptedCustomerInfo.setId(acceptedCustomerInfo.getId());
+            updateAcceptedCustomerInfo.setCreatedate(DateUtils.convertDate("yyyy-MM-dd HH:mm:ss"));
+            acceptedCustomerInfoService.updateSelective(updateAcceptedCustomerInfo);
+
+            acceptedCustomerInfo.setBranchno(yyb);
+            acceptedCustomerInfo.setCommission(acceptedCommission.getCommission().toString());
+            resultMap.put("acceptedCustomerInfo", acceptedCustomerInfo);
+        }
+
+        acceptedCertInfo.setBranchno(yyb);
+        acceptedCertInfo.setCommission(acceptedCommission.getCommission().doubleValue());
+        resultMap.put("acceptedCertInfo", acceptedCertInfo);
+
+        BBranch branchInfo = bBranchServiceImpl.getBranchInfo(yyb);
+        resultMap.put("branchInfo", branchInfo);
+
+        return resultMap;
     }
 }

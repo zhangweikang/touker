@@ -47,7 +47,7 @@ define("project/scripts/account/videoNotice",
                             var error_info = data.error_info;
                             if (error_no == 0) {
                                 appUtils.setSStorageInfo("idInfo", "exist");
-                                appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
+                                appUtils.pageInit(_pageLocation, "account/uploadPhoto");
                             } else {
                                 layerUtils.iLoading(false);
                                 layerUtils.iMsg(-1, error_info);
@@ -123,12 +123,12 @@ define("project/scripts/account/videoNotice",
         /* 处理返回按钮 */
         function pageBack() {
 
-            var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
+            var khh = appUtils.getSStorageInfo("khh");
             var currentStep = appUtils.getSStorageInfo("currentStep");
             var _prePageCode = appUtils.getSStorageInfo("_prePageCode");
             console.log("videoNotices currentStep=" + currentStep + " tpbankFlg=" + tpbankFlg);
             // 从短信登陆进入(当前完成步骤为：已校验设置交易密码)，处理返回按钮
-            if ((_prePageCode == "account/pwdVerify") || ((tpbankFlg == '001017' || tpbankFlg == '001015') && currentStep == "setpwd")) {
+            if ((_prePageCode == "account/pwdVerify") || (khh && currentStep == "setpwd")) {
                 appUtils.setSStorageInfo("personInfo", "exist"); // 标记完成资料填写步骤
                 appUtils.pageInit(_pageLocation, "account/pwdVerify");
                 return;

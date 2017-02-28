@@ -37,7 +37,7 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
             if (backAccount){
                 appUtils.pageInit(_pageLocation, "account/openAccount", {backUrl:_pageLocation});
             } else {
-                appUtils.pageInit(_pageLocation, "account/digitalCertificate", {});
+                appUtils.pageInit(_pageLocation, "account/digitalCertificate");
             }
         });
 

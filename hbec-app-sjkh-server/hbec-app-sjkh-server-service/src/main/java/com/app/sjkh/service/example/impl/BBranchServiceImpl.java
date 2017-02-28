@@ -113,7 +113,7 @@ public class BBranchServiceImpl extends HbecBaseServiceImpl<BBranch, String> imp
         //第三方渠道开户
         logger.info("====== 第三方渠道开户,thirdPartyChannel:" + thirdPartyChannel);
         if (customerServiceBranch != null && StringUtils.isNotBlank(thirdPartyChannel)) {
-            Map<String, String> map = getThirdPartyOpenAccBranch();
+            Map<String, String> map = propertiesUtils.getMap("thirdPartyOpenAccBranch");
             if (map != null && StringUtils.isNotBlank(map.get(thirdPartyChannel))) {
                 defBranchNo = map.get(thirdPartyChannel);
             }

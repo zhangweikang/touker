@@ -145,20 +145,10 @@ define(function (require, exports, module) {
             //用户流程
             pageCode = StepMap[lastcompleteStep];//新用户流程
         } else {
-            if (customerId) {
-                pageCode = "account/uploadPhoto";
-            } else {
-                pageCode = "account/selDepartment";
-            }
+            pageCode = "account/uploadPhoto";
         }
 
-        var backUrl = "";
-        if (openChannel == "1"){
-            backUrl = "account/openAccount";
-        } else {
-            backUrl = "account/phoneNumberVerify";
-        }
-        appUtils.pageInit(codePage, pageCode, {"backUrl": backUrl});
+        appUtils.pageInit(codePage, pageCode);
     }
 
     function setSessionStorage(obj) {
@@ -212,8 +202,24 @@ define(function (require, exports, module) {
                     appUtils.setSStorageInfo("jsessionid", result[0].jsessionid);
                 }
             },true,false);
+        }
+        if (branchInfo) {
+            // 将营业部Id保存到session
+            if (branchInfo.branchno) {
+                appUtils.setSStorageInfo("branchCode", branchInfo.branchno);
+            }
+            // 将营业部名称保存到session
+            if (branchInfo.branchname) {
+                appUtils.setSStorageInfo("branchName", branchInfo.branchname);
+            }
+            // 将营业部佣金保存到session
+            if (acceptedCertInfo && acceptedCertInfo.commission) {
+                appUtils.setSStorageInfo("commission", acceptedCertInfo.commission);
+            }
+        }
 
-            if (acceptedCustomerInfo && acceptedCustomerInfo.banktype) {
+        if (acceptedCustomerInfo) {
+            if (acceptedCustomerInfo.banktype){
                 var queryParam = {
                     "bindtype": "",
                     "ispwd": "",
@@ -231,20 +237,6 @@ define(function (require, exports, module) {
                         layerUtils.iAlert(errorInfo, -1);
                     }
                 }, true, false);
-            }
-        }
-        if (branchInfo) {
-            // 将营业部Id保存到session
-            if (branchInfo.branchno) {
-                appUtils.setSStorageInfo("branchCode", branchInfo.branchno);
-            }
-            // 将营业部名称保存到session
-            if (branchInfo.branchname) {
-                appUtils.setSStorageInfo("branchName", branchInfo.branchname);
-            }
-            // 将营业部佣金保存到session
-            if (acceptedCertInfo && acceptedCertInfo.commission) {
-                appUtils.setSStorageInfo("commission", acceptedCertInfo.commission);
             }
         }
     }

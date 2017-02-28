@@ -11,10 +11,11 @@
     <result column="SYNCLIENTIDFLG" jdbcType="CHAR" property="synclientidflg" />
     <result column="SYNCRMFLG" jdbcType="CHAR" property="syncrmflg" />
     <result column="THIRDPARTYCHANNEL" jdbcType="VARCHAR" property="thirdpartychannel" />
+    <result column="RECOMMENDBRANCHNO" jdbcType="VARCHAR" property="recommendbranchno" />
   </resultMap>
   <sql id="Base_Column_List" >
     MOBILENO, CLIENT_ID, CHANNEL, BRANCHNO, REQTIME, UPDATETIME, SYNCLIENTIDFLG, SYNCRMFLG,
-    THIRDPARTYCHANNEL
+    THIRDPARTYCHANNEL,RECOMMENDBRANCHNO
   </sql>
   <sql id="queryParam">
     <where>
@@ -44,6 +45,9 @@
       </if>
       <if test="thirdpartychannel != null" >
         AND THIRDPARTYCHANNEL = #{thirdpartychannel,jdbcType=CHAR}
+      </if>
+      <if test="recommendbranchno != null" >
+        AND RECOMMENDBRANCHNO = #{recommendbranchno,jdbcType=CHAR}
       </if>
     </where>
   </sql>

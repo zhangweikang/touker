@@ -24,6 +24,8 @@ public class CustomerServiceBranch {
 
     private String thirdpartychannel;
 
+    private String recommendbranchno;
+
     public String getMobileno() {
         return mobileno;
     }
@@ -96,6 +98,14 @@ public class CustomerServiceBranch {
         this.thirdpartychannel = thirdpartychannel == null ? null : thirdpartychannel.trim();
     }
 
+    public String getRecommendbranchno() {
+        return recommendbranchno;
+    }
+
+    public void setRecommendbranchno(String recommendbranchno) {
+        this.recommendbranchno = recommendbranchno;
+    }
+
     @Override
     public String toString() {
         return "CustomerServiceBranch{" +
@@ -108,6 +118,7 @@ public class CustomerServiceBranch {
                 ", synclientidflg='" + synclientidflg + '\'' +
                 ", syncrmflg='" + syncrmflg + '\'' +
                 ", thirdpartychannel='" + thirdpartychannel + '\'' +
+                ", recommendbranchno='" + recommendbranchno + '\'' +
                 '}';
     }
 }

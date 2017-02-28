@@ -428,4 +428,45 @@ public class ToukerApiService {
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
         }
     }
+
+    /**
+     * 获取经纪人信息
+     *
+     * @param phone
+     * @return
+     */
+    public ResultResponse stockReferralFacadeFindByPhone(String phone){
+
+        try {
+            if (StringUtils.isBlank(phone)){
+                return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
+            }
+
+            Map<String, String> map = new HashMap<>();
+            map.put("phone",phone);
+
+            String response = sendApi(propertiesUtils.get("apiUrl") + "stockReferralFacade.findByPhone", map);
+
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,phone = " + phone);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            logger.info("【stockReferralFacadeFindByPhone-响应】" + response);
+            JsonNode jsonNode = MAPPER.readTree(response).get("result");    //result:	1:成功    		 其他：失败
+            if (!Constants.ApiSuccess.equals(jsonNode.textValue())) {
+                logger.error("Api查询touker用户经纪人信息失败,phone = " + phone);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            //调用成功
+            JsonNode data = MAPPER.readTree(response).get("data");
+            if (data.isNull()) {
+                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+            }
+            return ResultResponse.ok(MAPPER.readValues(data.traverse(),MAPPER.getTypeFactory().constructMapType(Map.class,String.class,String.class)));
+        } catch (IOException e) {
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+        }
+    }
 }

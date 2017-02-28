@@ -6,7 +6,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
     var appUtils = require("appUtils"),
         service = require("serviceImp").getInstance(),  //业务层接口，请求数据
         layerUtils = require("layerUtils"),
-        global = require("gconfig").global,
         utils = require("utils"),
         manId = "",
         womenId = "",
@@ -89,24 +88,7 @@ define("project/scripts/account/personInfo", function (require, exports, module)
     function bindPageEvent() {
         /* 绑定返回 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
-            if (backUrl) {
-                appUtils.pageInit(_pageLocation, backUrl);
-            } else {
-                if ((tpbankFlg == "001015" || tpbankFlg == "001017")) {
-                    if ("2" == certUploadState) {
-                        //已开通三方存管或者三方支付,并且在钱钱中打开回到第一个页面
-                        if (global.openChannel == "1")
-                            appUtils.pageInit(_pageLocation, "account/openAccount", {backUrl: _pageLocation});
-                        else
-                            appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl: _pageLocation});
-                    } else {
-                        appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
-                    }
-                } else {
-                    appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
-                }
-            }
+            appUtils.pageInit(_pageLocation, "account/uploadPhoto",{backUrl:backUrl});
         });
 
         /* 点击页面其他元素隐藏下拉列表 */
@@ -175,24 +157,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
                 });
             }
         });
-    }
-
-    /* 处理返回按钮 */
-    function pageBack() {
-        var currentStep = appUtils.getSStorageInfo("currentStep");
-        // 当前完成步骤为：已成功上传身份证 或者 由视频返回到资料提交页，处理返回按钮
-        if (appUtils.getSStorageInfo("personInfo") == "exist" || currentStep == "uploadimg") {
-            appUtils.setSStorageInfo("currentStep", "uploadimg");
-            appUtils.setSStorageInfo("idInfo", "exist");  // 标记用户完成照片上传
-            appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
-        } else {// 正常开户处理返回按钮
-            var message = appUtils.getSStorageInfo("message");
-            if (message == '4') {		//如果是已经在投客网上传过身份证
-                appUtils.setSStorageInfo("currentStep", "uploadimg");
-                appUtils.setSStorageInfo("idInfo", "");  //
-            }
-            appUtils.pageInit(_pageLocation, "account/uploadPhoto", {});
-        }
     }
 
     function destroy() {
@@ -530,7 +494,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
     module.exports = {
         "init": init,
         "bindPageEvent": bindPageEvent,
-        "pageBack": pageBack,
         "destroy": destroy
     };
 });

@@ -7,9 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * properties注册为spring主键,获取加载resources配置文件中的值
@@ -70,4 +68,33 @@ public class PropertiesUtils {
         propertiesMap.put(plamformKey, plamformValue);
     }
 
+    /**
+     * 获取配置文件中的值,转化成list
+     * 例:propertiesKey:propertiesValue1,propertiesValue2......
+     * @param propertiesKey
+     * @return
+     */
+    public List<String> getList(String propertiesKey){
+        String propertiesValues = get(propertiesKey);
+        String[] split = propertiesValues.split(",");
+        return Arrays.asList(split);
+    }
+
+    /**
+     * 获取配置文件中的值,转化成map
+     * 例:propertiesKey:key1:value1,key2:value2......
+     * @param propertiesKey
+     * @return
+     */
+    public Map<String,String> getMap(String propertiesKey){
+        String propertiesValues = get(propertiesKey);
+        String[] split = propertiesValues.split(",");
+
+        Map<String,String> map = new HashMap<>();
+        for (String value:split) {
+            String[] split1 = value.split(":");
+            map.put(split1[0],split1[1]);
+        }
+        return map;
+    }
 }

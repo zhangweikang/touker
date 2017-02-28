@@ -32,7 +32,7 @@ define("project/scripts/account/digitalCertificate", function (require, exports,
 
         appUtils.bindEvent(getEvent(".icon_back"), function (e) {
             if (global.openChannel == "1") {
-                utils.closeApp();
+                appUtils.pageInit(_pageLocation, "account/openAccount", {"backUrl": _pageLocation});
             } else {
                 appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {"backUrl": _pageLocation});
             }

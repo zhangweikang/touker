@@ -56,7 +56,7 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
                     appUtils.pageInit(_pageLocation, backUrl);
                     return;
                 }
-                appUtils.pageInit(_pageLocation, "account/selDepartment");
+                appUtils.pageInit(_pageLocation, "account/uploadPhoto");
                 return;
             } else {
                 //用户更换手机则清除缓存

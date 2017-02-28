@@ -64,16 +64,11 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
 
         /* 绑定返回 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            //钱钱炒股在上传身份页面返回   关闭证券开户  回到钱钱炒股
-            var khh = appUtils.getSStorageInfo("khh");//如果客户号不为空，则一定已经选择了营业部，这里不能再让客户返回到选择营业部页面重新选择
-            if (khh) {
-                if (global.openChannel == "1") {
-                    appUtils.pageInit("account/personInfo", "account/openAccount", {backUrl: _pageLocation});
-                } else {
-                    appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl: _pageLocation});
-                }
+            //钱钱炒股在上传身份页面返回
+            if (global.openChannel == "1") {
+                appUtils.pageInit(_pageLocation, "account/openAccount", {backUrl: _pageLocation});
             } else {
-                appUtils.pageInit(_pageLocation, "account/selDepartment", {});
+                appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl: _pageLocation});
             }
         });
 

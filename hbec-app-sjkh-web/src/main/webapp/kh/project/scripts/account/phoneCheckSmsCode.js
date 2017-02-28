@@ -50,7 +50,7 @@ define("project/scripts/account/phoneCheckSmsCode", function (require, exports, 
     function bindPageEvent() {
         /* 绑定返回事件 */
         appUtils.bindEvent(getEvent(".header .icon_back"), function () {
-            appUtils.pageInit(_pageLocation, "account/phoneNumberVerify");
+            appUtils.pageInit(_pageLocation, "account/phoneNumberVerify", {backUrl:backUrl});
         });
 
         /* 绑定获取短信验证码事件 */
