@@ -307,8 +307,6 @@ define("project/scripts/account/signProtocol", function (require, exports, modul
                             console.log("签署协议页面获取的tpbankFlg=" + tpbankFlg);
                             if (tpbankFlg == '001015') {
                                 appUtils.pageInit(_pageLocation, "account/riskAssessment", {});  //跳转到问卷回访页面
-                            } else if (tpbankFlg == '001017') {
-                                appUtils.pageInit(_pageLocation, "account/thirdDepository", {});  //跳转设置密码页面
                             } else {
                                 appUtils.pageInit(_pageLocation, "account/setPwd", {});  //跳转设置密码页面
                             }

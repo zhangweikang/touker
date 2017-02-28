@@ -155,10 +155,6 @@ define(function (require, exports, module) {
         var acceptedCertInfo = obj.acceptedCertInfo;
         var branchInfo = obj.branchInfo;
         var acceptedCustomerInfo = obj.acceptedCustomerInfo;
-        // 顶点身份证号保存到session
-        if (obj.idnoDD) {
-            appUtils.setSStorageInfo("idnoDD", obj.idnoDD);
-        }
         if (acceptedCertInfo) {
             // user_id保存到session
             if (acceptedCertInfo.id) {
@@ -258,7 +254,7 @@ define(function (require, exports, module) {
                 var tpbankFlg = obj.tpbankFlg;
                 var tpAddr = obj.tpAddr;
 
-                appUtils.setSStorageInfo("smsCodeVail", "true");
+                appUtils.setSStorageInfo("smsCodeVail", "true");//短信校验通过标示
                 appUtils.setSStorageInfo("tpbankFlg", tpbankFlg);//用户开户标示
                 appUtils.setSStorageInfo("tpAddr", tpAddr);//重置交易密码地址(投客网或者网厅)
                 appUtils.setSStorageInfo("idnoDD", obj.idnoDD);//顶点保存的客户身份证号

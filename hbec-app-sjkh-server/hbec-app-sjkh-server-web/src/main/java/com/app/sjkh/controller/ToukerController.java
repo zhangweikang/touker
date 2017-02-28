@@ -421,28 +421,36 @@ public class ToukerController {
     public ResultResponse validateIdno(HttpServletRequest request){
         String mobileNo = request.getParameter("mobileNo");
         String idCardNo = request.getParameter("idCardNo");
+        String userId = request.getParameter("userId");
         //String mobileNo = (String) request.getAttribute("mobileNo");
         //String idCardNo = (String) request.getAttribute("idCardNo");
+        //String userId = (String) request.getAttribute("userId");
 
-        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(idCardNo)){
+        if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(idCardNo) || StringUtils.isBlank(userId)){
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(),ResultCode.HBEC_001004.getMemo());
         }
 
+        //身份证黑名单校验
+        BBlackList queryBlackList = new BBlackList();
+        queryBlackList.setIdNo(idCardNo);
+        BBlackList bBlackList = bBlackListServer.queryOneByWhere(queryBlackList);
+        if (bBlackList != null){
+            return ResultResponse.build(ResultCode.HBEC_001044.getCode(),ResultCode.HBEC_001044.getMemo());
+        }
+        //身份证在touker是否被占用
         ResultResponse resultResponse = toukerApiService.accountServiceFindByIdCardNo(idCardNo);
-
         if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0){
             Account account = (Account)resultResponse.getData();
             if (!StringUtils.equals(account.getPhone().toString(),mobileNo)){
                 return ResultResponse.build(ResultCode.HBEC_001043.getCode(),ResultCode.HBEC_001043.getMemo(),account);
             }
         }
-
-        BBlackList queryBlackList = new BBlackList();
-        queryBlackList.setIdNo(idCardNo);
-        BBlackList bBlackList = bBlackListServer.queryOneByWhere(queryBlackList);
-        if (bBlackList == null){
-            return ResultResponse.build(ResultCode.HBEC_001044.getCode(),ResultCode.HBEC_001044.getMemo());
+        //查看本地身份证是否已被占用,流程未走完则删除用户信息
+        try {
+            return toukerService.clearUnSubmitUserInfo(idCardNo,userId);
+        } catch (Exception e) {
+            logger.error("清除用户信息异常", e);
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
         }
-        return ResultResponse.ok();
     }
 }

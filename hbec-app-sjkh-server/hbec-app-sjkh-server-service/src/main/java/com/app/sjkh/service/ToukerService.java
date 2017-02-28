@@ -1164,7 +1164,6 @@ public class ToukerService {
             ResultResponse resultResponse = toukerApiService.accountServiceFindByPhone(acceptedCertInfo.getMobileno());
             if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0) {
                 Account account = (Account) resultResponse.getData();
-                acceptedCertInfo.setCertUploadState(account.getCertUploadState().toString());
             }
             return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, acceptedCertInfo);
         }

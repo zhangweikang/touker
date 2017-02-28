@@ -12,7 +12,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
         validatorUtil = require("validatorUtil"),
         idCardModify = false,  // 身份证是否被手工修改
         backUrl = "",
-        certUploadState = "",
         _pageId = "#account_personInfo",
         _pageLocation = "account/personInfo";
     /* 私有业务模块的全局变量 end */
@@ -75,8 +74,6 @@ define("project/scripts/account/personInfo", function (require, exports, module)
 
                     appUtils.setSStorageInfo("edu", obj.edu);//职业
                     appUtils.setSStorageInfo("professionCode", obj.professionCode);//学历
-
-                    certUploadState = obj.certUploadState;
                 } else {
                     layerUtils.iMsg("-1", data.msg);
                 }
@@ -136,7 +133,8 @@ define("project/scripts/account/personInfo", function (require, exports, module)
             {
                 var param = {
                     "idCardNo": getEvent(".user_form .idCardNo").val(),
-                    "mobileNo": appUtils.getSStorageInfo('mobileNo')
+                    "mobileNo": appUtils.getSStorageInfo('mobileNo'),
+                    "userId": appUtils.getSStorageInfo('userId')
                 };
 
                 /* param = khmobile.requestUrlParamsEncoding(utils.jsonToParams(param));*/
@@ -165,42 +163,26 @@ define("project/scripts/account/personInfo", function (require, exports, module)
 
     /*提交开户信息*/
     function submitInfo() {
-        //绑定三方存管或者三方支付标志     1：一定绑定了三方存管，还可能绑定了三方支付  	2：只绑定了三方支付	0：未绑定三方存管和三方支付
-        var tpbankFlg = appUtils.getSStorageInfo("tpbankFlg");
-        var idno = getEvent(".idCardNo").val();  // 身份证号
-        //先进行预处理（清除之前占用了该身份证号的客户的数据信息）
         var khh = appUtils.getSStorageInfo("khh");
-        var paramCert = {"userId": appUtils.getSStorageInfo("userId"), "idno": idno};
-
-        //先提交思迪，判读是否需要删除占用者客户数据信息
-        /*paramCert = khmobile.requestUrlParamsEncoding(utils.jsonToParams(paramCert));*/
-
-        service.serviceAjax("/touker/clearUnSubmitUserInfo", paramCert, function (data) {
-            var code = data.status;
-            if (code != "000000") {
-                layerUtils.iMsg("-1", data.msg);
-                return;
-            }
-            // 开户信息资料提交
-            var param = setSubmitDataParam();
-            service.submitUserInfo(param, function (data) {
-                var error_no = data.error_no;
-                var error_info = data.error_info;
-                if (error_no == 0) {
-                    //新开，则走新开流程
-                    if (tpbankFlg == '001017' || tpbankFlg == '001015') {
-                        // 跳转到验证交易密码
-                        console.log("跳转到密码验证页面");
-                        appUtils.pageInit(_pageLocation, "account/pwdVerify", {"backUrl": _pageLocation});
-                    } else {
-                        appUtils.pageInit(_pageLocation, "account/videoNotice", {});
-                    }
+        // 开户信息资料提交
+        var param = setSubmitDataParam();
+        service.submitUserInfo(param, function (data) {
+            var error_no = data.error_no;
+            var error_info = data.error_info;
+            if (error_no == 0) {
+                //新开，则走新开流程
+                if (khh) {
+                    // 跳转到验证交易密码
+                    console.log("跳转到密码验证页面");
+                    appUtils.pageInit(_pageLocation, "account/pwdVerify", {"backUrl": _pageLocation});
                 } else {
-                    layerUtils.iLoading(false);
-                    layerUtils.iAlert(error_info);  // 填写资料失败，弹出提示
+                    appUtils.pageInit(_pageLocation, "account/videoNotice", {});
                 }
-            }, false);
-        });
+            } else {
+                layerUtils.iLoading(false);
+                layerUtils.iAlert(error_info);  // 填写资料失败，弹出提示
+            }
+        }, false);
     }
 
     /* 根据身份证号进行判断性别: 倒数第二位数字，偶数为女，基数为男 */
