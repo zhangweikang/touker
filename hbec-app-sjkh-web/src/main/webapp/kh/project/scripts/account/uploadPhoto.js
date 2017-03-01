@@ -23,8 +23,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
             "gender": "",	// 用户性别
             "imgPath": "",  // 图片的显示地址
             "imgId": "", // 图片 id
-            "branchno": "", //营业部Id
-            "commission": "",  //佣金套餐
             "postid": "",  //邮编
             "backUrl": ""
         };
@@ -42,8 +40,6 @@ define("project/scripts/account/uploadPhoto", function (require, exports, module
 
         displayPhoto();//显示用户已上传的证件图片
 
-        fillInformationInParam.branchno = appUtils.getSStorageInfo("branchCode");
-        fillInformationInParam.commission = appUtils.getSStorageInfo("commission");
         fillInformationInParam.user_id = appUtils.getSStorageInfo("userId");
         fillInformationInParam.infocolect_channel = iBrowser.pc ? 0 : 3;  //信息来源渠道 0：PC  3：手机
         fillInformationInParam.idtype = "00";

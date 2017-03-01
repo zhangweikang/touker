@@ -274,6 +274,7 @@ public class EsbApiService {
      * @param srbs 标示值
      * @return 000000, 成功;data,用户信息
      * 001003,系统异常
+     * 001006,结果为空
      * {"clzt":8,"code":1,"count":1,"duration":"10.75ms","note":"查询成功","records":[{"csrq":"19881001","cz":"","dh":"110","dwdh":"",
      * "dwdz":"","dwyb":"","dz":"地球－中国","email":"","fxcsnl":"1","fxjb":"","gj":"156","hyzk":"","jg":"","jgbz":"0","jtdh":"","jtdz":"","jtyb":"",
      * "khh":"010000061675","khjc":"XXX","khlb":"0","khmc":"XXX","khqz":"","khrq":"20150615","khzt":"0","mzdm":"1","sj":"13800138000","srbs":"010000061675",
@@ -292,7 +293,8 @@ public class EsbApiService {
 
             List<Map<String, String>> data = MAPPER.readValue(
                     jsonNode.get("records").traverse(), MAPPER.getTypeFactory().constructCollectionType(List.class, Map.class));
-            return ResultResponse.ok(data.get(0));
+
+            return data.size() == 0 ? ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo()) : ResultResponse.ok(data.get(0));
         } catch (Exception e) {
             logger.error("顶点查询用户信息失败", e);
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), ResultCode.HBEC_001003.getMemo());
@@ -383,10 +385,6 @@ public class EsbApiService {
                 return ResultResponse.build(ResultCode.HBEC_001018.getCode(), ResultCode.HBEC_001018.getMemo());
             }
 
-            JsonNode records = jsonNode.get("records");
-            if (records.isNull()){
-                return ResultResponse.build(ResultCode.HBEC_001018.getCode(), ResultCode.HBEC_001018.getMemo());
-            }
             List<Map<String, String>> data = MAPPER.readValue(
                     jsonNode.get("records").traverse(), MAPPER.getTypeFactory().constructCollectionType(List.class, Map.class));
             return ResultResponse.build(ResultCode.HBEC_001017.getCode(), ResultCode.HBEC_001017.getMemo(),data);

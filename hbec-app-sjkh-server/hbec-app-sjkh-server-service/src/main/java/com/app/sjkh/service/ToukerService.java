@@ -884,11 +884,6 @@ public class ToukerService {
 
             Map<String, String> customrtInfo = (Map<String, String>) resultResponse.getData();
 
-            if (customrtInfo == null || customrtInfo.isEmpty()) {
-                logger.info("查询用户信息为空,顶点:customrtInfo:" + customrtInfo);
-                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
-            }
-
             String zjbh = customrtInfo.get("zjbh");
             resultMap.put("idnoDD", zjbh);
             String yyb = customrtInfo.get("yyb");
@@ -1271,27 +1266,29 @@ public class ToukerService {
 
         Map<String,Object> resultMap = new HashMap<>();
 
+        String yybDD = "";
+        String yyb;
         ResultResponse resultResponse = esbApiService.queryCustomerInfoByDingDian(Constants.BSLX_ZJBH,idcardNo);
-        if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
-            logger.error("顶点查询用户信息异常");
-            return resultResponse;
-        }
-        Map<String, String> customrtInfo = (Map<String, String>) resultResponse.getData();
-        if (customrtInfo == null || customrtInfo.isEmpty()) {
-            logger.info("查询用户信息为空,顶点:customrtInfo:" + customrtInfo);
-            return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+        if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) == 0) {
+            Map<String, String> customrtInfo = (Map<String, String>) resultResponse.getData();
+            yybDD = customrtInfo.get("yyb");
         }
 
         AcceptedCertInfo acceptedCertInfo = acceptedCertInfoService.queryById(userId);
         AcceptedCustomerInfo acceptedCustomerInfo = acceptedCustomerInfoService.queryOneByMoblie(mobileNo);
 
-        String yybDD = customrtInfo.get("yyb");
         String yybLocal = acceptedCertInfo.getBranchno();
-        String yyb = propertiesUtils.get("branchNo");
 
-        if (StringUtils.isNotBlank(yybLocal) && yybLocal.equals(yybDD)){
-            return resultResponse;
+        if (StringUtils.isBlank(yybLocal)){
+            yyb = propertiesUtils.get("branchNo");
+        } else {
+            if (yybLocal.equals(yybDD)){
+                resultResponse.setStatus(ResultCode.HBEC_000000.getCode());
+                return resultResponse;
+            }
+            yyb = yybLocal;
         }
+
         if (StringUtils.isNotBlank(yybDD) && !yybDD.equals(yybLocal)){
             yyb = yybDD;
         }
@@ -1319,6 +1316,7 @@ public class ToukerService {
             acceptedCustomerInfoService.updateSelective(updateAcceptedCustomerInfo);
         }
 
+        resultResponse.setStatus(ResultCode.HBEC_000000.getCode());
         resultResponse.setData(resultMap);
         return resultResponse;
     }
