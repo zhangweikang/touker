@@ -61,9 +61,13 @@ define("project/scripts/account/bankList", function (require, exports, module) {
                         div_bank_type.append(div_bank_info);
                     }
                     div_bank_item.append(div_bank_image).append(div_bank_type);
-                    if (isCard == "0") {
+                    if (isCard == "0" && "1" != item.open_flag) {
                         banklist.append(div_bank_item);
                     } else {
+                        banklist.prepend(div_bank_item);
+                    }
+                    //工商银行选择放到第一个
+                    if (bankcode == "GSYH" && i == length){
                         banklist.prepend(div_bank_item);
                     }
                 }

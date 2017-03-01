@@ -126,10 +126,9 @@ define("project/scripts/account/videoNotice",
             var khh = appUtils.getSStorageInfo("khh");
             var currentStep = appUtils.getSStorageInfo("currentStep");
             var _prePageCode = appUtils.getSStorageInfo("_prePageCode");
-            console.log("videoNotices currentStep=" + currentStep + " tpbankFlg=" + tpbankFlg);
+            console.log("videoNotices currentStep=" + currentStep);
             // 从短信登陆进入(当前完成步骤为：已校验设置交易密码)，处理返回按钮
             if ((_prePageCode == "account/pwdVerify") || (khh && currentStep == "setpwd")) {
-                appUtils.setSStorageInfo("personInfo", "exist"); // 标记完成资料填写步骤
                 appUtils.pageInit(_pageLocation, "account/pwdVerify");
                 return;
             }
