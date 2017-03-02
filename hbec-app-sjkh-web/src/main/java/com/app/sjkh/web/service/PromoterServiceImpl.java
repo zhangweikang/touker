@@ -27,7 +27,7 @@ public class PromoterServiceImpl implements PromoterService {
     private String PROMOTER_SET_BRANCHNO;
 
     public void setBranchnoInLocal(String phone, String fwry, String channel) {
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<String,String>();
         map.put("phone",phone);
         map.put("fwry",fwry);
         map.put("channel",channel);

@@ -62,7 +62,7 @@ public class BBranchServiceImpl extends HbecBaseServiceImpl<BBranch, String> imp
      */
     public LinkedList<String> getBranchNo() {
 
-        LinkedList<String> branchNoList = new LinkedList<>();
+        LinkedList<String> branchNoList = new LinkedList<String>();
         List<String> branchNo = bBranchMapper.getBranchNo();
         for (String branchno : branchNo) {
             branchNoList.add(branchno);

@@ -55,7 +55,7 @@ public class CommonsController {
     @ResponseBody
     public ResultResponse getIp(HttpServletRequest request) {
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         String ip = "";
         if (request.getHeader("x-forwarded-for") == null) {
             ip = request.getRemoteAddr();

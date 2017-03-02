@@ -129,7 +129,7 @@ public class StatisticsController {
 	 */
 	private ResultResponse vailDateParam(String beginDate, String endDate) {
 
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (StringUtils.isEmpty(beginDate) || StringUtils.isEmpty(endDate)) {
 			return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());

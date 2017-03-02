@@ -20,7 +20,7 @@ public class PropertiesUtils {
     private static Map<String, String> propertiesMap;
 
     static {
-        propertiesMap = new HashMap<>();
+        propertiesMap = new HashMap<String, String>();
         Properties prop = new Properties();
 
         try {
@@ -90,7 +90,7 @@ public class PropertiesUtils {
         String propertiesValues = get(propertiesKey);
         String[] split = propertiesValues.split(",");
 
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<String, String>();
         for (String value:split) {
             String[] split1 = value.split(":");
             map.put(split1[0],split1[1]);

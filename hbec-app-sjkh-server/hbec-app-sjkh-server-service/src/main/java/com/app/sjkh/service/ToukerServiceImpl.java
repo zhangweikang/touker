@@ -261,7 +261,7 @@ public class ToukerServiceImpl implements ToukerService{
      * 001040,有驳回
      */
     public ResultResponse valiUserInfo(String mobileNo, Integer source) {
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
             //获取用户数据
             AcceptedCertInfo certInfo = acceptedCertInfoService.getCertInfo(mobileNo, source);
@@ -294,7 +294,7 @@ public class ToukerServiceImpl implements ToukerService{
                 //获取用户驳回信息
                 List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(certInfo.getId());
                 if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
-                    Map<String, Object> beanMap = new HashMap<>();
+                    Map<String, Object> beanMap = new HashMap<String, Object>();
                     for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
                         beanMap.put(acceptedRejectLog.getFieldenname(), acceptedRejectLog);
                     }
@@ -631,7 +631,7 @@ public class ToukerServiceImpl implements ToukerService{
      * @throws Exception
      */
     public ResultResponse validateCustInfo(String mobileNo, String customerId, Integer opway) throws Exception {
-        Map<String, String> resultMap = new HashMap<>();
+        Map<String, String> resultMap = new HashMap<String, String>();
         String idnoDD;    //顶点客户号对应身份证号
         logger.info("validateCustInfo:mobileno=" + mobileNo + " khh=" + customerId);
         if (StringUtils.isBlank(mobileNo)) {
@@ -830,7 +830,7 @@ public class ToukerServiceImpl implements ToukerService{
      */
     public ResultResponse validateCustomerInfo(String mobileNo, String customerId, Integer opway) throws Exception {
 
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
 
         if (StringUtils.isBlank(mobileNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
@@ -859,7 +859,7 @@ public class ToukerServiceImpl implements ToukerService{
             //获取用户驳回信息
             List<AcceptedRejectLog> acceptedRejectLogs = acceptedRejectLogService.getReject(acceptedCertInfo.getId());
             if (acceptedRejectLogs != null && !acceptedRejectLogs.isEmpty()) {
-                Map<String, Object> beanMap = new HashMap<>();
+                Map<String, Object> beanMap = new HashMap<String, Object>();
                 for (AcceptedRejectLog acceptedRejectLog : acceptedRejectLogs) {
                     beanMap.put(acceptedRejectLog.getFieldenname(), acceptedRejectLog);
                 }
@@ -1143,7 +1143,7 @@ public class ToukerServiceImpl implements ToukerService{
         if (acceptedMediaUrls == null || acceptedMediaUrls.isEmpty() || acceptedCertInfo == null) {
             return ResultResponse.build(ResultCode.HBEC_001006.getCode(), null);
         } else {
-            Map<String, Object> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<String, Object>();
             result.put("acceptedMediaUrls", acceptedMediaUrls);
             result.put("acceptedCertInfo", acceptedCertInfo);
             return ResultResponse.build(ResultCode.HBEC_000000.getCode(), null, result);
@@ -1215,7 +1215,7 @@ public class ToukerServiceImpl implements ToukerService{
      */
     private Map<String, Object> updateBranchNo(AcceptedCertInfo acceptedCertInfo, AcceptedCustomerInfo acceptedCustomerInfo, String yyb, String mobileNo, Integer opway) throws Exception {
 
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
 
         AcceptedCommission queryAcceptedCommission = new AcceptedCommission();
         queryAcceptedCommission.setBranchNo(yyb);
@@ -1265,7 +1265,7 @@ public class ToukerServiceImpl implements ToukerService{
      */
     public ResultResponse updateOpenAccBranchNo(Long userId, String idcardNo, String mobileNo) throws Exception {
 
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
 
         String yybDD = "";
         String yyb;

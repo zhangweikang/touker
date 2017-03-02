@@ -75,7 +75,7 @@ public class ToukerApiService {
      * @throws Exception
      */
     public String sendSmsApi(String tplName, String mobileNumber, String tplParams) throws IOException {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("tplName", tplName);
         params.put("tplParams", tplParams);
         params.put("mobileNumber", mobileNumber);
@@ -93,7 +93,7 @@ public class ToukerApiService {
      * @datetime:2015-10-27 上午10:19:26
      */
     public boolean sendSMSByMOBILE_REGIS_CODE(String mobileNumber, String code) throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("vCode", code);
 
         String smsApi = sendSmsApi(Constants.MOBILE_REGIS_CODE, mobileNumber, JacksonUtil.toJSon(map));
@@ -111,7 +111,7 @@ public class ToukerApiService {
      * @datetime:2015-10-27 上午10:19:46
      */
     public boolean sendSMSByMOBILE_OPENACC_CODE(String mobileNumber, String code) throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("vCode", code);
 
         String smsApi = sendSmsApi(Constants.MOBILE_OPENACC_CODE, mobileNumber, JacksonUtil.toJSon(map));
@@ -130,7 +130,7 @@ public class ToukerApiService {
      * @throws Exception
      */
     public boolean sendSMSByMOBILE_FUNDACC_RETMSG(String mobileNumber, String custName, String client_id, String fund_account) throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("cusname", custName);
         map.put("cusno", client_id);
         map.put("fundaccno", fund_account);
@@ -149,7 +149,7 @@ public class ToukerApiService {
      * @throws Exception
      */
     public boolean sendSMSByMOBILE_OPENACC_VALCODE(String mobileNumber, String code) throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("vCode", code);
 
         String smsApi = sendSmsApi(Constants.MOBILE_OPENACC_VALCODE, mobileNumber, JacksonUtil.toJSon(map));
@@ -180,7 +180,7 @@ public class ToukerApiService {
      * @throws Exception
      */
     public ResultResponse accountServiceFindByPhone(String mobileno) throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("phone", mobileno);
         String response = sendApi(propertiesUtils.get("apiUrl") + "accountService.findByPhone", map);
         if (StringUtils.isBlank(response)) {
@@ -360,7 +360,7 @@ public class ToukerApiService {
      */
     public ResultResponse uploadServiceGetFileBytes(String category, String key) {
         try {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<String, String>();
             map.put("category", category);
             map.put("key", key);
             map.put("width", "800");
@@ -402,7 +402,7 @@ public class ToukerApiService {
             Account account = new Account();
             account.setIdcardNo(idCardNo);
 
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<String, String>();
             map.put("acc", JacksonUtil.toJSon(account));
             String response = sendApi(propertiesUtils.get("apiUrl") + "accountFacade.findAccount", map);
 
@@ -442,7 +442,7 @@ public class ToukerApiService {
                 return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
             }
 
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<String, String>();
             map.put("phone",phone);
 
             String response = sendApi(propertiesUtils.get("apiUrl") + "stockReferralFacade.findByPhone", map);

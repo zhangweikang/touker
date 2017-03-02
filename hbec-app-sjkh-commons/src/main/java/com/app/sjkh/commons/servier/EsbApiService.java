@@ -57,7 +57,7 @@ public class EsbApiService {
     private void esbLogin() {
         logger.info("进入ESB登陆方法,isLogin = " + isLogin);
         String loginUrl = getEsbUrl("login");
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("loginId", propertiesUtils.get("loginId"));
         map.put("loginPwd", propertiesUtils.get("loginPwd"));
         try {
@@ -192,7 +192,7 @@ public class EsbApiService {
      * @return
      */
     public Map<String, String> initPublicParam() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("fqqd", Constants.CunGuan_fqqd);
         map.put("fqr", Constants.CunGuan_fqr);
         map.put("ywxt", Constants.CunGuan_ywxt);
@@ -240,7 +240,7 @@ public class EsbApiService {
      */
     public ResultResponse queryBankInfoByDingDian(String customerId) {
         try {
-            Map<String, String> params = new HashMap<>();
+            Map<String, String> params = new HashMap<String, String>();
             params.put("fqqd", Constants.CunGuan_fqqd);
             params.put("fqr", Constants.CunGuan_fqr);
             params.put("khh", customerId);
@@ -283,7 +283,7 @@ public class EsbApiService {
      */
     public ResultResponse queryCustomerInfoByDingDian(String bslx,String srbs) {
         try {
-            Map<String, String> params = new HashMap<>();
+            Map<String, String> params = new HashMap<String, String>();
             params.put("bslx", bslx);
             params.put("fqqd", Constants.QuickBind_fqqd);
             params.put("srbs", srbs);
@@ -314,7 +314,7 @@ public class EsbApiService {
      */
     public ResultResponse vaildataTradePwd(String customerId, String password, String ip) {
         try {
-            Map<String, String> params = new HashMap<>();
+            Map<String, String> params = new HashMap<String, String>();
             params.put("fqqd", Constants.CunGuan_fqqd);
             params.put("fqr", Constants.CunGuan_fqr);
             params.put("jmlx", Constants.CunGuan_jmlx);
@@ -342,7 +342,7 @@ public class EsbApiService {
     public ResultResponse cxfwryyyb(String jjrId) {
         String referbranchno = "0";
         try {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<String, String>();
             map.put("JJR", jjrId);
             String result = esbBusinessService(EsbServiceEnum.CXFWRYYYB.getServiceId(), map);
 
@@ -373,7 +373,7 @@ public class EsbApiService {
      */
     public ResultResponse queryQuickBankCard (String customerId){
         try {
-            Map<String, String> params = new HashMap<>();
+            Map<String, String> params = new HashMap<String, String>();
             params.put("pay_channel_id", Constants.CunGuan_ywxt);
             params.put("pay_sign_status", Constants.QuickBind_bslx);
             params.put("pay_cust_num", customerId);
