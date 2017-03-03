@@ -51,13 +51,18 @@ define("project/scripts/account/phoneNumberVerify", function (require, exports, 
             }
 
             //如果用户回退到输入手机号页面,用户未修改手机号码,并且短信验证通过,直接进入
-            if (appUtils.getSStorageInfo("smsCodeVail") == "true" && mobileNo == appUtils.getSStorageInfo("mobileNo")) {
-                if (backUrl) {
-                    appUtils.pageInit(_pageLocation, backUrl);
+            if (mobileNo == appUtils.getSStorageInfo("mobileNo")) {
+                if (appUtils.getSStorageInfo("smsCodeVail") == "true") {
+                    if (backUrl) {
+                        appUtils.pageInit(_pageLocation, backUrl);
+                        return;
+                    }
+                    appUtils.pageInit(_pageLocation, "account/uploadPhoto");
+                    return;
+                } else {
+                    appUtils.pageInit(_pageLocation, "account/phoneCheckSmsCode");
                     return;
                 }
-                appUtils.pageInit(_pageLocation, "account/uploadPhoto");
-                return;
             } else {
                 //用户更换手机则清除缓存
                 appUtils.clearSStorage();

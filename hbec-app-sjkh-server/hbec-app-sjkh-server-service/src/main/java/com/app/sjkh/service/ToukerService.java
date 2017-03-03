@@ -11,11 +11,11 @@ import java.util.Map;
  */
 public interface ToukerService {
 
-    ResultResponse sendSMSCode(String mobileNo, String ip, String mac, String opway) throws Exception;
+    ResultResponse sendSMSCode(String mobileNo, String ip, String mac, String opway,String isToukerRegister) throws Exception;
 
-    ResultResponse checkSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac);
+    ResultResponse checkSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac ,String isToukerRegister);
 
-    ResultResponse valiSmsCheckUserInfo(String mobileNo, String mobileCode, String source, String ip, String mac);
+    ResultResponse valiSmsCheckUserInfo(String mobileNo, String mobileCode, String source, String ip, String mac,String isToukerRegister);
 
     ResultResponse valiUserInfo(String mobileNo, Integer source);
 

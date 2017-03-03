@@ -93,13 +93,14 @@ public class ToukerController {
         String ip = request.getParameter("ip");
         String mac = request.getParameter("mac");
         String op_way = request.getParameter("op_way");
+        String isToukerRegister = request.getParameter("isToukerRegister");
 
 //        String mobileNo = (String) request.getAttribute("mobileNo");
 //        String ip = (String) request.getAttribute("ip");
 //        String mac = (String) request.getAttribute("mac");
 //        String op_way = (String) request.getAttribute("op_way");
 
-        logger.info("【sendSmSapi】mobileno=" + mobileNo);
+        logger.info("【sendSmSapi】mobileno=" + mobileNo + ",isToukerRegister:" + isToukerRegister);
         if (StringUtils.isBlank(mobileNo) || StringUtils.isBlank(ip)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "请求参数异常");
         }
@@ -108,7 +109,7 @@ public class ToukerController {
         }
 
         try {
-            return toukerService.sendSMSCode(mobileNo, ip, mac, op_way);
+            return toukerService.sendSMSCode(mobileNo, ip, mac, op_way,isToukerRegister);
         } catch (Exception e) {
             logger.error("短信发送失败,请稍后再试!");
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "短信发送失败,请稍后再试!");
@@ -128,6 +129,7 @@ public class ToukerController {
         String source = request.getParameter("source");
         String ip = request.getParameter("ip");
         String mac = request.getParameter("mac");
+        String isToukerRegister = request.getParameter("isToukerRegister");
 
 //      String mobileNo = (String) request.getAttribute("mobileNo");
 //      String mobileCode = (String) request.getAttribute("mobileCode");
@@ -139,7 +141,7 @@ public class ToukerController {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), "手机号码格式不正确");
         }
 
-        toukerService.valiSmsCheckUserInfo(mobileNo,mobileCode,source,ip,mac);
+        toukerService.valiSmsCheckUserInfo(mobileNo,mobileCode,source,ip,mac,isToukerRegister);
         return null;
     }
 
@@ -243,7 +245,7 @@ public class ToukerController {
 
         try {
             //校验短信
-            ResultResponse resultResponse2 = toukerService.checkSMSCode(mobileNo, mobileCode, source, ip, mac);
+            ResultResponse resultResponse2 = toukerService.checkSMSCode(mobileNo, mobileCode, source, ip, mac,isToukerRegister);
             if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse2.getStatus()) != 0){
                 return resultResponse2;
             }

@@ -5,6 +5,7 @@ import com.app.sjkh.commons.utils.JacksonUtil;
 import com.app.sjkh.commons.utils.PropertiesUtils;
 import com.app.sjkh.commons.vo.*;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -467,6 +468,102 @@ public class ToukerApiService {
             return ResultResponse.ok(MAPPER.readValues(data.traverse(),MAPPER.getTypeFactory().constructMapType(Map.class,String.class,String.class)));
         } catch (IOException e) {
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+        }
+    }
+
+    /**
+     * api调用发送短信
+     *
+     * @param phone 手机号
+     * @param smsTemplateId 短信模板
+     * @return
+     * 000000,成功
+     * 001045,发送失败
+     */
+    public ResultResponse smsCodeServiceSmsVerifyCode(String phone,String smsTemplateId){
+        try {
+            Map<String,String> map = new HashMap<String, String>();
+            map.put("tplName",smsTemplateId);
+            map.put("timeoutInSeconds",propertiesUtils.get("smsTimeOut"));
+            map.put("vLen",Constants.CODELENGTH+"");
+            map.put("phone",phone);
+
+            String response = sendApi(propertiesUtils.get("apiUrl") + "smsCode.smsVerifyCode", map);
+
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,phone = " + phone);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            logger.info("【smsCodeServiceSmsVerifyCode-响应】" + response);
+            JsonNode jsonNode = MAPPER.readTree(response).get("result");    //result:	1:成功    		 其他：失败
+            if (!Constants.ApiSuccess.equals(jsonNode.textValue())) {
+                logger.error("Api查询发送短信失败,phone = " + phone);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            //调用成功
+            JsonNode data = MAPPER.readTree(response).get("data");
+            if (data.isNull()) {
+                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+            }
+
+            Boolean flag = data.get("flag").asBoolean();
+            String msg = data.get("msg").asText();
+
+            if (!flag){
+                return ResultResponse.build(ResultCode.HBEC_001045.getCode(),StringUtils.isBlank(msg)?ResultCode.HBEC_001045.getMemo():msg);
+            }
+            return ResultResponse.ok();
+        } catch (IOException e) {
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(),ResultCode.HBEC_001003.getMemo());
+        }
+    }
+
+    /**
+     * api验证短信验证码
+     *
+     * @param phone 手机号
+     * @param smsCode 短信验证码
+     * @param smsTemplateId 短信模板
+     * @return
+     */
+    public ResultResponse smsCodeServiceValidPhoneSmsCode(String phone,String smsCode ,String smsTemplateId){
+        try {
+            Map<String,String> map = new HashMap<String, String>();
+            map.put("tplName",smsTemplateId);
+            map.put("smsCode",smsCode);
+            map.put("phone",phone);
+
+            String response = sendApi(propertiesUtils.get("apiUrl") + "smsCode.validPhoneSmsCodeNotImgToken", map);
+
+            if (StringUtils.isBlank(response)) {
+                logger.error("ToukerApi调用失败,phone = " + phone);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            logger.info("【smsCodeServiceValidPhoneSmsCode-响应】" + response);
+            JsonNode jsonNode = MAPPER.readTree(response).get("result");    //result:	1:成功    		 其他：失败
+            if (!Constants.ApiSuccess.equals(jsonNode.textValue())) {
+                logger.error("Api校验短信失败,phone = " + phone);
+                return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后重试");
+            }
+
+            //调用成功
+            JsonNode data = MAPPER.readTree(response).get("data");
+            if (data.isNull()) {
+                return ResultResponse.build(ResultCode.HBEC_001006.getCode(), ResultCode.HBEC_001006.getMemo());
+            }
+
+            Boolean flag = data.get("flag").asBoolean();
+            String msg = data.get("msg").asText();
+
+            if (!flag){
+                return ResultResponse.build(ResultCode.HBEC_001046.getCode(),StringUtils.isBlank(msg)?ResultCode.HBEC_001046.getMemo():msg);
+            }
+            return ResultResponse.ok();
+        } catch (IOException e) {
+            return ResultResponse.build(ResultCode.HBEC_001003.getCode(),ResultCode.HBEC_001003.getMemo());
         }
     }
 }

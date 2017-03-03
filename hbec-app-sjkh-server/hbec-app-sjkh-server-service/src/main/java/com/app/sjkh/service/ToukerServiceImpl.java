@@ -101,42 +101,28 @@ public class ToukerServiceImpl implements ToukerService{
      * @return
      * @throws Exception
      */
-    public ResultResponse sendSMSCode(String mobileNo, String ip, String mac, String opway) throws Exception {
+    public ResultResponse sendSMSCode(String mobileNo, String ip, String mac, String opway ,String isToukerRegister) throws Exception {
 
         ResultResponse resultResponse = ResultResponse.ok();
 
         //缓存获取短信缓存
         String key = REDISSMSCODEKEY + mobileNo;
         logger.debug("从缓存中获取验证码，key：" + key);
-        String saved_codetime = redisService.get(key);
-        logger.error("saved_codetime=" + saved_codetime);
+        String redisSendTime = redisService.get(key);
+        logger.error("redisSendTime = " + redisSendTime);
 
         //短信控制
-        ResultResponse valiSmsTime = valiSmsTime(saved_codetime, mobileNo, ip);
+        ResultResponse valiSmsTime = valiSmsTime(redisSendTime, mobileNo, ip);
         if (!ResultCode.HBEC_000000.getCode().equals(valiSmsTime.getStatus())) {
             return valiSmsTime;
         }
         String saved_code = (String) valiSmsTime.getData();
 
-        //生成短信验证码
-        String code = NumberUtils.generateCode(Constants.CODELENGTH);
-        logger.info("【生成验证码】code=" + code);
-        String code_time = code + "_" + DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date());
-        redisService.set(key, code_time, NumberUtils.getIntegerValue(propertiesUtils.get("smsTimeOut"), Constants.SMSCODESAVE_TIME));
-        logger.info("存入缓存服务器的" + key + "," + code_time);
-
-        //是否是投客注册用户
-        ResultResponse accountService = toukerApiService.accountServiceFindByPhone(mobileNo);
-
-        if (ResultCode.HBEC_001003.getCode().equals(accountService.getStatus())) {
-            //异常
-            return accountService;
-        }
         //短信模板名称
         String smsTemplete = "";
-        if (ResultCode.HBEC_001011.getCode().equals(accountService.getStatus())) {
+        if ("false".equals(isToukerRegister)) {
             smsTemplete = Constants.RegisterTemplete;
-        } else if (ResultCode.HBEC_001012.getCode().equals(accountService.getStatus())) {
+        } else if ("true".equals(isToukerRegister)) {
             smsTemplete = Constants.AccountLoginTemplete;
         }
         //记录操作日志
@@ -148,22 +134,23 @@ public class ToukerServiceImpl implements ToukerService{
 
         //发送短信
         logger.info("---发送短信开始---");
+        String err_no = "0";
+        String err_msg = "发送短信成功";
         Boolean bool = true;
         String sendFlag = propertiesUtils.get("smsValidateFlg");    //短信发送验证开关   0：不验证     1：验证
         if ("1".equals(sendFlag)) {
-            if (Constants.MOBILE_REGIS_CODE.equals(smsTemplete))    //注册投客网
-                bool = toukerApiService.sendSMSByMOBILE_REGIS_CODE(mobileNo, code);
-            else if (Constants.MOBILE_OPENACC_CODE.equals(smsTemplete))    //手机开户
-                bool = toukerApiService.sendSMSByMOBILE_OPENACC_CODE(mobileNo, code);
+            ResultResponse resultResponse1 = toukerApiService.smsCodeServiceSmsVerifyCode(mobileNo, smsTemplete);
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse1.getStatus()) != 0){
+                err_no = "-1";
+                err_msg = StringUtils.isBlank(resultResponse1.getMsg())?"发送短信失败":resultResponse1.getMsg();
+                bool = false;
+            }
         }
         logger.info("---发送短信结束---");
 
-        String err_no = "0";
-        String err_msg = "发送短信成功";
-        if (!bool) {
-            err_no = "-1";
-            err_msg = "发送短信失败";
-        }
+        String sendTime =DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date());
+        redisService.set(key, sendTime,Constants.SMSCODESEND_TIME);
+        logger.info("存入缓存服务器的" + key + "," + sendTime);
 
         //log4j记录发送短信成功失败日志
         logger.info("手机号码" + mobileNo + err_msg);
@@ -199,9 +186,7 @@ public class ToukerServiceImpl implements ToukerService{
      * 001039,短信错误
      * 000000,校验成功
      */
-    public ResultResponse checkSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac) {
-
-        String redisSmsCode = redisService.get("REDISSMSCODEKEY" + mobileNo);
+    public ResultResponse checkSMSCode(String mobileNo, String mobileCode, String source, String ip, String mac,String isToukerRegister) {
 
         //记录登陆日志
         BBusinessLog bean = new BBusinessLog();
@@ -218,15 +203,19 @@ public class ToukerServiceImpl implements ToukerService{
         //短信验证标示
         String smsValidateFlg = propertiesUtils.get("smsValidateFlg");
         //测试环境不校验短信
-        if (!"0".equals(smsValidateFlg)) {
-            if (StringUtils.isBlank(redisSmsCode)) {
-
-                bean.setErrMsg(ResultCode.HBEC_001038.getMemo());
-                bBusinessLogService.saveSelective(bean);
-                return ResultResponse.build(ResultCode.HBEC_001038.getCode(), ResultCode.HBEC_001038.getMemo());
+        if ("1".equals(smsValidateFlg)) {
+            //短信模板名称
+            String smsTemplete = "";
+            if ("false".equals(isToukerRegister)) {
+                smsTemplete = Constants.RegisterTemplete;
+            } else if ("true".equals(isToukerRegister)) {
+                smsTemplete = Constants.AccountLoginTemplete;
             }
-            if (mobileCode.equals(redisSmsCode)) {
-                bean.setErrMsg(ResultCode.HBEC_001039.getMemo());
+
+            ResultResponse resultResponse = toukerApiService.smsCodeServiceValidPhoneSmsCode(mobileNo, mobileCode, smsTemplete);
+
+            if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0){
+                bean.setErrMsg(StringUtils.isBlank(resultResponse.getMsg())?ResultCode.HBEC_001038.getMemo():resultResponse.getMsg());
                 bBusinessLogService.saveSelective(bean);
                 return ResultResponse.build(ResultCode.HBEC_001039.getCode(), ResultCode.HBEC_001039.getMemo());
             }
@@ -245,8 +234,8 @@ public class ToukerServiceImpl implements ToukerService{
      * @param mac
      * @return
      */
-    public ResultResponse valiSmsCheckUserInfo(String mobileNo, String mobileCode, String source, String ip, String mac) {
-        ResultResponse resultResponse = checkSMSCode(mobileNo, mobileCode, source, ip, mac);
+    public ResultResponse valiSmsCheckUserInfo(String mobileNo, String mobileCode, String source, String ip, String mac,String isToukerRegister) {
+        ResultResponse resultResponse = checkSMSCode(mobileNo, mobileCode, source, ip, mac ,isToukerRegister);
         if (ResultCode.HBEC_000000.getCode().compareTo(resultResponse.getStatus()) != 0) {
             return resultResponse;
         }
@@ -484,15 +473,10 @@ public class ToukerServiceImpl implements ToukerService{
      */
     private ResultResponse valiSmsTime(String savedCodetime, String mobileNo, String ip) {
 
-        String saved_code = "";
-
         if (!StringUtils.isBlank(savedCodetime)) {
-            String[] codetime = savedCodetime.split("_");
-            saved_code = codetime[0];
-            String sendTime = codetime[1];
             int sms_sendtime = Constants.SMSCODESEND_TIME;
             String current_time = DateUtils.convertDateIntoYYYYMMDD_HHCMMCSSStr(new Date());
-            Date sendDate = DateUtils.parseDate(sendTime, Constants.FormateDate);
+            Date sendDate = DateUtils.parseDate(savedCodetime, Constants.FormateDate);
             Date date = new Date();
             logger.error("date=" + current_time);
             long time_space = (date.getTime() - sendDate.getTime()) / 1000L;
@@ -518,7 +502,7 @@ public class ToukerServiceImpl implements ToukerService{
             return ResultResponse.build(ResultCode.HBEC_001003.getCode(), "系统异常,请稍后再试!");
         }
 
-        return ResultResponse.ok(saved_code);
+        return ResultResponse.ok();
     }
 
     /**
