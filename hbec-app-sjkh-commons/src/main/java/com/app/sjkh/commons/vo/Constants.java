@@ -117,4 +117,7 @@ public class Constants {
 
 	/** 标识类型:6|基金账号 */
 	public static final String BSLX_JJZH="6";
+
+	/** redis公用前缀标示 */
+	public static final String REDIS_KEY_PLAMFORM="plamform/";
 }
