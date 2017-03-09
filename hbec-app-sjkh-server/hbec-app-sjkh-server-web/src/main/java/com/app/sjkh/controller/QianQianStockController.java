@@ -34,11 +34,9 @@ public class QianQianStockController {
     @RequestMapping(value = "qqAccess", method = RequestMethod.POST)
     @ResponseBody
     public ResultResponse qqAccess(HttpServletRequest request) {
-        String mobileNo = request.getParameter("mobileNo");
-        String channel = request.getParameter("channel");
 
-//		String mobileNo = (String)request.getAttribute("mobileNo");
-//		String channel = (String)request.getAttribute("channel");
+        String mobileNo = (String) request.getAttribute("mobileNo");
+        String channel = (String) request.getAttribute("channel");
 
         if (StringUtils.isEmpty(mobileNo) || StringUtils.isEmpty(channel)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());
@@ -59,9 +57,8 @@ public class QianQianStockController {
     @RequestMapping(value = "queryAccStat", method = RequestMethod.POST)
     @ResponseBody
     public ResultResponse queryAccStat(HttpServletRequest request) {
-        String mobileNo = request.getParameter("mobileNo");
 
-        //String mobileNo = (String)request.getAttribute("mobileNo");
+        String mobileNo = (String) request.getAttribute("mobileNo");
 
         if (StringUtils.isEmpty(mobileNo)) {
             return ResultResponse.build(ResultCode.HBEC_001004.getCode(), ResultCode.HBEC_001004.getMemo());

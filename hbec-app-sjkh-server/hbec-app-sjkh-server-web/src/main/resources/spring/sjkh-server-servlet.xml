@@ -9,15 +9,11 @@
     <!-- 拦截器 -->
     <mvc:interceptors>
         <!-- 参数解密拦截器 -->
-        <!--<mvc:interceptor>
+        <mvc:interceptor>
             <mvc:mapping path="/touker/*"/>
             <mvc:mapping path="/qianqian/*"/>
             <mvc:mapping path="/statistics/*"/>
             <bean class="com.app.sjkh.interceptor.RequestParamDecodeInterceptor"></bean>
-        </mvc:interceptor>-->
-        <mvc:interceptor>
-            <mvc:mapping path="/*/*"/>
-            <bean class="com.app.sjkh.interceptor.RequestParamInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
     <!-- 注解驱动 -->
