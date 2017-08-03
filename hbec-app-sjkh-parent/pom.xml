@@ -34,6 +34,8 @@
         <json.version>1.0.2</json.version>
         <redis.version>2.9.0</redis.version>
         <c3p0.version>0.9.5.2</c3p0.version>
+        <dubbo.version>2.4.10</dubbo.version>
+        <zookeeper.version>0.3</zookeeper.version>
         <!--<mybatis.paginator.version>1.2.15</mybatis.paginator.version>-->
         <!--<mysql.version>5.1.32</mysql.version>-->
         <!--<joda-time.version>2.5</joda-time.version>-->
@@ -235,6 +237,17 @@
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${redis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.101tec</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zookeeper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
