@@ -58,6 +58,9 @@ public class PromoterController {
     }
 
 
+    /**
+     * dubbo服务调用
+     */
     private void setBranchnoInLocal(String phone,String fwry ,String channel){
         //记录经纪人关系
         promoterService.addPromoteCust(phone, fwry, channel);
