@@ -1,10 +1,12 @@
-package com.app.sjkh.service;
+package com.app.sjkh.biz.impl.business;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.utils.DateUtils;
 import com.app.sjkh.commons.utils.NumberUtils;
 import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
+import com.app.sjkh.facade.business.PromoterService;
 import com.app.sjkh.pojo.local.CustomerServiceBranch;
 import com.app.sjkh.pojo.local.PromoteCustomer;
 import com.app.sjkh.service.example.CustomerServiceBranchService;
@@ -12,7 +14,7 @@ import com.app.sjkh.service.example.PromoteCustomerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -20,8 +22,9 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/3/1.
  */
+@Component("promoterService")
 @Service
-public class PromoterServiceImpl implements PromoterService{
+public class PromoterServiceImpl implements PromoterService {
 
     private final static Log logger = LogFactory.getLog(PromoterServiceImpl.class);
 

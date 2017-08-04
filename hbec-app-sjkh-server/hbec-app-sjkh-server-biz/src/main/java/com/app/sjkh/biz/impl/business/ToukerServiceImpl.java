@@ -1,15 +1,17 @@
-package com.app.sjkh.service;
+package com.app.sjkh.biz.impl.business;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.app.sjkh.commons.servier.EsbApiService;
 import com.app.sjkh.commons.servier.RedisService;
 import com.app.sjkh.commons.servier.ToukerApiService;
 import com.app.sjkh.commons.utils.DateUtils;
-import com.app.sjkh.commons.utils.NumberUtils;
 import com.app.sjkh.commons.utils.PropertiesUtils;
 import com.app.sjkh.commons.vo.Account;
 import com.app.sjkh.commons.vo.Constants;
 import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
+import com.app.sjkh.facade.business.PromoterService;
+import com.app.sjkh.facade.business.ToukerService;
 import com.app.sjkh.pojo.local.*;
 import com.app.sjkh.service.example.*;
 import com.app.sjkh.service.example.impl.AcceptedMediaUrlServiceImpl;
@@ -18,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,8 +28,9 @@ import java.util.*;
 /**
  * Created by Administrator on 2017/3/1.
  */
+@Component("toukerService")
 @Service
-public class ToukerServiceImpl implements ToukerService{
+public class ToukerServiceImpl implements ToukerService {
 
     private final Log logger = LogFactory.getLog(ToukerServiceImpl.class);
 
@@ -94,11 +97,10 @@ public class ToukerServiceImpl implements ToukerService{
     /**
      * 发送短信
      *
-     * @param mobileNo
-     * @param ip
-     * @param mac
-     * @param opway
-     * @return
+     * @param mobileNo 手机号
+     * @param ip ip
+     * @param mac mac
+     * @param opway 渠道
      * @throws Exception
      */
     public ResultResponse sendSMSCode(String mobileNo, String ip, String mac, String opway ,String isToukerRegister) throws Exception {

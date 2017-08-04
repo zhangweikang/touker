@@ -1,7 +1,7 @@
 package com.app.sjkh.controller;
 
 import com.app.sjkh.commons.vo.ResultResponse;
-import com.app.sjkh.service.PromoterService;
+import com.app.sjkh.facade.business.PromoterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -7,10 +7,10 @@ import com.app.sjkh.commons.utils.PropertiesUtils;
 import com.app.sjkh.commons.vo.Account;
 import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
+import com.app.sjkh.facade.business.ToukerService;
 import com.app.sjkh.pojo.local.AcceptedCertInfo;
 import com.app.sjkh.pojo.local.AcceptedMediaUrl;
 import com.app.sjkh.pojo.local.BBlackList;
-import com.app.sjkh.service.ToukerService;
 import com.app.sjkh.service.example.BBlackListServer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -51,7 +51,6 @@ public class ToukerController {
     /**
      * 判断手机号是否注册投客网
      *
-     * @param request
      * @return 001011, 未注册
      * 001012,已注册
      * 001004,参数空
@@ -78,7 +77,6 @@ public class ToukerController {
     /**
      * 发送短信验证码
      *
-     * @param request
      * @return 001004, 参数异常
      * 001003,系统异常
      * 000000,短信发送成功
@@ -112,8 +110,6 @@ public class ToukerController {
     /**
      * 校验短信验证码,返回用户信息
      *
-     * @param request
-     * @return
      */
     @RequestMapping(value = "checkSMSCode", method = RequestMethod.POST)
     @ResponseBody
@@ -140,7 +136,6 @@ public class ToukerController {
     /**
      * 关联手机号和投客网ID
      *
-     * @param request
      * @return 001004, 参数空
      * 001003,系统异常
      * 001011,用户未注册
@@ -169,7 +164,6 @@ public class ToukerController {
     /**
      * 注册投客网并关联手机号投客Id
      *
-     * @param request
      * @return 001004, 参数空
      * 001003,系统异常
      * 000000,成功
@@ -196,8 +190,6 @@ public class ToukerController {
     }
 
     /**
-     * @param request
-     * @return
      */
     @RequestMapping(value = "validateCustInfo", method = RequestMethod.POST)
     @ResponseBody
@@ -272,8 +264,6 @@ public class ToukerController {
     /**
      * 清除用户信息
      *
-     * @param request
-     * @return
      */
     @RequestMapping(value = "clearUnSubmitUserInfo", method = RequestMethod.POST)
     @ResponseBody
@@ -295,9 +285,6 @@ public class ToukerController {
 
     /**
      * 校验交易密码
-     *
-     * @param request
-     * @return
      */
     @RequestMapping(value = "validatePwd", method = RequestMethod.POST)
     @ResponseBody
@@ -390,9 +377,6 @@ public class ToukerController {
 
     /**
      * 校验用户身份证在投客对应的手机号与用户输入的手机号是否一致
-     *
-     * @param request
-     * @return
      */
     @RequestMapping(value = "validateIdno", method = RequestMethod.POST)
     @ResponseBody

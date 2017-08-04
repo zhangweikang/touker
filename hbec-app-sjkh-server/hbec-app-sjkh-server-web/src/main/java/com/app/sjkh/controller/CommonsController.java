@@ -2,9 +2,7 @@ package com.app.sjkh.controller;
 
 import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
-import com.app.sjkh.service.ToukerService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.app.sjkh.facade.business.ToukerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +31,6 @@ public class CommonsController {
 
     /**
      * 获取交易时间
-     *
-     * @return
      */
     @RequestMapping(value = "getTradeDate", method = RequestMethod.POST)
     @ResponseBody
@@ -45,7 +41,7 @@ public class CommonsController {
     /**
      * 判断手机号是否注册投客网
      *
-     * @param request
+     * @param request request
      * @return 001011, 未注册
      * 001012,已注册
      * 001004,参数空
@@ -56,7 +52,7 @@ public class CommonsController {
     public ResultResponse getIp(HttpServletRequest request) {
 
         Map<String, String> map = new HashMap<String, String>();
-        String ip = "";
+        String ip ;
         if (request.getHeader("x-forwarded-for") == null) {
             ip = request.getRemoteAddr();
         } else {
@@ -73,10 +69,9 @@ public class CommonsController {
      *
      * @param ip String,127.0.0.1格式
      * @return mac String
-     * @throws Exception
      */
     public String getMACAddress(String ip) {
-        String line = "";
+        String line;
         String macAddress = "";
         final String MAC_ADDRESS_PREFIX = "MAC Address = ";
         final String LOOPBACK_ADDRESS = "127.0.0.1";
@@ -105,11 +100,9 @@ public class CommonsController {
             InputStreamReader isr = new InputStreamReader(p.getInputStream());
             BufferedReader br = new BufferedReader(isr);
             while ((line = br.readLine()) != null) {
-                if (line != null) {
-                    int index = line.indexOf(MAC_ADDRESS_PREFIX);
-                    if (index != -1) {
-                        macAddress = line.substring(index + MAC_ADDRESS_PREFIX.length()).trim().toUpperCase();
-                    }
+                int index = line.indexOf(MAC_ADDRESS_PREFIX);
+                if (index != -1) {
+                    macAddress = line.substring(index + MAC_ADDRESS_PREFIX.length()).trim().toUpperCase();
                 }
             }
             br.close();

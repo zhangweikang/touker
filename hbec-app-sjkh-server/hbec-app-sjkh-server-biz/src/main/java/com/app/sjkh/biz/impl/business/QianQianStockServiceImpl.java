@@ -1,11 +1,13 @@
-package com.app.sjkh.service;
+package com.app.sjkh.biz.impl.business;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.app.sjkh.commons.servier.RedisService;
 import com.app.sjkh.commons.utils.DateUtils;
 import com.app.sjkh.commons.utils.NumberUtils;
 import com.app.sjkh.commons.vo.Constants;
 import com.app.sjkh.commons.vo.ResultCode;
 import com.app.sjkh.commons.vo.ResultResponse;
+import com.app.sjkh.facade.business.QianQianStockService;
 import com.app.sjkh.pojo.local.AcceptedSchedule;
 import com.app.sjkh.pojo.local.KhTask;
 import com.app.sjkh.service.example.AcceptedScheduleService;
@@ -13,7 +15,7 @@ import com.app.sjkh.service.example.KhTaskService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,8 +25,9 @@ import java.util.Map;
 /**
  * Created by Administrator on 2017/3/1.
  */
+@Component("qianQianStockService")
 @Service
-public class QianQianStockServiceImpl implements QianQianStockService{
+public class QianQianStockServiceImpl implements QianQianStockService {
 
     private final Log logger = LogFactory.getLog(QianQianStockServiceImpl.class);
 

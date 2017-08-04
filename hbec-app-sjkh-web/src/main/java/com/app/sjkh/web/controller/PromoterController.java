@@ -1,9 +1,8 @@
 package com.app.sjkh.web.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.app.sjkh.commons.vo.Constants;
-import com.app.sjkh.web.service.PromoterServiceImpl;
-import com.app.sjkh.web.service.impl.PromoterService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.app.sjkh.facade.business.PromoterService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,51 +21,47 @@ import java.io.IOException;
 @Controller
 public class PromoterController {
 
-    @Autowired
+    @Reference
     private PromoterService promoterService;
 
     /**
      * 钱钱推广页面
-     *
-     * @param request
-     * @param response
-     * @return
      * @throws IOException
      */
     @RequestMapping(value = "promoteInfo")
-    public ModelAndView mobileOpenAccountIndex(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ModelAndView mv = new ModelAndView("promote/promoteInfo");
-        return mv;
+    public ModelAndView mobileOpenAccountIndex() throws IOException {
+        return new ModelAndView("promote/promoteInfo");
     }
 
     /**
      * 手机开户推广页面
      *
-     * @param request
-     * @param response
-     * @return
      * @throws IOException
      */
     @RequestMapping(value = "promoteInfo_hbstock")
-    public ModelAndView qianQianStockIndex(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ModelAndView mv = new ModelAndView("promote/promoteInfo_hbstock");
-        return mv;
+    public ModelAndView qianQianStockIndex() throws IOException {
+        return new ModelAndView("promote/promoteInfo_hbstock");
     }
 
     @RequestMapping(value = "mobileOpenAccount", method = RequestMethod.POST)
     public void mobileOpenAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String phone = (String) request.getAttribute("phoneNo");
         String fwry = (String) request.getAttribute("fwry");
-        promoterService.setBranchnoInLocal(phone, fwry, Constants.MOBILEOPENACCOUNT_CHANNEL);
+        setBranchnoInLocal(phone, fwry, Constants.MOBILEOPENACCOUNT_CHANNEL);
         response.sendRedirect(Constants.MOBILEOPENACCOUNT_APP_URL);
-        return;
     }
 
     @RequestMapping(value = "qianQianStock", method = RequestMethod.POST)
-    public void qianQianStock(@RequestParam("phoneno")String phone,@RequestParam("fwry")String fwry,HttpServletResponse response,HttpServletRequest request) throws IOException {
-        promoterService.setBranchnoInLocal(phone, fwry, Constants.QIANQIANSTOCK_CHANNEL);
+    public void qianQianStock(@RequestParam("phoneno")String phone,@RequestParam("fwry")String fwry,HttpServletResponse response) throws IOException {
+        setBranchnoInLocal(phone, fwry, Constants.QIANQIANSTOCK_CHANNEL);
         response.sendRedirect(Constants.QIANQIANSTOCK_APP_URL);
-        return;
     }
 
+
+    private void setBranchnoInLocal(String phone,String fwry ,String channel){
+        //记录经纪人关系
+        promoterService.addPromoteCust(phone, fwry, channel);
+        //记录服务营业部
+        promoterService.addCustServiceBranch(phone, fwry);
+    }
 }

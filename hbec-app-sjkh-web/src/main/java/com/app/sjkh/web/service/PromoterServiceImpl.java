@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/12/6.
  */
-@Service
 public class PromoterServiceImpl implements PromoterService {
 
     private Log logger = LogFactory.getLog(PromoterServiceImpl.class);
