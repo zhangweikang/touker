@@ -22,8 +22,28 @@
 			<list>
 				<!-- 第一个节点 -->
 				<bean class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.ip}"/>
-					<constructor-arg index="1" value="${redis.port}"/>
+					<constructor-arg index="0" value="${redis1.ip}"/>
+					<constructor-arg index="1" value="${redis1.port}"/>
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg index="0" value="${redis2.ip}"/>
+					<constructor-arg index="1" value="${redis2.port}"/>
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg index="0" value="${redis3.ip}"/>
+					<constructor-arg index="1" value="${redis3.port}"/>
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg index="0" value="${redis4.ip}"/>
+					<constructor-arg index="1" value="${redis4.port}"/>
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg index="0" value="${redis5.ip}"/>
+					<constructor-arg index="1" value="${redis5.port}"/>
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg index="0" value="${redis6.ip}"/>
+					<constructor-arg index="1" value="${redis6.port}"/>
 				</bean>
 			</list>
 		</constructor-arg>
