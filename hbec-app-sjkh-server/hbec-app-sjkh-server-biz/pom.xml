@@ -4,24 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>hbec-app-sjkh-server</artifactId>
-        <groupId>com.app.sjkh.server</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <groupId>sjkh</groupId>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>hbec.app.sjkh.server.biz</groupId>
     <artifactId>hbec-app-sjkh-server-biz</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>hbec.app.sjkh.server.facade</groupId>
+            <groupId>sjkh</groupId>
             <artifactId>hbec-app-sjkh-server-facade</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>hbec.app.sjkh.server.service</groupId>
+            <groupId>sjkh</groupId>
             <artifactId>hbec-app-sjkh-server-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
