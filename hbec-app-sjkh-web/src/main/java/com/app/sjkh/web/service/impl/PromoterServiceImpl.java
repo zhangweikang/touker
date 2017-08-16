@@ -1,7 +1,7 @@
-package com.app.sjkh.web.service;
+package com.app.sjkh.web.service.impl;
 
 import com.app.sjkh.commons.servier.ApiService;
-import com.app.sjkh.web.service.impl.PromoterService;
+import com.app.sjkh.web.service.PromoterService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

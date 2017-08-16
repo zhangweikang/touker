@@ -36,6 +36,9 @@
         <c3p0.version>0.9.5.2</c3p0.version>
         <dubbo.version>2.4.10</dubbo.version>
         <zookeeper.version>0.3</zookeeper.version>
+        <rabbitmq.version>3.5.0</rabbitmq.version>
+        <spring-rabbit.version>1.4.1.RELEASE</spring-rabbit.version>
+        <quartz.version>2.2.2</quartz.version>
         <!--<mybatis.paginator.version>1.2.15</mybatis.paginator.version>-->
         <!--<mysql.version>5.1.32</mysql.version>-->
         <!--<joda-time.version>2.5</joda-time.version>-->
@@ -63,6 +66,11 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
             </dependency>
 
             <!-- Spring -->
@@ -239,15 +247,47 @@
                 <version>${redis.version}</version>
             </dependency>
 
+            <!--dubbo-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>dubbo</artifactId>
                 <version>${dubbo.version}</version>
             </dependency>
+
+            <!--zookeeper-->
             <dependency>
                 <groupId>com.101tec</groupId>
                 <artifactId>zkclient</artifactId>
                 <version>${zookeeper.version}</version>
+            </dependency>
+
+            <!--rabbitmq-->
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${rabbitmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-rabbit</artifactId>
+                <version>${spring-rabbit.version}</version>
+            </dependency>
+
+            <!--quartz-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
